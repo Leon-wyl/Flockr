@@ -1,6 +1,10 @@
+import channels
+
 def channel_invite(token, channel_id, u_id):
-    return {
-    }
+    #
+    #
+    #
+
 
 def channel_details(token, channel_id):
     return {
@@ -36,12 +40,44 @@ def channel_messages(token, channel_id, start):
     }
 
 def channel_leave(token, channel_id):
-    return {
-    }
+    # check if channel does not exsist
+    check = 0
+    for channels in channels.channels_listall(token):
+        if channels['channel_id'] == channel_id:
+            check = 1
+    if check == 0:
+        raise Exception("leave failed, channel does not exsist")
+    check = 0
+    # check if user is in the channel
+    #
+    #
+    #
+
 
 def channel_join(token, channel_id):
-    return {
-    }
+    # check if channel does not exsist
+    check = 0
+    for channels in channels.channels_listall(token):
+        if channels['channel_id'] == channel_id:
+            check = 1
+    if check == 0:
+        raise Exception("join failed, channel does not exsist")
+
+    # check if already joined
+    for channels in channels.channels_list(token):
+        if channels['channel_id'] == channel_id:
+            raise Exception("join failed, you already joined this channel")
+    
+    # if nothing goes wrong, join the channel
+    from data import channels
+    for user in data.['users']:
+        if token == user.token:
+            channels['members'].append({
+                u_id = user.u_id
+                name_first = user.name_first
+                name_last = user.name_last
+            })
+    
 
 def channel_addowner(token, channel_id, u_id):
     return {
