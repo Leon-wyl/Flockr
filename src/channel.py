@@ -1,10 +1,32 @@
 import channels
 
 def channel_invite(token, channel_id, u_id):
-    #
-    #
-    #
 
+    # Invalid user
+    check = 0
+    for user in data['users']:
+        if u_id == user['u_id']:
+            check = 1
+    if check = 0:
+        raise Exception('Invitation failed, user does not exsist')
+
+    # Invalid channel
+    check = 0
+    for channel in data['channels']:
+        if channel_id == channel['id']:
+            check = 1
+            for member in channel['members']:
+                if token == member['member_id']:
+                    # if authorised, invite user with user_id into the channel
+                    # member[]
+                    #
+                    #
+                    #
+    if check = 0:
+        raise Exception('Invitation failed, channel has not been created')
+
+    # the authorised user is not already a member of the channel
+    raise Exception('invite failed, permission denied')
 
 def channel_details(token, channel_id):
     return {
@@ -40,6 +62,7 @@ def channel_messages(token, channel_id, start):
     }
 
 def channel_leave(token, channel_id):
+
     # check if channel does not exsist
     check = 0
     for channels in channels.channels_listall(token):
@@ -47,25 +70,29 @@ def channel_leave(token, channel_id):
             check = 1
     if check == 0:
         raise Exception("leave failed, channel does not exsist")
-    check = 0
+
     # check if user is in the channel
-    #
-    #
-    #
+    for channel in data['channels']:
+        if channel['member_id'] == token:
+            channel['member_id'] == None
+
+    # else, user is not in the channel
+    raise Exception("leave railed, you have not joined the channel yet")
 
 
 def channel_join(token, channel_id):
+
     # check if channel does not exsist
     check = 0
-    for channels in channels.channels_listall(token):
-        if channels['channel_id'] == channel_id:
+    for channels in data['channels']:
+        if channels['id'] == channel_id:
             check = 1
     if check == 0:
         raise Exception("join failed, channel does not exsist")
 
     # check if already joined
     for channels in channels.channels_list(token):
-        if channels['channel_id'] == channel_id:
+        if channels['id'] == channel_id:
             raise Exception("join failed, you already joined this channel")
     
     # if nothing goes wrong, join the channel
