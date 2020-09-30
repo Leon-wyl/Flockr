@@ -7,6 +7,11 @@ def auth_login(email, password):
     '''Given a registered users' email and 
     password and generates a valid token 
     for the user to remain authenticated'''
+    global data
+
+    if not (re.search(regex,email)):  
+        raise Exception(f"Email entered is not a valid email")
+
     correct_user = None
     for user in data['users']:
         if user['email'] == email:
@@ -20,7 +25,7 @@ def auth_login(email, password):
     
     return {
         'u_id': correct_user['u_id'],
-        #'token': '12345',
+        'token': correct_user['u_id'],
     }
 
 def auth_logout(token):
@@ -38,6 +43,8 @@ def auth_register(email, password, name_first, name_last):
     that is the concatentation of a lowercase-only first name and last name. If the
     concatenation is longer than 20 characters, it is cutoff at 20 characters. If the handle 
     is already taken, you may modify the handle in any way you see fit to make it unique.'''
+    global data
+
     if not (re.search(regex,email)):  
         raise Exception(f"Email entered is not a valid email")
 
@@ -74,5 +81,5 @@ def auth_register(email, password, name_first, name_last):
 
     return {
         'u_id': u_id,
-        #'token': '12345',
+        'token': u_id,
     }
