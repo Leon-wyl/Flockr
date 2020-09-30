@@ -1,5 +1,6 @@
 def clear():
-    pass
+    data['users'].clear()
+    data['channels'].clear()
 
 def users_all(token):
     return {
