@@ -1,11 +1,7 @@
 import re
+from src.database import data 
 
 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
-
-data = {
-    'users':[],
-    'channels':[],
-}
 
 def auth_login(email, password):
     '''Given a registered users' email and 

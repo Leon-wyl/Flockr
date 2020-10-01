@@ -1,5 +1,6 @@
 import pytest
-from src.auth import auth_register, auth_login, data
+from src.auth import auth_register, auth_login
+from src.database import data
 
 def test_register():
     global data 
