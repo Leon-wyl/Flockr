@@ -2,7 +2,8 @@ import pytest
 from src.auth import auth_register, auth_login, data
 
 def test_register():
-    data.clear()
+    global data 
+    data['users'].clear()
 
     # Valid information has been summitted to register from the first user
     info = auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "Wu")
@@ -10,10 +11,10 @@ def test_register():
 
     # Vadid information has been summitted to register from the second user
     info = auth_register("billgates@outlook.com", "VukkFsrwa", "Bill", "Gates")
-    assert info == {'u_id': 1, 'token': 2}
+    assert info == {'u_id': 1, 'token': 1}
 
     # Vadid information has been summitted to register from the third user
-    info = auth_register("Monique.Johnson@icloud.com", "RFVtgb45678", "Monique", "Johnson")
+    info = auth_register("johnson@icloud.com", "RFVtgb45678", "Monique", "Johnson")
     assert info == {'u_id': 2, 'token': 2}
 
     # Test the number of users
@@ -24,17 +25,21 @@ def test_register():
         auth_register("ufhsdfkshfdhfsfhiw", "uf89rgu", "Andrew", "Williams")    
 
     # Email has already used to register by another users
-    auth_register("uniisfun@ad.unsw.edu.au", "ILoveUniversity", "Hayden", "Smith")
+    auth_register("uniisfun@gmail.com", "ILoveUniversity", "Hayden", "Smith")
     with pytest.raises(Exception):
-        auth_register("uniisfun@ad.unsw.edu.au", "uf89rgus", "Andrew", "Williams")
+        auth_register("uniisfun@gmail.com", "uf89rgus", "Andrew", "Williams")
     
     # Password is below 6 characters in length
     with pytest.raises(Exception):
         auth_register("Flora.Lamb@hotmail.com", "uf9du", "Andrew", "Williams")
 
-    # Password is above 50 characters in length
+    # First name is less than 1 characters in length
     with pytest.raises(Exception):
-        auth_register("xiaolonglin@qq.com", "i" * 51, "Xiaolong", "Lin")
+        auth_register("xiaolonglin@qq.com", "ijdhfjhfwehf", "", "Lin")
+
+    # Last name is less than 1 characters in length
+    with pytest.raises(Exception):
+        auth_register("raymond@gmail.com", "ijdhfjhfwehf", "Raymond", "")
 
     # First name is above 50 characters in length
     with pytest.raises(Exception):
@@ -44,24 +49,28 @@ def test_register():
     with pytest.raises(Exception):
         auth_register("josemourinho@gmail.com", "ParktheBus", "Jose", "m" * 51)  
 
+    # Test the number of users again
+    assert len(data['users']) == 4
+
 def test_login():
-    data.clear()
+    global data 
+    data['users'].clear()
     
     # Register then normal login
     info = auth_register("france@germany.com", "sdfage9sgdfff", "France", "Germany")
-    assert auth_login("FranceGermany.com", "sdfage9sgdfff") == info
+    assert auth_login("france@germany.com", "sdfage9sgdfff") == info
 
     # Register then provided an invalid email to log in
-    info = auth_register("Iloveyou@gmail.com", "Idontloveyou", "Jonh", "Sheppard")
+    info = auth_register("iloveyou@gmail.com", "Idontloveyou", "Jonh", "Sheppard")
     with pytest.raises(Exception):
-        auth_login("Iloveyou.gmail.com", "Idontloveyou")
+        auth_login("iloveyou.gmail.com", "Idontloveyou")
 
     # Register then provided an email which has not been registered
-    info = auth_register("Francoise@gmail.com", "Idfasdjfksdj0dfd", "Jonh", "Sheppard")
+    info = auth_register("francoise@gmail.com", "Idfasdjfksdj0dfd", "Francoise", "Sheppard")
     with pytest.raises(Exception):
-        auth_login("Francois@gmail.com", "Idfasdjfksdj0dfd")
+        auth_login("francois@gmail.com", "Idfasdjfksdj0dfd")
 
     # Register then provided an email with a wrong password to login
-    info = auth_register("Eviedunstone@gmail.com", "Qwerty6", "Evie", "dunstone")
+    info = auth_register("eviedunstone@gmail.com", "Qwerty6", "Evie", "Dunstone")
     with pytest.raises(Exception):
-        auth_login("Eviedunstone@gmail.com", "Qwerty8")
+        auth_login("eviedunstone@gmail.com", "Qwerty8")

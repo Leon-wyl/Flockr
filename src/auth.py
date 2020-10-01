@@ -1,7 +1,11 @@
 import re
-from src.database import data
 
 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+
+data = {
+    'users':[],
+    'channels':[],
+}
 
 def auth_login(email, password):
     '''Given a registered users' email and 
@@ -55,10 +59,10 @@ def auth_register(email, password, name_first, name_last):
     if len(password) in range(0, 6):
         raise Exception("Password entered is less than 6 characters long")
 
-    if len(name_first) not in range(1, 51):
+    if len(name_first) not in range(1, 50):
         raise Exception("name_first is not between 1 and 50 characters inclusively in length")
 
-    if len(name_last) not in range(1, 51):
+    if len(name_last) not in range(1, 50):
         raise Exception("name_last is not between 1 and 50 characters inclusively in length")
 
     u_id = len(data['users'])
@@ -66,14 +70,14 @@ def auth_register(email, password, name_first, name_last):
     handle = (name_first + name_last).lower()
     for user in data['users']:
         if user['handle'] == handle[:20]:
-            handle = handle[:6] + u_id
+            handle = handle[:6] + str(u_id)
             handle = handle[:20]
             break
 
     data['users'].append({
         'u_id': u_id,
         'email': email,
-        'password': password
+        'password': password,
         'name_first': name_first,
         'name_last': name_last,
         'handle': handle,
