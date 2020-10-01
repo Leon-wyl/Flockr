@@ -1,3 +1,4 @@
+from database import data
 def clear():
     data['users'].clear()
     data['channels'].clear()
