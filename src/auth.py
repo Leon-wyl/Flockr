@@ -27,9 +27,11 @@ def auth_login(email, password):
     if correct_user['password'] != password:
         raise Exception(f"Error, wrong password")
     
+    correct_user['login'] = True
+
     return {
         'u_id': correct_user['u_id'],
-        'token': correct_user['u_id'],
+        'token': correct_user['token'],
     }
 
 def auth_logout(token):
@@ -66,6 +68,7 @@ def auth_register(email, password, name_first, name_last):
         raise Exception("name_last is not between 1 and 50 characters inclusively in length")
 
     u_id = len(data['users'])
+    token = str(u_id)
 
     handle = (name_first + name_last).lower()
     for user in data['users']:
@@ -81,9 +84,11 @@ def auth_register(email, password, name_first, name_last):
         'name_first': name_first,
         'name_last': name_last,
         'handle': handle,
+        'login': False,
+        'token': token,
     })
 
     return {
         'u_id': u_id,
-        'token': u_id,
+        'token': token,
     }

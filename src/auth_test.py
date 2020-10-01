@@ -7,15 +7,15 @@ def test_register():
 
     # Valid information has been summitted to register from the first user
     info = auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "Wu")
-    assert info == {'u_id': 0, 'token': 0}
+    assert info == {'u_id': 0, 'token': '0'}
 
     # Vadid information has been summitted to register from the second user
     info = auth_register("billgates@outlook.com", "VukkFsrwa", "Bill", "Gates")
-    assert info == {'u_id': 1, 'token': 1}
+    assert info == {'u_id': 1, 'token': '1'}
 
     # Vadid information has been summitted to register from the third user
     info = auth_register("johnson@icloud.com", "RFVtgb45678", "Monique", "Johnson")
-    assert info == {'u_id': 2, 'token': 2}
+    assert info == {'u_id': 2, 'token': '2'}
 
     # Test the number of users
     assert len(data['users']) == 3
@@ -74,3 +74,24 @@ def test_login():
     info = auth_register("eviedunstone@gmail.com", "Qwerty6", "Evie", "Dunstone")
     with pytest.raises(Exception):
         auth_login("eviedunstone@gmail.com", "Qwerty8")
+
+'''def test_logout():
+    global data 
+    data['users'].clear()
+
+    # Register, login then logout
+    info = auth_register("linliangming@163.com", "edfjkjfkdjfked", "Liangming", "Lin")
+    auth_login("linliangming@163.com", "edfjkjfkdjfked")
+    assert auth_logout(info['token']) == {'is_success': True}
+    
+    # Register, then logout without log in
+    info = auth_register("yhn@abc.com", "ujmsdfwer", "Younghyie", "Ngo")
+    with pytest.raises(Exception):
+        auth_logout(info['token'])
+
+    # Register, login, logout then logout again
+    info = auth_register("skysport@gmail.com", "Welovesport", "Sky", "Sport")
+    auth_login("skysport@gmail.com", "Welovesport")
+    auth_logout(info['token'])
+    with pytest.raises(Exception):
+        auth_logout(info['token'])'''
