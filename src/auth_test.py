@@ -76,7 +76,7 @@ def test_login():
     with pytest.raises(Exception):
         auth_login("eviedunstone@gmail.com", "Qwerty8")
 
-'''def test_logout():
+def test_logout():
     global data 
     data['users'].clear()
 
@@ -95,4 +95,4 @@ def test_login():
     auth_login("skysport@gmail.com", "Welovesport")
     auth_logout(info['token'])
     with pytest.raises(Exception):
-        auth_logout(info['token'])'''
+        auth_logout(info['token'])
