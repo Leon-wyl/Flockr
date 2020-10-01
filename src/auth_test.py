@@ -1,6 +1,6 @@
 import pytest
-from src.auth import auth_register, auth_login
-from src.database import data
+from auth import auth_register, auth_login, auth_logout
+from database import data
 
 def test_register():
     global data 
@@ -87,12 +87,11 @@ def test_logout():
     
     # Register, then logout without log in
     info = auth_register("yhn@abc.com", "ujmsdfwer", "Younghyie", "Ngo")
-    with pytest.raises(Exception):
-        auth_logout(info['token'])
+    assert auth_logout(info['token']) == {'is_success': False}
 
     # Register, login, logout then logout again
     info = auth_register("skysport@gmail.com", "Welovesport", "Sky", "Sport")
     auth_login("skysport@gmail.com", "Welovesport")
     auth_logout(info['token'])
-    with pytest.raises(Exception):
-        auth_logout(info['token'])
+    assert auth_logout(info['token']) == {'is_success': False}
+

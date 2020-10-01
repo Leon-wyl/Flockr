@@ -1,5 +1,5 @@
 import re
-from src.database import data 
+from database import data 
 
 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
@@ -35,9 +35,17 @@ def auth_logout(token):
     log the user out. If a valid token is given, and the 
     user is successfully logged out, it returns true, 
     otherwise false.'''
-    return {
-        'is_success': True,
-    }
+    u_id = int(token)
+
+    if u_id in range(len(data['users'])) and data['users'][u_id]['login'] == True:
+        data['users'][u_id]['login'] = False
+        return {
+            'is_success': True,
+        }
+    else:
+        return {
+            'is_success': False,
+        }
 
 def auth_register(email, password, name_first, name_last):
     '''Given a user's first and last name, email address, and password, create a new account
