@@ -42,7 +42,7 @@ def channels_create(token, name, is_public):
         raise Exception(f"Invalid token!")
 
     if data['channels'] == []:
-        channel_id = 1
+        channel_id = 0
     else:
         channel_id = data['channels'][-1]['channel_id'] + 1
     new_channel = {
