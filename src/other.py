@@ -1,5 +1,9 @@
+from database import data
+
+# delete all the information in two lists in data dictionary
 def clear():
-    pass
+    data['users'].clear()
+    data['channels'].clear()
 
 def users_all(token):
     return {
