@@ -5,7 +5,7 @@ import auth
 from database import data
 from other import clear
 
-
+# test if channels can be created successfully
 def test_channels_create():
     clear()
     auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
@@ -14,6 +14,8 @@ def test_channels_create():
     assert channels.channels_create(0, 'second', False) == {'channel_id' : 1}
     assert len(data['channels']) == 2
 
+# test if the function raises an Exception if the input is invalid or token is
+# invalid
 def test_channels_create_except():
     clear()
     auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
@@ -23,6 +25,8 @@ def test_channels_create_except():
     with pytest.raises(Exception):
         channels.channels_create(0, "jdjdkdidnekdmedkwdemdkeimd", False)
 
+# test if the function returns the correct list of channels that the user is 
+# a member of
 def test_channels_list():
     clear()
     auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
@@ -40,7 +44,7 @@ def test_channels_list():
     assert user_channel == channels.channels_list(0)['channels']
             
     
-    
+# test if the function raises an Exception if token is invalid    
 def test_channels_list_except():
     clear()
     auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
@@ -54,7 +58,7 @@ def test_channels_list_except():
     with pytest.raises(Exception):
         channels.channels_list(2)
     
-
+# test if the function returns the correct list of channels
 def test_channels_listall():
     clear()
     auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
@@ -65,9 +69,8 @@ def test_channels_listall():
     channels.channels_create(0, 'fourth', True)
     assert data['channels'] == channels.channels_listall(0)['channels']
     
-    
-    
-    
+  
+# test if the function raises an Exception if token is invalid       
 def test_channels_listall_except():
     clear()
     auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
