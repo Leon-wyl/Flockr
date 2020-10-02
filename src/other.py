@@ -1,4 +1,6 @@
 from database import data
+
+# delete all the information in two lists in data dictionary
 def clear():
     data['users'].clear()
     data['channels'].clear()
