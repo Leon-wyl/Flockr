@@ -64,6 +64,7 @@ def channels_create(token, name, is_public):
         'visibility' : is_public,
         'members' : [],
         'owners' : [],
+        'messages' : [],
     }
     # add new_channel to the list
     data['channels'].append(new_channel)
