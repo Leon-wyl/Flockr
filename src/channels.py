@@ -17,7 +17,10 @@ def channels_list(token):
         for member in channel['members']:
             # add channel to list if the user is a member of that channel
             if member['u_id'] == token:
-                user_channel.append(channel)
+                new_channel = {}
+                new_channel['channel_id'] = channel['channel_id']
+                new_channel['name'] = channel['name']
+                user_channel.append(new_channel)
                 break
     return {
         'channels': user_channel,
@@ -35,8 +38,15 @@ def channels_listall(token):
             break
     if not exist:
         raise Exception(f"Invalid token!")
+    # creat an empty list and append channels to it
+    channels = []
+    for channel in data['channels']:
+        new_channel = {}
+        new_channel['channel_id'] = channel['channel_id']
+        new_channel['name'] = channel['name']
+        channels.append(new_channel)
     return {
-        'channels': data['channels'],
+        'channels': channels,
     }
 
 # Creates a new channel with that name that is 

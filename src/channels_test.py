@@ -37,11 +37,9 @@ def test_channels_list():
     channels.channels_create(0, 'fourth', True)
     channel.channel_join(0, 0)
     channel.channel_join(0, 2)
-    user_channel = []
-    for single in data['channels']:
-        if single['channel_id'] == 0 or single['channel_id'] == 2:
-            user_channel.append(single)
-    assert user_channel == channels.channels_list(0)['channels']
+    assert channels.channels_list(0)['channels'] ==
+    [{'channel_id': 0, 'name': 'first'},
+     {'channel_id': 2, 'name': 'third'}]
             
     
 # test if the function raises an Exception if token is invalid    
@@ -67,7 +65,11 @@ def test_channels_listall():
     channels.channels_create(0, 'second', True)
     channels.channels_create(0, 'third', True)
     channels.channels_create(0, 'fourth', True)
-    assert data['channels'] == channels.channels_listall(0)['channels']
+    assert channels.channels_listall(0)['channels'] == 
+    [{'channel_id': 0, 'name': 'first'},
+     {'channel_id': 1, 'name': 'second'},
+     {'channel_id': 2, 'name': 'third'},
+     {'channel_id': 3, 'name': 'fourth'}]
     
   
 # test if the function raises an Exception if token is invalid       
@@ -78,5 +80,5 @@ def test_channels_listall_except():
     channels.channels_create(0, 'first', True)
     channels.channels_create(0, 'second', True)
     with pytest.raises(Exception):
-        channels.channels_listall(2)['channels']
+        channels.channels_listall(2)
 
