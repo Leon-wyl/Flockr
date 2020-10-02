@@ -100,7 +100,7 @@ def channel_join(token, channel_id):
                 'name_first': user['name_first'],
                 'name_last': user['name_last'],
             }
-            channels['members'].append(member)
+            data['channels']['members'].append(member)
     
     raise Exception(f'InputError, user is invalid')
     
