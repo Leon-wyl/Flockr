@@ -37,7 +37,7 @@ def test_channels_list():
     channels.channels_create(0, 'fourth', True)
     channel.channel_join(0, 0)
     channel.channel_join(0, 2)
-    assert channels.channels_list(0)['channels'] ==
+    assert channels.channels_list(0)['channels'] == \
     [{'channel_id': 0, 'name': 'first'},
      {'channel_id': 2, 'name': 'third'}]
             
@@ -65,7 +65,7 @@ def test_channels_listall():
     channels.channels_create(0, 'second', True)
     channels.channels_create(0, 'third', True)
     channels.channels_create(0, 'fourth', True)
-    assert channels.channels_listall(0)['channels'] == 
+    assert channels.channels_listall(0)['channels'] == \
     [{'channel_id': 0, 'name': 'first'},
      {'channel_id': 1, 'name': 'second'},
      {'channel_id': 2, 'name': 'third'},
