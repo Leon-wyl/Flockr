@@ -18,10 +18,11 @@ def channel_invite(token, channel_id, u_id):
             for member in channel['members']:
                 if token == member['member_id']:
                     # if authorised, invite user with user_id into the channel
-                    # member[]
-                    #
-                    #
-                    #
+                    channel['members'].append(
+                        { 
+                            'member_id': u_id
+                        }
+                    )
     if check = 0:
         raise Exception('Invitation failed, channel has not been created')
 
