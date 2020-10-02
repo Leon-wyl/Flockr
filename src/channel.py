@@ -1,4 +1,6 @@
 import channels
+import auth
+from database import data
 
 def channel_invite(token, channel_id, u_id):
 
@@ -7,27 +9,24 @@ def channel_invite(token, channel_id, u_id):
     for user in data['users']:
         if u_id == user['u_id']:
             check = 1
-    if check = 0:
-        raise Exception('Invitation failed, user does not exsist')
+    if check == 0:
+        raise Exception(f'InputError, invitation failed, invalid user')
 
     # Invalid channel
     check = 0
     for channel in data['channels']:
-        if channel_id == channel['id']:
+        if channel_id == channel['channel_id']:
             check = 1
             for member in channel['members']:
-                if token == member['member_id']:
+                if token == member['u_id']:
                     # if authorised, invite user with user_id into the channel
-                    channel['members'].append(
-                        { 
-                            'member_id': u_id
-                        }
-                    )
-    if check = 0:
-        raise Exception('Invitation failed, channel has not been created')
+                    import channel_join
+                    channel_join(u_id, channel_id)
+    if check == 0:
+        raise Exception(f'InputError, invitation failed, invalid channel')
 
     # the authorised user is not already a member of the channel
-    raise Exception('invite failed, permission denied')
+    raise Exception(f'AccessError, invitation failed, permission denied')
 
 def channel_details(token, channel_id):
     return {
@@ -64,47 +63,46 @@ def channel_messages(token, channel_id, start):
 
 def channel_leave(token, channel_id):
 
-    # check if channel does not exsist
+    # check if channel exsist
     check = 0
-    for channels in channels.channels_listall(token):
-        if channels['channel_id'] == channel_id:
+    for channel in channels.channels_listall(token):
+        if channel['channel_id'] == channel_id:
             check = 1
+            # find the member
+            for member in channel['members']:
+                if token == member['u_id']:
+                    member.clear() # clean member details
     if check == 0:
-        raise Exception("leave failed, channel does not exsist")
-
-    # check if user is in the channel
-    for channel in data['channels']:
-        if channel['member_id'] == token:
-            channel['member_id'] == None
+        raise Exception(f"InputError, leave failed, channel does not exsist")
 
     # else, user is not in the channel
-    raise Exception("leave railed, you have not joined the channel yet")
+    raise Exception(f"AccessError, leave failed, you have not joined the channel yet")
 
 
 def channel_join(token, channel_id):
 
-    # check if channel does not exsist
+    # check if channel_id is valid
     check = 0
-    for channels in data['channels']:
-        if channels['id'] == channel_id:
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
             check = 1
+            # check if the channel is public
+            if channel['visibility'] == False:
+                raise Exception(f"AccessError, join failed, channel is private")
     if check == 0:
-        raise Exception("join failed, channel does not exsist")
-
-    # check if already joined
-    for channels in channels.channels_list(token):
-        if channels['id'] == channel_id:
-            raise Exception("join failed, you already joined this channel")
+        raise Exception(f"InputError, join failed, channel is invalid")
     
     # if nothing goes wrong, join the channel
-    from data import channels
-    for user in data.['users']:
-        if token == user.token:
-            channels['members'].append({
-                u_id = user.u_id
-                name_first = user.name_first
-                name_last = user.name_last
-            })
+    for user in data['users']:
+        if token == user['u_id']:
+            member = {
+                'u_id': user['u_id'],
+                'name_first': user['name_first'],
+                'name_last': user['name_last'],
+            }
+            channels['members'].append(member)
+    
+    raise Exception(f'InputError, user is invalid')
     
 
 def channel_addowner(token, channel_id, u_id):
