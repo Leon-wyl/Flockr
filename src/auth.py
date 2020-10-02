@@ -4,7 +4,7 @@ from database import data
 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
 def auth_login(email, password):
-    '''Given a registered users' email and 
+    '''Given a registered user's email and 
     password and generates a valid token 
     for the user to remain authenticated'''
     global data
@@ -62,7 +62,7 @@ def auth_register(email, password, name_first, name_last):
         if user['email'] == email:
             raise Exception(f"Email address {email} is already being used by another user")
     
-    if len(password) in range(0, 6):
+    if len(password) in range(0, 5):
         raise Exception("Password entered is less than 6 characters long")
 
     if len(name_first) not in range(1, 50):

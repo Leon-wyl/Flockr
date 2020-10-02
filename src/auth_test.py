@@ -7,15 +7,15 @@ def test_register():
     data['users'].clear()
 
     # Valid information has been summitted to register from the first user
-    info = auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "Wu")
+    info = auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
     assert info == {'u_id': 0, 'token': '0'}
 
     # Vadid information has been summitted to register from the second user
-    info = auth_register("billgates@outlook.com", "VukkFsrwa", "Bill", "Gates")
+    info = auth_register("billgates@outlook.com", "VukkFs", "Bill", "Gates")
     assert info == {'u_id': 1, 'token': '1'}
 
     # Vadid information has been summitted to register from the third user
-    info = auth_register("johnson@icloud.com", "RFVtgb45678", "Monique", "Johnson")
+    info = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
     assert info == {'u_id': 2, 'token': '2'}
 
     # Test the number of users
