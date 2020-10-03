@@ -23,7 +23,8 @@ def test_register():
 
     # Invalid email
     with pytest.raises(Exception):
-        auth_register("ufhsdfkshfdhfsfhiw", "uf89rgu", "Andrew", "Williams")
+        auth_register("ufhsdfkshfdhfsfhiw", "uf89rgu", "Andrew", "Williams")    
+
 
     # Email has already used to register by another users
     auth_register("uniisfun@gmail.com", "ILoveUniversity", "Hayden", "Smith")
@@ -50,6 +51,7 @@ def test_register():
     with pytest.raises(Exception):
         auth_register("josemourinho@gmail.com", "ParktheBus", "Jose", "m" * 51)
 
+
     # Test the number of users again
     assert len(data['users']) == 4
 
@@ -60,6 +62,7 @@ def test_register():
 def test_login():
     global data
     data['users'].clear()
+
 
     # Register then normal login
     info = auth_register("france@germany.com", "sdfage9sgdfff", "France", "Germany")
@@ -98,3 +101,4 @@ def test_logout():
     auth_login("skysport@gmail.com", "Welovesport")
     auth_logout(info['token'])
     assert auth_logout(info['token']) == {'is_success': False}
+

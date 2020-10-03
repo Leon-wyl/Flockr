@@ -88,7 +88,4 @@ def test_channel_messages():
                                     "message", 'start', 'end'
                                     ''''''
                                     '''   
-    
-    
-    
-    
+

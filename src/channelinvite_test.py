@@ -154,5 +154,4 @@ def test_channel_leave_invalid_channel():
     channel.channel_join(userA['u_id'], newchannel['channel_id'])
     with pytest.raises(Exception):
         channel.channel_leave(userA['u_id'], 1) # channel_id = 1 does not exsist
-    
 
