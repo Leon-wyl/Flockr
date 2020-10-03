@@ -53,6 +53,10 @@ def test_register():
     # Test the number of users again
     assert len(data['users']) == 4
 
+    # User's new handle when there is a equivalent name of existent user in the data base
+    auth_register("uniisnotfunatall@gmail.com", "IHateUniversity", "Hayden", "Smith")
+    assert data['users'][4]['handle'] == 'hayden4'
+
 def test_login():
     global data 
     data['users'].clear()
