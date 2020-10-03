@@ -1,4 +1,5 @@
 Project Assumption
+
 auth.py
 1. An empty dictionary which has two list items, ‘users’ and ‘channels’, has been created to store information of users and channels.
 2. u_ids start from 0.
