@@ -1,10 +1,10 @@
 Project Assumption
 
 auth.py
-1. An empty dictionary which has two list items, ‘users’ and ‘channels’, has been created to store information of users and channels.
-2. u_ids start from 0.
-3. tokens are the strings form of u_ids
-
+1. In the function of auth_register, the inputs of the function auth_register and auth_login, which is email, password, name_first and name_last, are in the type of string.
+2. u_id is an int start from 0.
+3. token is teh string form of u_ids
+4. An empty dictionary which has two list items, ‘users’ and ‘channels’, has been created to store information of users and channels.
 
 channels.py
 1. Assume channel_id start from 0. 
