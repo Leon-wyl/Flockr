@@ -3,7 +3,7 @@ from auth import auth_register, auth_login, auth_logout
 from database import data
 
 def test_register():
-    global data 
+    global data
     data['users'].clear()
 
     # Valid information has been summitted to register from the first user
@@ -23,13 +23,13 @@ def test_register():
 
     # Invalid email
     with pytest.raises(Exception):
-        auth_register("ufhsdfkshfdhfsfhiw", "uf89rgu", "Andrew", "Williams")    
+        auth_register("ufhsdfkshfdhfsfhiw", "uf89rgu", "Andrew", "Williams")
 
     # Email has already used to register by another users
     auth_register("uniisfun@gmail.com", "ILoveUniversity", "Hayden", "Smith")
     with pytest.raises(Exception):
         auth_register("uniisfun@gmail.com", "uf89rgus", "Andrew", "Williams")
-    
+
     # Password is below 6 characters in length
     with pytest.raises(Exception):
         auth_register("Flora.Lamb@hotmail.com", "uf9du", "Andrew", "Williams")
@@ -44,11 +44,11 @@ def test_register():
 
     # First name is above 50 characters in length
     with pytest.raises(Exception):
-        auth_register("KeisekuKagawa@yahoo.com", "jdsfjigI8dfsa", "K" * 51, "Honda")  
+        auth_register("KeisekuKagawa@yahoo.com", "jdsfjigI8dfsa", "K" * 51, "Honda")
 
     # Last name is above 50 characters in length
     with pytest.raises(Exception):
-        auth_register("josemourinho@gmail.com", "ParktheBus", "Jose", "m" * 51)  
+        auth_register("josemourinho@gmail.com", "ParktheBus", "Jose", "m" * 51)
 
     # Test the number of users again
     assert len(data['users']) == 4
@@ -58,9 +58,9 @@ def test_register():
     assert data['users'][4]['handle'] == 'hayden4'
 
 def test_login():
-    global data 
+    global data
     data['users'].clear()
-    
+
     # Register then normal login
     info = auth_register("france@germany.com", "sdfage9sgdfff", "France", "Germany")
     assert auth_login("france@germany.com", "sdfage9sgdfff") == info
@@ -81,14 +81,14 @@ def test_login():
         auth_login("eviedunstone@gmail.com", "Qwerty8")
 
 def test_logout():
-    global data 
+    global data
     data['users'].clear()
 
     # Register, login then logout
     info = auth_register("linliangming@163.com", "edfjkjfkdjfked", "Liangming", "Lin")
     auth_login("linliangming@163.com", "edfjkjfkdjfked")
     assert auth_logout(info['token']) == {'is_success': True}
-    
+
     # Register, then logout without log in
     info = auth_register("yhn@abc.com", "ujmsdfwer", "Younghyie", "Ngo")
     assert auth_logout(info['token']) == {'is_success': False}
@@ -98,4 +98,3 @@ def test_logout():
     auth_login("skysport@gmail.com", "Welovesport")
     auth_logout(info['token'])
     assert auth_logout(info['token']) == {'is_success': False}
-

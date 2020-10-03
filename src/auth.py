@@ -1,28 +1,28 @@
 import re
-from database import data 
+from database import data
 
-regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$' 
 
 def auth_login(email, password):
-    '''Given a registered user's email and 
-    password and generates a valid token 
+    '''Given a registered user's email and
+    password and generates a valid token
     for the user to remain authenticated'''
     global data
 
-    if not (re.search(regex,email)):  
-        raise Exception(f"Email entered is not a valid email")
+    if not re.search(regex, email):
+        raise Exception("Email entered is not a valid email")
 
     correct_user = None
     for user in data['users']:
         if user['email'] == email:
             correct_user = user
 
-    if correct_user == None:
+    if correct_user is None:
         raise Exception(f"Error, email address {email} has not been registered yet")
 
     if correct_user['password'] != password:
-        raise Exception(f"Error, wrong password")
-    
+        raise Exception("Error, wrong password")
+
     correct_user['login'] = True
 
     return {
@@ -31,9 +31,9 @@ def auth_login(email, password):
     }
 
 def auth_logout(token):
-    '''Given an active token, invalidates the taken to 
-    log the user out. If a valid token is given, and the 
-    user is successfully logged out, it returns true, 
+    '''Given an active token, invalidates the taken to
+    log the user out. If a valid token is given, and the
+    user is successfully logged out, it returns true,
     otherwise false.'''
     u_id = int(token)
 
@@ -51,17 +51,17 @@ def auth_register(email, password, name_first, name_last):
     '''Given a user's first and last name, email address, and password, create a new account
     for them and return a new token for authentication in their session. A handle is generated
     that is the concatentation of a lowercase-only first name and last name. If the
-    concatenation is longer than 20 characters, it is cutoff at 20 characters. If the handle 
+    concatenation is longer than 20 characters, it is cutoff at 20 characters. If the handle
     is already taken, you may modify the handle in any way you see fit to make it unique.'''
     global data
 
-    if not (re.search(regex,email)):  
-        raise Exception(f"Email entered is not a valid email")
+    if not re.search(regex, email):
+        raise Exception("Email entered is not a valid email")
 
     for user in data['users']:
         if user['email'] == email:
             raise Exception(f"Email address {email} is already being used by another user")
-    
+
     if len(password) in range(0, 5):
         raise Exception("Password entered is less than 6 characters long")
 
