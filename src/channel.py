@@ -34,17 +34,21 @@ def channel_invite(token, channel_id, u_id):
 # Given a Channel with ID channel_id that the authorised user is part of, provide basic details about the channel.
 def channel_details(token, channel_id): 
     for channels in data['channels']:
+        # Check for valid channel ID inputted
         if channel_id == channels['channel_id']: 
             for members in channels['members']:
+                # Check if user is in the channel
                 if token == members['u_id']:
                     channel_name = channels['name']
                     owners = []
+                    # Append owner in channel into a new list
                     for owner in channels['owners']:
                         new_owner = {}
                         new_owner['u_id'] = owner['u_id']
                         new_owner['name_first'] = owner['name_first']
                         new_owner['name_last'] = owner['name_last']
                         owners.append(new_owner)
+                    # Append member in channel into a new list
                     members = []
                     for member in channels['members']:
                         new_member = {}
@@ -52,6 +56,7 @@ def channel_details(token, channel_id):
                         new_member['name_first'] = member['name_first']
                         new_member['name_last'] = member['name_last']
                         members.append(new_member)
+                    # Return channel name, owner list and member list
                     return {
                         'name': channel_name,
                         'owner_members': owners,
@@ -63,8 +68,7 @@ def channel_details(token, channel_id):
 
 # Given a Channel with ID channel_id that the authorised user is part of, return up to 50 messages between index "start" and "start + 50". Message with index 0 is the most recent message in the channel. This function returns a new index "end" which is the value of "start + 50", or, if this function has returned the least recent messages in the channel, returns -1 in "end" to indicate there are no more messages to load after this return.
 def channel_messages(token, channel_id, start):
-
-    
+    # Check for valid channel ID inputted, raise InputError if invalid
     valid_id = False
     channel_count = 0
     for channels in data['channels']:
@@ -74,7 +78,8 @@ def channel_messages(token, channel_id, start):
         channel_count =+ 1
     if not valid_id:
         raise InputError("You have entered an invalid channel ID")
-            
+        
+    # Check if user is an authorised user in the channel, raise AccessError if unauthorised        
     authorised_user = False
     for members in channels['members']:
         if token == members['u_id']:
@@ -83,6 +88,7 @@ def channel_messages(token, channel_id, start):
     if not authorised_user:
         raise AccessError("You are unauthorised to obtain the messages of this channel") 
         
+    # Check if message start is a valid start, raise InputError if invalid 
     owners = []
     if start > len(data['channels'][channel_count]['messages']):
         raise InputError("You have entered an invalid start which is greater than the total number of messages in the channel")
@@ -90,6 +96,7 @@ def channel_messages(token, channel_id, start):
         end = start + 50
     else:
         end = -1
+    # Append message in channel into a new list, return the list
     message_list =[]
     for message in data['channels'][channel_count]['messages']:
 	    channel['messages'].append(message)                
