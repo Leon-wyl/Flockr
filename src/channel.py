@@ -31,10 +31,8 @@ def channel_invite(token, channel_id, u_id):
     # the authorised user is not already a member of the channel
 
 
-
-def channel_details(token, channel_id):
-    #Given a Channel with ID channel_id that the authorised user is part of, provide basic details about the channel.
-    
+# Given a Channel with ID channel_id that the authorised user is part of, provide basic details about the channel.
+def channel_details(token, channel_id): 
     for channels in data['channels']:
         if channel_id == channels['channel_id']: 
             for members in channels['members']:
@@ -63,10 +61,10 @@ def channel_details(token, channel_id):
             raise AccessError("You are unauthorised to obtain the details of this channel")
     raise InputError("You have entered an invalid channel ID")
 
-
+# Given a Channel with ID channel_id that the authorised user is part of, return up to 50 messages between index "start" and "start + 50". Message with index 0 is the most recent message in the channel. This function returns a new index "end" which is the value of "start + 50", or, if this function has returned the least recent messages in the channel, returns -1 in "end" to indicate there are no more messages to load after this return.
 def channel_messages(token, channel_id, start):
-    #Given a Channel with ID channel_id that the authorised user is part of, return up to 50 messages between index "start" and "start + 50". Message with index 0 is the most recent message in the channel. This function returns a new index "end" which is the value of "start + 50", or, if this function has returned the least recent messages in the channel, returns -1 in "end" to indicate there are no more messages to load after this return.
-    #channels.messages { message_id, u_id, message, time_created  }
+
+    
     valid_id = False
     channel_count = 0
     for channels in data['channels']:
@@ -96,21 +94,6 @@ def channel_messages(token, channel_id, start):
     for message in data['channels'][channel_count]['messages']:
 	    channel['messages'].append(message)                
     return message_list, start, end           
-    '''  
-    return {
-        'messages': [
-            {
-                'message_id': 1,
-                'u_id': 1,
-                'message': 'Hello world',
-                'time_created': 1582426789,
-            }
-        ],
-        'start': 0,
-        'end': 50,
-    }
-    '''
-
 
 def channel_leave(token, channel_id):
 
