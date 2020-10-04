@@ -8,27 +8,32 @@ from database import data
 
 def channel_invite(token, channel_id, u_id):
 
-    # Invalid user
+    # Check for valid user ID input
     check = 0
     for user in data['users']:
         if u_id == user['u_id']:
             check = 1
     if check == 0:
         raise Exception(f'InputError, invitation failed, invalid user')
-    # Invalid channel
-    check = 0
+    # Check for valid channel ID input
+    checkchannel = 0
+    checkuser = 0
     for channel in data['channels']:
         if channel_id == channel['channel_id']:
+            checkchannel = 1
             for member in channel['members']:
                 if token == member['u_id']:
-                    check = 1
+                    checkuser = 1
                     # if authorised, invite user with user_id into the channel
                     channel_join(u_id, channel_id)
                     break
-    if check == 0:
+    if checkchannel == 0:
         raise Exception(f'InputError, invitation failed, invalid channel')
+    # Check if the user is authorised in the channel
+    if checkuser == 0:
+        raise Exception(f'AccessError, invitation failed, unauthorised user')
 
-    # the authorised user is not already a member of the channel
+
 
 
 # Given a Channel with ID channel_id that the authorised user is part of, provide basic details about the channel.
@@ -103,12 +108,11 @@ def channel_messages(token, channel_id, start):
     return message_list, start, end           
 
 def channel_leave(token, channel_id):
-
-    # check if channel exsist
+    # Check if channel exist
     check = 0
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:           
-            # find the member
+            # Find the member
             for member in channel['members']:
                 if token == member['u_id']:
                     check = 1
