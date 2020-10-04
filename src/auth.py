@@ -96,7 +96,7 @@ def auth_register(email, password, name_first, name_last):
             handle = handle[:20]
             break
 
-    # Uploade the data to the database
+    # Upload the data to the database
     data['users'].append({
         'u_id': u_id,
         'email': email,
