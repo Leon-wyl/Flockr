@@ -188,6 +188,15 @@ data = {
         {
             'id': 1,
             'name' : 'channel1',
+            'owner': '',
+            'member': [
+                {
+                    'member_id': 123,
+                }
+                {
+                    'member_id': 234,
+                }
+            ]
         },
         {
             'id': 2,
