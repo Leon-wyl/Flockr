@@ -15,4 +15,4 @@ channels.py
 channel.py
 1. Assuming if users are already in a channel, they cannot rejoin the same channel, otherwise the same member details would appear one time more each time the user joins
 2. An user has to register (if not yet registered) & login before he/she can join or create or leave any channel
-3. User 
+3. Owner of the channel may not be in the members list

@@ -11,7 +11,7 @@ def channels_list(token):
             break
     if not exist:
         raise Exception(f"Invalid token!")
-    # creat an empty list
+    # create an empty list
     user_channel = []
     for channel in data['channels']:
         for member in channel['members']:
