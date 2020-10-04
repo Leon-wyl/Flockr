@@ -149,7 +149,9 @@ def channel_join(token, channel_id):
     if not channel_exist:
         raise Exception(f"InputError, join failed, channel is invalid")
 
+# Make user with user id u_id an owner of this channel
 def channel_addowner(token, channel_id, u_id):
+    # check whether the user is valid
     check = 0
     for user in data['users']:
         if u_id == user['u_id']:
@@ -161,29 +163,37 @@ def channel_addowner(token, channel_id, u_id):
     check = 0
     for channel in data['channels']:
         if channel_id == channel['channel_id']:
+            # find if the user with u_id is owner
             owner_exist = False
             for owner in channel['owners']:
                 if u_id == owner['u_id']:
                     owner_exist = True
             for owner in channel['owners']:
+                # find if the user with token is owner
                 if token == owner['u_id'] and not owner_exist:
                     check = 1
                     channel['owners'].append(add_owner)
+    # if one of the requirements is not reached
     if check == 0:
         raise Exception(f'InputError, invitation failed, invalid user')             
 
+# Remove user with user id u_id an owner of this channel
 def channel_removeowner(token, channel_id, u_id):
     check = 0
     for channel in data['channels']:
+        # find channel with channel_id
         if channel_id == channel['channel_id']:
+            # find if the user with u_id is owner
             owner_exist = False
             for owner in channel['owners']:
                 if u_id == owner['u_id']:
                     remove_owner = owner
                     owner_exist = True
             for owner in channel['owners']:
+                # find if the user with token is owner
                 if token == owner['u_id'] and owner_exist:
                     check = 1
                     channel['owners'].remove(remove_owner)
+    # if one of the requirements is not reached
     if check == 0:
         raise Exception(f'InputError, invitation failed, invalid user') 
