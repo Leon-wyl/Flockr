@@ -1,7 +1,7 @@
 import re
 from database import data
 
-regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$' 
+regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$' 
 
 def auth_login(email, password):
     '''Given a registered user's email and
