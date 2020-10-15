@@ -71,15 +71,15 @@ def auth_register(email, password, name_first, name_last):
         if user['email'] == email:
             raise Exception(f"Email address {email} is already being used by another user")
 
-    if len(password) in range(0, 5):
+    if len(password) in range(0, 6):
         # If the length of password is too short (less than 6), raise exception
         raise Exception("Password entered is less than 6 characters long")
 
-    if len(name_first) not in range(1, 50):
+    if len(name_first) not in range(1, 51):
         # If the length of name_first is out of range (1 to 50), raise exception
         raise Exception("name_first is not between 1 and 50 characters inclusively in length")
 
-    if len(name_last) not in range(1, 50):
+    if len(name_last) not in range(1, 51):
         # If the length of name_last is out of range (1 to 50), raise exception
         raise Exception("name_last is not between 1 and 50 characters inclusively in length")
 

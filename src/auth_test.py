@@ -33,7 +33,7 @@ def test_register():
 
     # Password is below 6 characters in length
     with pytest.raises(Exception):
-        auth_register("Flora.Lamb@hotmail.com", "uf9du", "Andrew", "Williams")
+        auth_register("floralamb@hotmail.com", "uf9du", "Andrew", "Williams")
 
     # First name is less than 1 characters in length
     with pytest.raises(Exception):
