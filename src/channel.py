@@ -97,9 +97,9 @@ def channel_messages(token, channel_id, start):
     # Check if message start is a valid start, raise InputError if invalid 
     if start > len(data['channels'][channel_count]['messages']):
         raise InputError("You have entered an invalid start which is greater than the total number of messages in the channel")
-     if message_count > 50:
+    if message_count > 50:
         end = start + 50
-     else:
+    else:
         end = -1
     # Append message in channel into a new list, return the list
     message_list =[]
