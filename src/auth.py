@@ -1,5 +1,6 @@
 import re
 from database import data
+from error import InputError
 
 regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$' 
 
@@ -11,7 +12,7 @@ def auth_login(email, password):
 
     if not re.search(regex, email):
         # Test whether the email input is valid. If not, raisee exception
-        raise Exception("Email entered is not a valid email")
+        raise InputError("Email entered is not a valid email")
 
     # Find out whether the input email is a registered email
     correct_user = None
@@ -21,11 +22,11 @@ def auth_login(email, password):
 
     if correct_user is None:
         # If the email has not been registered, raise exception
-        raise Exception(f"Error, email address {email} has not been registered yet")
+        raise InputError(f"Error, email address {email} has not been registered yet")
 
     if correct_user['password'] != password:
         # If the password is not correct, raise exception
-        raise Exception("Password is not correct")
+        raise InputError("Password is not correct")
 
     # Change login state
     correct_user['login'] = True
@@ -64,24 +65,24 @@ def auth_register(email, password, name_first, name_last):
 
     if not re.search(regex, email):
         # Test whether the email input is valid. If not, raisee exception
-        raise Exception("Email entered is not a valid email")
+        raise InputError("Email entered is not a valid email")
 
     # Loop through the database to find whether there is a same email registered in the database. If yes, raise exception
     for user in data['users']:
         if user['email'] == email:
-            raise Exception(f"Email address {email} is already being used by another user")
+            raise InputError(f"Email address {email} is already being used by another user")
 
     if len(password) in range(0, 6):
         # If the length of password is too short (less than 6), raise exception
-        raise Exception("Password entered is less than 6 characters long")
+        raise InputError("Password entered is less than 6 characters long")
 
     if len(name_first) not in range(1, 51):
         # If the length of name_first is out of range (1 to 50), raise exception
-        raise Exception("name_first is not between 1 and 50 characters inclusively in length")
+        raise InputError("name_first is not between 1 and 50 characters inclusively in length")
 
     if len(name_last) not in range(1, 51):
         # If the length of name_last is out of range (1 to 50), raise exception
-        raise Exception("name_last is not between 1 and 50 characters inclusively in length")
+        raise InputError("name_last is not between 1 and 50 characters inclusively in length")
 
     # Create u_id and token
     u_id = len(data['users'])
