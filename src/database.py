@@ -47,14 +47,11 @@ def data_logout(u_id):
     otherwise false.'''
 
     if u_id in range(len(data['users'])) and data['users'][u_id]['login']:
-        # If the input u_id is a valid u_id and the login state is True, switch login state
-        # to false and return is_success True
         data['users'][u_id]['login'] = False
         return {
             'is_success': True,
         }
 
-    # If not, return is_success False
     return {
         'is_success': False,
     }
