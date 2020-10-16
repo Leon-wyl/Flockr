@@ -1,10 +1,10 @@
 import pytest
 from auth import auth_register, auth_login, auth_logout
+from other import clear
 from database import data
 
 def test_register():
-    global data
-    data['users'].clear()
+    clear()
 
     # Valid information has been summitted to register from the first user
     info = auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
@@ -60,9 +60,7 @@ def test_register():
     assert data['users'][4]['handle'] == 'hayden4'
 
 def test_login():
-    global data
-    data['users'].clear()
-
+    clear()
 
     # Register then normal login
     info = auth_register("france@germany.com", "sdfage9sgdfff", "France", "Germany")
@@ -84,8 +82,7 @@ def test_login():
         auth_login("eviedunstone@gmail.com", "Qwerty8")
 
 def test_logout():
-    global data
-    data['users'].clear()
+    clear()
 
     # Register, login then logout
     info = auth_register("linliangming@163.com", "edfjkjfkdjfked", "Liangming", "Lin")

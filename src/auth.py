@@ -1,5 +1,5 @@
 import re
-from database import data
+from database import data_email_search, data_handle_create, data_upload, data_login, data_logout, data_u_id_create
 from error import InputError
 
 regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$' 
@@ -8,19 +8,15 @@ def auth_login(email, password):
     '''Given a registered user's email and
     password and generates a valid token
     for the user to remain authenticated'''
-    global data
 
     if not re.search(regex, email):
         # Test whether the email input is valid. If not, raisee exception
         raise InputError("Email entered is not a valid email")
 
     # Find out whether the input email is a registered email
-    correct_user = None
-    for user in data['users']:
-        if user['email'] == email:
-            correct_user = user
+    correct_user = data_email_search(email)
 
-    if correct_user is None:
+    if correct_user == None:
         # If the email has not been registered, raise exception
         raise InputError(f"Error, email address {email} has not been registered yet")
 
@@ -29,7 +25,7 @@ def auth_login(email, password):
         raise InputError("Password is not correct")
 
     # Change login state
-    correct_user['login'] = True
+    data_login(email)
 
     return {
         'u_id': correct_user['u_id'],
@@ -43,17 +39,7 @@ def auth_logout(token):
     otherwise false.'''
     u_id = int(token)
 
-    if u_id in range(len(data['users'])) and data['users'][u_id]['login'] == True:
-        # If the input u_id is a valid u_id and the login state is True, switch login state to false and return is_success True
-        data['users'][u_id]['login'] = False
-        return {
-            'is_success': True,
-        }
-    else:
-        # If not, return is_success False
-        return {
-            'is_success': False,
-        }
+    return data_logout(u_id)
 
 def auth_register(email, password, name_first, name_last):
     '''Given a user's first and last name, email address, and password, create a new account
@@ -61,16 +47,14 @@ def auth_register(email, password, name_first, name_last):
     that is the concatentation of a lowercase-only first name and last name. If the
     concatenation is longer than 20 characters, it is cutoff at 20 characters. If the handle
     is already taken, you may modify the handle in any way you see fit to make it unique.'''
-    global data
 
     if not re.search(regex, email):
         # Test whether the email input is valid. If not, raisee exception
         raise InputError("Email entered is not a valid email")
-
-    # Loop through the database to find whether there is a same email registered in the database. If yes, raise exception
-    for user in data['users']:
-        if user['email'] == email:
-            raise InputError(f"Email address {email} is already being used by another user")
+    
+    if data_email_search(email) != None:
+        # If there is a same email registered in the database, raise exception
+        raise InputError(f"Email address {email} is already being used by another user")
 
     if len(password) in range(0, 6):
         # If the length of password is too short (less than 6), raise exception
@@ -85,29 +69,12 @@ def auth_register(email, password, name_first, name_last):
         raise InputError("name_last is not between 1 and 50 characters inclusively in length")
 
     # Create u_id and token
-    u_id = len(data['users'])
+    u_id = data_u_id_create()
     token = str(u_id)
 
-    # Create handle
-    handle = (name_first + name_last).lower()
-    for user in data['users']:
-        if user['handle'] == handle[:20]:
-            # Solution for a handle that is the same as a existing handle being created
-            handle = handle[:6] + str(u_id)
-            handle = handle[:20]
-            break
-
-    # Upload the data to the database
-    data['users'].append({
-        'u_id': u_id,
-        'email': email,
-        'password': password,
-        'name_first': name_first,
-        'name_last': name_last,
-        'handle': handle,
-        'login': False,
-        'token': token,
-    })
+    # Create a handle and upload the data
+    handle = data_handle_create(name_first, name_last, u_id)
+    data_upload(u_id, email, password, name_first, name_last, handle, token)
 
     return {
         'u_id': u_id,
