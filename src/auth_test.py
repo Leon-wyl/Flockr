@@ -23,7 +23,7 @@ def test_register():
 
     # Invalid email
     with pytest.raises(Exception):
-        auth_register("ufhsdfkshfdhfsfhiw", "uf89rgu", "Andrew", "Williams")    
+        auth_register("ufhsdfkshfdhfsfhiw", "uf89rgu", "Andrew", "Williams")
 
 
     # Email has already used to register by another users
@@ -98,4 +98,3 @@ def test_logout():
     auth_login("skysport@gmail.com", "Welovesport")
     auth_logout(info['token'])
     assert auth_logout(info['token']) == {'is_success': False}
-

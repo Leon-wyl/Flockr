@@ -1,22 +1,22 @@
 import re
-from database import data_email_search, data_handle_create, data_upload, data_login, data_logout, data_u_id_create
+from database import data_email_search, data_handle, data_upload, data_login, data_logout, data_u_id
 from error import InputError
 
-regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$' 
+REGEX = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
 def auth_login(email, password):
     '''Given a registered user's email and
     password and generates a valid token
     for the user to remain authenticated'''
 
-    if not re.search(regex, email):
+    if not re.search(REGEX, email):
         # Test whether the email input is valid. If not, raisee exception
         raise InputError("Email entered is not a valid email")
 
     # Find out whether the input email is a registered email
     correct_user = data_email_search(email)
 
-    if correct_user == None:
+    if correct_user is None:
         # If the email has not been registered, raise exception
         raise InputError(f"Error, email address {email} has not been registered yet")
 
@@ -48,11 +48,11 @@ def auth_register(email, password, name_first, name_last):
     concatenation is longer than 20 characters, it is cutoff at 20 characters. If the handle
     is already taken, you may modify the handle in any way you see fit to make it unique.'''
 
-    if not re.search(regex, email):
+    if not re.search(REGEX, email):
         # Test whether the email input is valid. If not, raisee exception
         raise InputError("Email entered is not a valid email")
-    
-    if data_email_search(email) != None:
+
+    if data_email_search(email) is not None:
         # If there is a same email registered in the database, raise exception
         raise InputError(f"Email address {email} is already being used by another user")
 
@@ -69,11 +69,11 @@ def auth_register(email, password, name_first, name_last):
         raise InputError("name_last is not between 1 and 50 characters inclusively in length")
 
     # Create u_id and token
-    u_id = data_u_id_create()
+    u_id = data_u_id()
     token = str(u_id)
 
     # Create a handle and upload the data
-    handle = data_handle_create(name_first, name_last, u_id)
+    handle = data_handle(name_first, name_last, u_id)
     data_upload(u_id, email, password, name_first, name_last, handle, token)
 
     return {

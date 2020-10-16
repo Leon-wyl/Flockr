@@ -10,7 +10,7 @@ def data_email_search(email):
             return user
     return None
 
-def data_handle_create(name_first, name_last, u_id):
+def data_handle(name_first, name_last, u_id):
     '''Create a handle using the first name and the last name'''
     handle = (name_first + name_last).lower()
     for user in data['users']:
@@ -46,18 +46,18 @@ def data_logout(u_id):
     user is successfully logged out, it returns true,
     otherwise false.'''
 
-    if u_id in range(len(data['users'])) and data['users'][u_id]['login'] == True:
-        # If the input u_id is a valid u_id and the login state is True, switch login state 
+    if u_id in range(len(data['users'])) and data['users'][u_id]['login']:
+        # If the input u_id is a valid u_id and the login state is True, switch login state
         # to false and return is_success True
         data['users'][u_id]['login'] = False
         return {
             'is_success': True,
         }
-    else:
-        # If not, return is_success False
-        return {
-            'is_success': False,
-        }
 
-def data_u_id_create():
+    # If not, return is_success False
+    return {
+        'is_success': False,
+    }
+
+def data_u_id():
     return len(data['users'])
