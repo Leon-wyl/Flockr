@@ -34,13 +34,13 @@ def data_upload(u_id, email, password, name_first, name_last, handle, token):
         'token': token,
     })
 
-def data_login(email):
+def login(email):
     '''Change login state'''
     for user in data['users']:
         if user['email'] == email:
             user['login'] = True
 
-def data_logout(u_id):
+def logout(u_id):
     '''Given an active u_id, invalidates the taken to
     log the user out. If a valid u_id is given, and the
     user is successfully logged out, it returns true,

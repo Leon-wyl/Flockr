@@ -1,5 +1,5 @@
 import re
-from database import data_email_search, data_handle, data_upload, data_login, data_logout, data_u_id
+from database import data_email_search, data_handle, data_upload, login, logout, data_u_id
 from error import InputError
 
 REGEX = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
@@ -25,7 +25,7 @@ def auth_login(email, password):
         raise InputError("Password is not correct")
 
     # Change login state
-    data_login(email)
+    login(email)
 
     return {
         'u_id': correct_user['u_id'],
@@ -39,7 +39,7 @@ def auth_logout(token):
     otherwise false.'''
     u_id = int(token)
 
-    return data_logout(u_id)
+    return logout(u_id)
 
 def auth_register(email, password, name_first, name_last):
     '''Given a user's first and last name, email address, and password, create a new account
