@@ -14,7 +14,7 @@ def channel_invite(token, channel_id, u_id):
         if u_id == user['u_id']:
             check = 1
     if check == 0:
-        raise Exception(f'InputError, invitation failed, invalid user')
+        raise InputError('Invitation failed, invalid user')
     # Check for valid channel ID input
     checkchannel = 0
     checkuser = 0
@@ -28,10 +28,10 @@ def channel_invite(token, channel_id, u_id):
                     channel_join(u_id, channel_id)
                     break
     if checkchannel == 0:
-        raise Exception(f'InputError, invitation failed, invalid channel')
+        raise InputError('Invitation failed, invalid channel')
     # Check if the user is authorised in the channel
     if checkuser == 0:
-        raise Exception(f'AccessError, invitation failed, unauthorised user')
+        raise AccessError('Invitation failed, unauthorised user')
 
 
 
@@ -108,92 +108,72 @@ def channel_messages(token, channel_id, start):
     return message_list, start, end           
 
 def channel_leave(token, channel_id):
-    # Check if channel exist
-    check = 0
-    for channel in data['channels']:
-        if channel['channel_id'] == channel_id:           
-            # Find the member
-            for member in channel['members']:
-                if token == member['u_id']:
-                    check = 1
-                    channel['members'].remove(member)
-                    break
-                     # clean member details
-    if check == 0:
-        raise Exception(f"InputError, leave failed, channel does not exsist")
-
-    # else, user is not in the channel
-
+    channel = valid_channel(token, channel_id)
+    member = valid_member(channel, token)
+    channel['members'].remove(member)
 
 def channel_join(token, channel_id):
-
-    # check if channel_id is valid
+    # check valid user
+    user = valid_user(token)
+    # check if channel_id is valid 
+    channel = valid_channel(token, channel_id)
+    # and check channel is public
+    is_public_channel(channel)
     # if nothing goes wrong, join the channel
+    channel['members'].append(user)
+
+# Make user with user id u_id an owner of this channel
+def channel_addowner(token, channel_id, u_id):
+    channel = valid_channel(token, channel_id)
+    for owner in channel['owners']:
+        if u_id == owner['u_id']:
+            raise Exception('User is already an owner of the channel')
+    # check whether the user with user id of token is authorised to use add owner
+    valid_owner(token, channel)
+    owner = valid_user(u_id)
+    channel['owners'].append(owner)
+
+# Remove user with user id u_id an owner of this channel
+def channel_removeowner(token, channel_id, u_id):
+    channel = valid_channel(token, channel_id)
+    valid_owner(u_id, channel)
+    owner_id = valid_owner(token, channel)
+    # check whether the user is valid
+    owner = valid_user(owner_id)
+    channel['owners'].remove(owner)
+
+def valid_user(token):
     user_exist = False
     for user in data['users']:
         if token == user['u_id']:
             user_exist = True
-            member = user
-            break
+            return user
     if not user_exist:
-        raise Exception(f'InputError, user is invalid')
-    channel_exist = False
+        raise InputError('User is invalid')
+
+def is_public_channel(channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
-            # check if the channel is public
             if channel['visibility'] == False:
-                raise Exception(f"AccessError, join failed, channel is private")
-            channel['members'].append(member)
-            channel_exist = True
-            break
-    if not channel_exist:
-        raise Exception(f"InputError, join failed, channel is invalid")
+                raise AccessError("Channel is private")
 
-# Make user with user id u_id an owner of this channel
-def channel_addowner(token, channel_id, u_id):
-    # check whether the user is valid
-    check = 0
-    for user in data['users']:
-        if u_id == user['u_id']:
-            check = 1
-            add_owner = user
-            
-    if check == 0:
-        raise Exception(f'InputError, invitation failed, invalid user')
-    check = 0
+def valid_channel(u_id, channel_id):
     for channel in data['channels']:
-        if channel_id == channel['channel_id']:
-            # find if the user with u_id is owner
-            owner_exist = False
-            for owner in channel['owners']:
-                if u_id == owner['u_id']:
-                    owner_exist = True
-            for owner in channel['owners']:
-                # find if the user with token is owner
-                if token == owner['u_id'] and not owner_exist:
-                    check = 1
-                    channel['owners'].append(add_owner)
-    # if one of the requirements is not reached
-    if check == 0:
-        raise Exception(f'InputError, invitation failed, invalid user')             
+        if channel['channel_id'] == channel_id:
+            return channel
+    raise InputError("Channel_id is invalid")
 
-# Remove user with user id u_id an owner of this channel
-def channel_removeowner(token, channel_id, u_id):
-    check = 0
-    for channel in data['channels']:
-        # find channel with channel_id
-        if channel_id == channel['channel_id']:
-            # find if the user with u_id is owner
-            owner_exist = False
-            for owner in channel['owners']:
-                if u_id == owner['u_id']:
-                    remove_owner = owner
-                    owner_exist = True
-            for owner in channel['owners']:
-                # find if the user with token is owner
-                if token == owner['u_id'] and owner_exist:
-                    check = 1
-                    channel['owners'].remove(remove_owner)
-    # if one of the requirements is not reached
-    if check == 0:
-        raise Exception(f'InputError, invitation failed, invalid user') 
+# check if the the user who use add_owner is permitted to add owner 
+# and check if the user being added is already an owner
+def valid_owner(u_id, channel):
+    for owner in channel['owners']:
+        # check if the person who runs this command is owner
+        if u_id == owner['u_id']:
+            return u_id 
+    raise AccessError('You are not an owner yet! Only an owner have this permission')
+
+def valid_member(channel, u_id):
+    for member in channel['members']:
+        if u_id == member['u_id']:
+            return member
+    raise InputError('Invalid member id')
