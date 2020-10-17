@@ -84,19 +84,15 @@ def channel_addowner(token, channel_id, u_id):
         if u_id == owner['u_id']:
             raise InputError('User is already an owner of the channel')
     # check whether the user with user id of token is authorised to use add owner
-    if valid_owner(token, channel) == False:
-        raise AccessError('You are not authorised to add an owner')
+    valid_owner(token, channel)
     owner = valid_user(u_id)
     channel['owners'].append(owner)
 
 # Remove user with user id u_id an owner of this channel
 def channel_removeowner(token, channel_id, u_id):
     channel = valid_channel(channel_id)
-    if not valid_owner(u_id, channel):
-        raise InputError('User is not an owner of this channel')
+    valid_owner(u_id, channel)
     owner_id = valid_owner(token, channel)
-    if not owner_id:
-        raise AccessError('You are not authorised to remove an owner')
     owner = valid_user(owner_id)
     channel['owners'].remove(owner)
 
@@ -125,7 +121,7 @@ def valid_owner(u_id, channel):
         # check if the person who runs this command is owner
         if u_id == owner['u_id']:
             return u_id 
-    return False
+    raise InputError('You are not an owner yet! Only an owner have this permission')
 
 def valid_member(channel, u_id):
     for member in channel['members']:

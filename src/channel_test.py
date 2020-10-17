@@ -144,7 +144,7 @@ def test_unauthorised_channel_addowner():
     'Guanbin', 'Wen')
     auth.auth_login('newemail@gmail.com', '234abc!@#')
     channel.channel_join(0,0) 
-    with pytest.raises(AccessError):
+    with pytest.raises(Exception):
         assert channel.channel_addowner(1, 0, 1)  
 
 # Test if the function functions normally with one owner and one member in the channel.   
@@ -159,7 +159,7 @@ def test_channel_addowner():
     data['channels'][0]['owners'].append(new_owner)
     auth.auth_register('newemail@gmail.com', '234abc!@#', 
     'Guanbin', 'Wen')
-    channel.channel_join(0,0) 
+    channel.channel_join(1,0) 
     assert channel.channel_addowner(0, 0, 1) == None
 
 # Test if the function raises an Input Error if the channel id is invalid.
