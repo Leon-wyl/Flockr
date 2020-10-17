@@ -113,7 +113,7 @@ def test_invalid_id_channel_addowner():
     auth.auth_login('validemail@gmail.com', '123abc!@#')
     channels.channels_create(0, 'validchannelname', True)
     channel.channel_join(0,0)
-    with pytest.raises(Exception):
+    with pytest.raises(InputError):
         assert channel.channel_addowner(0, 6, 0)
 
 # Test if the function raises an Input Error if the user is already an owner of the channel.
@@ -127,7 +127,7 @@ def test_already_owner_channel_addowner():
     channel.channel_join(0,0)
     new_owner = data['users'][0]
     data['channels'][0]['owners'].append(new_owner)
-    with pytest.raises(Exception):
+    with pytest.raises(InputError):
         assert channel.channel_addowner(0, 0, 0)
 
 # Test if the function raises an Access Error if user is unauthorised to add owner to this channel.      
@@ -144,7 +144,7 @@ def test_unauthorised_channel_addowner():
     'Guanbin', 'Wen')
     auth.auth_login('newemail@gmail.com', '234abc!@#')
     channel.channel_join(0,0) 
-    with pytest.raises(Exception):
+    with pytest.raises(AccessError):
         assert channel.channel_addowner(1, 0, 1)  
 
 # Test if the function functions normally with one owner and one member in the channel.   
@@ -159,7 +159,6 @@ def test_channel_addowner():
     data['channels'][0]['owners'].append(new_owner)
     auth.auth_register('newemail@gmail.com', '234abc!@#', 
     'Guanbin', 'Wen')
-    auth.auth_login('newemail@gmail.com', '234abc!@#')
     channel.channel_join(0,0) 
     assert channel.channel_addowner(0, 0, 1) == None
 
@@ -173,10 +172,10 @@ def test_invalid_id_channel_removeowner():
     channel.channel_join(0,0)
     new_owner = data['users'][0]
     data['channels'][0]['owners'].append(new_owner)
-    with pytest.raises(Exception):
+    with pytest.raises(InputError):
         assert channel.channel_removeowner(0, 6, 0)
 
-# Test if the function raises an Input Error if the channel id is invalid.
+# if the user is not yet an owner of the channel
 def test_not_owner_channel_removeowner():
     clear()
     auth.auth_register('validemail@gmail.com', '123abc!@#', 
@@ -184,7 +183,7 @@ def test_not_owner_channel_removeowner():
     auth.auth_login('validemail@gmail.com', '123abc!@#')
     channels.channels_create(0, 'validchannelname', True)
     channel.channel_join(0,0)
-    with pytest.raises(Exception):
+    with pytest.raises(InputError):
         assert channel.channel_removeowner(0, 0, 0)
 
 # Test if the function raises an Access Error if user is unauthorised to remove owner from this channel.      
