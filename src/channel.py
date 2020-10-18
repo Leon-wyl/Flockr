@@ -1,6 +1,3 @@
-import error
-import channels
-import auth
 from error import InputError
 from error import AccessError
 from database import data
@@ -61,7 +58,7 @@ def channel_messages(token, channel_id, start):
         end = -1
     # Append message in channel into a new list, return the list
     message_list =[]
-    for message in data['channels'][channel_count]['messages']:
+    for message in channel['messages']:
 	    message_list.append(message)                
     return message_list, start, end           
 
