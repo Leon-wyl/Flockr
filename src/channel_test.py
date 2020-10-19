@@ -157,10 +157,12 @@ def test_channel_addowner():
     channel.channel_join(0,0)
     new_owner = data['users'][0]
     data['channels'][0]['owners'].append(new_owner)
+    assert len(data['channels'][0]['owners']) == 1
     auth.auth_register('newemail@gmail.com', '234abc!@#', 
     'Guanbin', 'Wen')
     channel.channel_join(1,0) 
-    assert channel.channel_addowner(0, 0, 1) == None
+    channel.channel_addowner(0, 0, 1)
+    assert len(data['channels'][0]['owners']) == 2
 
 # Test if the function raises an Input Error if the channel id is invalid.
 def test_invalid_id_channel_removeowner():
@@ -218,7 +220,9 @@ def test_channel_removeowner():
     auth.auth_login('newemail@gmail.com', '234abc!@#')
     channel.channel_join(0,0) 
     channel.channel_addowner(0, 0, 1)
-    assert channel.channel_removeowner(0, 0, 1) == None
+    assert len(data['channels'][0]['owners']) == 2
+    channel.channel_removeowner(0, 0, 1)
+    assert len(data['channels'][0]['owners']) == 1
 
 # Test chanel_invite
 #
