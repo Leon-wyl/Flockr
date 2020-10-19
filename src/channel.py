@@ -5,15 +5,17 @@ from database import data
 
 def channel_invite(token, channel_id, u_id):
     valid_user(u_id)
-    channel = valid_channel(channel_id) #valid_channel returns the info of channel of given channel_id
+    # valid_channel returns the info of channel of given channel_id
+    channel = valid_channel(channel_id)
     valid_member(channel, token)
     channel_join(u_id, channel_id)
+    return {}
 
 # Given a Channel with ID channel_id that the authorised user is part of, provide basic details about the channel.
-def channel_details(token, channel_id): 
+def channel_details(token, channel_id):
     for channels in data['channels']:
         # Check for valid channel ID inputted
-        if channel_id == channels['channel_id']: 
+        if channel_id == channels['channel_id']:
             for members in channels['members']:
                 # Check if user is in the channel
                 if token == members['u_id']:
@@ -44,34 +46,42 @@ def channel_details(token, channel_id):
             raise AccessError("You are unauthorised to obtain the details of this channel")
     raise InputError("You have entered an invalid channel ID")
 
-# Given a Channel with ID channel_id that the authorised user is part of, return up to 50 messages between index "start" and "start + 50". Message with index 0 is the most recent message in the channel. This function returns a new index "end" which is the value of "start + 50", or, if this function has returned the least recent messages in the channel, returns -1 in "end" to indicate there are no more messages to load after this return.
+# Given a Channel with ID channel_id that the authorised user is part of, 
+# return up to 50 messages between index "start" and "start + 50". 
+# Message with index 0 is the most recent message in the channel. 
+# This function returns a new index "end" which is the value of "start + 50", 
+# or, if this function has returned the least recent messages in the channel, 
+# returns -1 in "end" to indicate there are no more messages to load after this return.
+
 def channel_messages(token, channel_id, start):
-    channel = valid_channel(channel_id)      
+    channel = valid_channel(channel_id)
     valid_member(channel, token)
     message_count = 0
     # Check if message start is a valid start, raise InputError if invalid 
     if start > len(channel['messages']):
-        raise InputError("You have entered an invalid start which is greater than the total number of messages in the channel")
+        raise InputError("You message is greater than the total number of messages in the channel")
     if message_count > 50:
         end = start + 50
     else:
         end = -1
     # Append message in channel into a new list, return the list
-    message_list =[]
+    message_list = []
     for message in channel['messages']:
-	    message_list.append(message)                
-    return message_list, start, end           
+	    message_list.append(message)
+    return message_list, start, end
 
 def channel_leave(token, channel_id):
     channel = valid_channel(channel_id)
     member = valid_member(channel, token)
     channel['members'].remove(member)
+    return {}
 
 def channel_join(token, channel_id):
     user = valid_user(token)
     channel = valid_channel(channel_id)
     is_public_channel(channel)
     channel['members'].append(user)
+    return {}
 
 # Make user with user id u_id an owner of this channel
 def channel_addowner(token, channel_id, u_id):
@@ -84,6 +94,7 @@ def channel_addowner(token, channel_id, u_id):
     valid_owner(token, channel)
     owner = valid_user(u_id)
     channel['owners'].append(owner)
+    return {}
 
 # Remove user with user id u_id an owner of this channel
 def channel_removeowner(token, channel_id, u_id):
@@ -92,6 +103,7 @@ def channel_removeowner(token, channel_id, u_id):
     owner_id = valid_owner(token, channel)
     owner = valid_user(owner_id)
     channel['owners'].remove(owner)
+    return {}
 
 def valid_user(u_id):
     for user in data['users']:
@@ -111,8 +123,7 @@ def valid_channel(channel_id):
             return channel
     raise InputError("Channel_id is invalid")
 
-# check if the the user who use add_owner is permitted to add owner 
-# and check if the user being added is already an owner
+# check if the the user who use add_owner is permitted to add owner
 def valid_owner(u_id, channel):
     for owner in channel['owners']:
         # check if the person who runs this command is owner
