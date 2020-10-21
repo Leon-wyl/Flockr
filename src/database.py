@@ -187,13 +187,13 @@ def data_clear():
     data['users'].clear()
     data['channels'].clear()
 
-'''
+
 def is_login(u_id):
     for user in data['users']:
         if u_id == user['u_id']:
             return user['login']
     
-'''
+
 
 
 

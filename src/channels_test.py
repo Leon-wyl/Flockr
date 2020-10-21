@@ -2,9 +2,8 @@ import pytest
 import channels
 import channel
 import auth
-from error import InputError
-from error import AccessError
-from database import data
+from error import InputError, AccessError
+from database import *
 from other import clear
 
 # test if channels can be created successfully
