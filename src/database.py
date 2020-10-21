@@ -203,11 +203,45 @@ def data_users_list():
         user_list.append(new_user)
     return user_list
         
-        
+
+def data_permission(u_id):
+    for user in data['users']:
+        if user['u_id'] == u_id:
+            return user['permission_id']
+
+      
+def data_change_permission(u_id, permission_id):
+    for user in data['users']:
+        if user['u_id'] == u_id:
+            user['permission_id'] = permission_id
+            return
 
 
 
 
-
+[
+            {
+                'message_id': 1,
+                'u_id': 1,
+                'message': 'Hello world',
+                'time_created': 1582426789,
+            }
+        ]
+def data_search_message(query_str, u_id):
+    message_list = []
+    for channel in data['channels']:
+        for member in channel['members']:
+            # add channel to list if the user is a member of that channel
+            if member['u_id'] == u_id:
+                for message in channel['messages']:
+                    if query_str in message['message']:
+                        new_massage = {}
+                        new_massage['message_id'] = message['message_id']
+                        new_massage['u_id'] = message['u_id']
+                        new_massage['message'] = message['message']
+                        new_massage['time_created'] = message['time_created']
+                        message_list.append(new_massage)
+                break
+    return message_list
 
 

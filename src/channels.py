@@ -1,6 +1,6 @@
 from database import *
-from utility import *
-from auth import *
+from utility import check_valid_token, check_valid_channel_name
+from auth import auth_u_id_from_token
 from error import InputError, AccessError
 
 # Provide a list of all channels (and their associated details) 

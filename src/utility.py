@@ -1,10 +1,21 @@
 import jwt
 from database import *
-from auth import *
+from auth import auth_u_id_from_token
 from error import InputError
 from error import AccessError
 
 SECRET = "fri09mango01"
+
+def check_valid_permission_id(permission_id):
+    if permission_id != 1 and permission_id != 2
+        raise InputError("Invalid permission_id")
+    return
+    
+    
+def check_global_owner(u_id):
+    if data_permission(u_id) != 1
+        raise AccessError("You are not owner of flockr")
+    return
 
 def check_valid_user(u_id):
     if not is_user_exist(u_id):
