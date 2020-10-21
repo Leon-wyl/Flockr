@@ -77,6 +77,14 @@ def is_user_exist(u_id):
             return True
     return False
 
+
+def is_token_exist(token):
+    for user in data['users']:
+        if token == user['token']:
+            return True
+    return False
+
+
 def is_public_channel(channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
@@ -150,6 +158,28 @@ def data_remove_owner(u_id, channel_id):
                 if u_id == user['u_id']:
                     channel['owners'].remove(user)
                     return
+
+
+
+def data_add_member(u_id, channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            for user in data['users']:
+                if u_id == user['u_id']:
+                    channel['members'].append(user)
+                    return
+            
+    
+
+def data_remove_member(u_id, channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            for user in data['users']:
+                if u_id == user['u_id']:
+                    channel['members'].remove(user)
+                    return
+
+
 
 
 def data_clear():

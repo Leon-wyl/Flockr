@@ -1,15 +1,16 @@
 from database import *
 from utility import *
-from error import InputError
-from error import AccessError
+from auth import *
+from error import InputError, AccessError
 
 # Provide a list of all channels (and their associated details) 
 # that the authorised user is part of
 def channels_list(token):
     # if token is invalid raise an Exception
     check_valid_token(token)
+    u_id = auth_u_id_from_token(token)
     return {
-        'channels': data_user_channels(int(token)),
+        'channels': data_user_channels(u_id),
     }
 
 
@@ -44,7 +45,9 @@ def channels_create(token, name, is_public):
     }
     # add new_channel to the list
     data_add_channel(new_channel)
-    data_add_owner(int(token), channel_id)
+    u_id = auth_u_id_from_token(token)
+    data_add_owner(u_id, channel_id)
+    data_add_member(u_id, channel_id)
     return {
         'channel_id': channel_id,
     }
