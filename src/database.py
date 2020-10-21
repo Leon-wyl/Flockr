@@ -180,7 +180,8 @@ def data_remove_member(u_id, channel_id):
                     return
 
 
-
+def channel_numbers():
+    return len(data['channels'])
 
 def data_clear():
     data['users'].clear()

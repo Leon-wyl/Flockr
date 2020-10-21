@@ -33,11 +33,11 @@ def test_users_all():
     
 def test_users_all_except():
     clear()
-    auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
-    auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
+    info1 = auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
+    info2 = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
     auth_login("johnson@icloud.com", "RFVtgb45678")
     with pytest.raises(AccessError):
-        users_all('12')
+        users_all(info1['token'] + 'a')
     
     
 

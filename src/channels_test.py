@@ -14,7 +14,7 @@ def test_channels_create():
     auth.auth_login("leonwu@gmail.com", "ihfeh3hgi00d")
     assert channels.channels_create(info['token'], 'first', True) == {'channel_id' : 0}
     assert channels.channels_create(info['token'], 'second', False) == {'channel_id' : 1}
-    assert len(data['channels']) == 2
+    assert channel_numbers() == 2
 
 # test if the function raises an Exception if the input is invalid or token is
 # invalid
