@@ -28,3 +28,25 @@ def check_owner_not_exist(u_id, channel_id):
     if is_owner_exist(u_id, channel_id):
         raise InputError('Already an owner of the channel')
     return
+    
+    
+    
+
+def check_public_channel(channel_id):
+    if not is_public_channel(channel_id):
+        raise AccessError("Channel is private")
+    return
+
+
+
+
+
+
+
+
+
+
+
+
+
+

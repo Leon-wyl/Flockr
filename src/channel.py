@@ -80,7 +80,7 @@ def channel_leave(token, channel_id):
 def channel_join(token, channel_id):
     user = valid_user(token)
     channel = valid_channel(channel_id)
-    is_public_channel(channel)
+    check_public_channel(channel_id)
     channel['members'].append(user)
     return {}
 
@@ -112,11 +112,7 @@ def valid_user(u_id):
             return user
     raise InputError('User is invalid')
 
-def is_public_channel(channel_id):
-    for channel in data['channels']:
-        if channel['channel_id'] == channel_id:
-            if channel['visibility'] == False:
-                raise AccessError("Channel is private")
+
 
 def valid_channel(channel_id):
     for channel in data['channels']:
