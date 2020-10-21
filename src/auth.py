@@ -1,78 +1,38 @@
 import re
+import hashlib
+import jwt
 from database import data_email_search, data_handle, data_upload, login, logout, data_u_id
 from error import InputError
 
 REGEX = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+SECRET = "fri09mango01"
 
 def auth_login(email, password):
     '''Given a registered user's email and
     password and generates a valid token
     for the user to remain authenticated'''
 
-    if not re.search(REGEX, email):
-        # Test whether the email input is valid. If not, raisee exception
-        raise InputError("Email entered is not a valid email")
-
-    # Find out whether the input email is a registered email
-    correct_user = data_email_search(email)
-
-    if correct_user is None:
-        # If the email has not been registered, raise exception
-        raise InputError(f"Error, email address {email} has not been registered yet")
-
-    if correct_user['password'] != password:
-        # If the password is not correct, raise exception
-        raise InputError("Password is not correct")
-
-    # Change login state
+    correct_u_id_token = auth_login_check(email, password)
     login(email)
-
-    return {
-        'u_id': correct_user['u_id'],
-        'token': correct_user['token'],
-    }
+    return correct_u_id_token
 
 def auth_logout(token):
-    '''Given an active token, invalidates the taken to
-    log the user out. If a valid token is given, and the
-    user is successfully logged out, it returns true,
-    otherwise false.'''
-    u_id = int(token)
+    '''Given an active token, invalidates the token to
+    log the user out'''
 
+    u_id = auth_u_id_from_token(token)
     return logout(u_id)
 
 def auth_register(email, password, name_first, name_last):
-    '''Given a user's first and last name, email address, and password, create a new account
-    for them and return a new token for authentication in their session. A handle is generated
-    that is the concatentation of a lowercase-only first name and last name. If the
-    concatenation is longer than 20 characters, it is cutoff at 20 characters. If the handle
-    is already taken, you may modify the handle in any way you see fit to make it unique.'''
+    '''Check whether the input argument email, password, name_first
+    and name_last are valid. If yes, create u_id, token, handle and
+    upload the data. Then return u_id and token'''
+    auth_register_check(email, password, name_first, name_last)
 
-    if not re.search(REGEX, email):
-        # Test whether the email input is valid. If not, raisee exception
-        raise InputError("Email entered is not a valid email")
-
-    if data_email_search(email) is not None:
-        # If there is a same email registered in the database, raise exception
-        raise InputError(f"Email address {email} is already being used by another user")
-
-    if len(password) in range(0, 6):
-        # If the length of password is too short (less than 6), raise exception
-        raise InputError("Password entered is less than 6 characters long")
-
-    if len(name_first) not in range(1, 51):
-        # If the length of name_first is out of range (1 to 50), raise exception
-        raise InputError("name_first is not between 1 and 50 characters inclusively in length")
-
-    if len(name_last) not in range(1, 51):
-        # If the length of name_last is out of range (1 to 50), raise exception
-        raise InputError("name_last is not between 1 and 50 characters inclusively in length")
-
-    # Create u_id and token
+    # Encode password, create u_id, token, handle and upload the data
+    password = auth_password_encode(password)
     u_id = data_u_id()
-    token = str(u_id)
-
-    # Create a handle and upload the data
+    token = auth_token_generate(u_id)
     handle = data_handle(name_first, name_last, u_id)
     data_upload(u_id, email, password, name_first, name_last, handle, token)
 
@@ -80,3 +40,65 @@ def auth_register(email, password, name_first, name_last):
         'u_id': u_id,
         'token': token,
     }
+
+def auth_login_check(email, password):
+    '''Check whether the email and password are valid. If yes,
+    return a dict of u_id and token. If not, raise error'''
+    auth_email_check(email)
+
+    # Find out whether the input email is a registered email
+    correct_user = data_email_search(email)
+
+    if correct_user is None:
+        # If the email has not been registered
+        raise InputError(f"Error, email address {email} has not been registered yet")
+
+    password = auth_password_encode(password)
+    if correct_user['password'] != password:
+        # If the password is not correct
+        raise InputError("Password is not correct")
+
+    return {
+        'u_id': correct_user['u_id'],
+        'token': correct_user['token'],
+    }
+
+def auth_register_check(email, password, name_first, name_last):
+    ''' Check whether the email, password, name_first,
+    name_last valid. If one of them not, raise error'''
+    auth_email_check(email)
+
+    if data_email_search(email) is not None:
+        # Check whether email was registered
+        raise InputError(f"Email address {email} is already being used by another user")
+
+    if len(password) in range(0, 6):
+        # If the length of password is too short (less than 6)
+        raise InputError("Password entered is less than 6 characters long")
+
+    if len(name_first) not in range(1, 51):
+        # If the length of name_first is out of range (1 to 50)
+        raise InputError("name_first is not between 1 and 50 characters inclusively in length")
+
+    if len(name_last) not in range(1, 51):
+        # If the length of name_last is out of range (1 to 50)
+        raise InputError("name_last is not between 1 and 50 characters inclusively in length")
+
+def auth_email_check(email):
+    '''Test whether the email input is valid. If not, raise exception'''
+    if not re.search(REGEX, email):
+        raise InputError("Email entered is not a valid email")
+
+def auth_password_encode(password):
+    ''' Return the encoded password'''
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def auth_token_generate(u_id):
+    '''Return the generated token'''
+    return jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256').decode('utf-8')
+
+def auth_u_id_from_token(token):
+    '''Input a token, return its corresponding u_id'''
+    decoded_jwt = jwt.decode(token.encode(), SECRET, algorithms=['HS256'])
+    u_id = int(decoded_jwt['u_id'])
+    return u_id
