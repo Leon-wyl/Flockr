@@ -7,9 +7,9 @@ from error import AccessError
 # that the authorised user is part of
 def channels_list(token):
     # if token is invalid raise an Exception
-    check_valid_user(token)
+    check_valid_token(token)
     return {
-        'channels': data_user_channels(token),
+        'channels': data_user_channels(int(token)),
     }
 
 
@@ -17,7 +17,7 @@ def channels_list(token):
 # Provide a list of all channels (and their associated details)
 def channels_listall(token):
     # if token is invalid raise an Exception
-    check_valid_user(token)
+    check_valid_token(token)
     return {
         'channels': data_channels_list(),
     }
@@ -27,7 +27,7 @@ def channels_listall(token):
 def channels_create(token, name, is_public):
     # if the name is more than 20 or token is invalid raise an Exception
     check_valid_channel_name(name)
-    check_valid_user(token)
+    check_valid_token(token)
     if is_channel_empty():
         # when the channel is empty
         channel_id = 0
@@ -44,6 +44,7 @@ def channels_create(token, name, is_public):
     }
     # add new_channel to the list
     data_add_channel(new_channel)
+    data_add_owner(int(token), channel_id)
     return {
         'channel_id': channel_id,
     }

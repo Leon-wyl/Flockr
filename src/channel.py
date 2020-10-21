@@ -8,7 +8,7 @@ def channel_invite(token, channel_id, u_id):
     valid_user(u_id)
     # valid_channel returns the info of channel of given channel_id
     channel = valid_channel(channel_id)
-    valid_member(channel, token)
+    valid_member(channel, int(token))
     channel_join(u_id, channel_id)
     return {}
 
@@ -78,7 +78,7 @@ def channel_leave(token, channel_id):
     return {}
 
 def channel_join(token, channel_id):
-    user = valid_user(token)
+    user = valid_user(int(token))
     channel = valid_channel(channel_id)
     check_public_channel(channel_id)
     channel['members'].append(user)
@@ -87,22 +87,22 @@ def channel_join(token, channel_id):
 # Make user with user id u_id an owner of this channel
 def channel_addowner(token, channel_id, u_id):
     check_valid_channel(channel_id)
-    check_valid_user(token)
+    check_valid_token(token)
     check_valid_user(u_id)
     # make sure the user with u_id is not a owner
     check_owner_not_exist(u_id, channel_id)
     # check whether the user with user id of token is authorised to use add owner
-    check_owner_exist(token, channel_id)
+    check_owner_exist(int(token), channel_id)
     data_add_owner(u_id, channel_id)
     return {}
 
 # Remove user with user id u_id an owner of this channel
 def channel_removeowner(token, channel_id, u_id):
     check_valid_channel(channel_id)
-    check_valid_user(token)
+    check_valid_token(token)
     check_valid_user(u_id)
     check_owner_exist(u_id, channel_id)
-    check_owner_exist(token, channel_id)
+    check_owner_exist(int(token), channel_id)
     data_remove_owner(u_id, channel_id)
     return {}
 

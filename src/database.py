@@ -117,16 +117,15 @@ def is_owner_exist(u_id, channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
             for owner in channel['owners']:
-                # check if the person who runs this command is owner
                 if u_id == owner['u_id']:
                     return True
     return False
+
 
 def is_member_exist(u_id, channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
             for member in channel['members']:
-                # check if the person who runs this command is owner
                 if u_id == member['u_id']:
                     return True
     return False
@@ -153,11 +152,17 @@ def data_remove_owner(u_id, channel_id):
                     return
 
 
+def data_clear():
+    data['users'].clear()
+    data['channels'].clear()
 
-
-
-
-
+'''
+def is_login(u_id):
+    for user in data['users']:
+        if u_id == user['u_id']:
+            return user['login']
+    
+'''
 
 
 

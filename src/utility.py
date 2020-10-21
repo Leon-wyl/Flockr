@@ -6,6 +6,12 @@ def check_valid_user(u_id):
     if not is_user_exist(u_id):
         raise InputError('User is invalid')
     return
+    
+def check_valid_token(token):
+    if not is_user_exist(int(token)):
+        raise AccessError('User is invalid')
+    return
+
 
 def check_valid_channel(channel_id):
     if not is_channel_exist(channel_id):
@@ -38,7 +44,10 @@ def check_public_channel(channel_id):
     return
 
 
-
+def check_member_exist(u_id, channel_id):
+    if not is_member_exist(u_id, channel_id):
+        raise InputError('Member does not exist')
+    return
 
 
 
