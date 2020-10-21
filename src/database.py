@@ -217,16 +217,6 @@ def data_change_permission(u_id, permission_id):
             return
 
 
-
-
-[
-            {
-                'message_id': 1,
-                'u_id': 1,
-                'message': 'Hello world',
-                'time_created': 1582426789,
-            }
-        ]
 def data_search_message(query_str, u_id):
     message_list = []
     for channel in data['channels']:
