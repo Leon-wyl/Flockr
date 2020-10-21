@@ -2,6 +2,8 @@ import pytest
 import channels
 import channel
 import auth
+from error import InputError
+from error import AccessError
 from database import data
 from other import clear
 
@@ -22,7 +24,7 @@ def test_channels_create_except():
     auth.auth_login("leonwu@gmail.com", "ihfeh3hgi00d")
     with pytest.raises(Exception):
         channels.channels_create(6, 'first', True)
-    with pytest.raises(Exception):
+    with pytest.raises(InputError):
         channels.channels_create(0, "jdjdkdidnekdmedkwdemdkeimd", False)
 
 # test if the function returns the correct list of channels that the user is 
