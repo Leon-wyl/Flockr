@@ -23,10 +23,9 @@ def check_valid_user(u_id):
     return
     
 def check_valid_token(token): 
-    u_id = auth_u_id_from_token(token)
     if not is_token_exist(token):
         raise AccessError('Token is invalid') 
-    if not is_login(u_id):
+    if not is_login(token):
         raise AccessError('Token is invalid')
     return
 

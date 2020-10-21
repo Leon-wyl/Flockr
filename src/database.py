@@ -183,9 +183,9 @@ def data_clear():
     data['channels'].clear()
 
 
-def is_login(u_id):
+def is_login(token):
     for user in data['users']:
-        if u_id == user['u_id']:
+        if token == user['token']:
             return user['login']
     
 
