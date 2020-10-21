@@ -196,7 +196,19 @@ def is_login(u_id):
 
 
 
-
+def data_users_list():
+    user_list = []
+    for user in data['users']:
+        new_user = {}
+        new_user['u_id'] = user['u_id']
+        new_user['email'] = user['email']
+        new_user['name_first'] = user['name_first']
+        new_user['name_last'] = user['name_last']
+        new_user['handle_str'] = user['handle']
+        user_list.append(new_user)
+    return user_list
+        
+        
 
 
 

@@ -7,16 +7,9 @@ def clear():
 
 # Returns a list of all users and their associated details
 def users_all(token):
+    check_valid_token(token)
     return {
-        'users': [
-            {
-                'u_id': 1,
-                'email': 'cs1531@cse.unsw.edu.au',
-                'name_first': 'Hayden',
-                'name_last': 'Jacobs',
-                'handle_str': 'hjacobs',
-            },
-        ],
+        'users': data_users_list()
     }
 
 
