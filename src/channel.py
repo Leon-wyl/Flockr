@@ -1,6 +1,7 @@
 from error import InputError
 from error import AccessError
-from database import data
+from database import *
+from utility import *
 
 
 def channel_invite(token, channel_id, u_id):
@@ -79,30 +80,30 @@ def channel_leave(token, channel_id):
 def channel_join(token, channel_id):
     user = valid_user(token)
     channel = valid_channel(channel_id)
-    is_public_channel(channel)
+    check_public_channel(channel_id)
     channel['members'].append(user)
     return {}
 
 # Make user with user id u_id an owner of this channel
 def channel_addowner(token, channel_id, u_id):
-    channel = valid_channel(channel_id)
-    # addtional checks
-    for owner in channel['owners']:
-        if u_id == owner['u_id']:
-            raise InputError('User is already an owner of the channel')
+    check_valid_channel(channel_id)
+    check_valid_user(token)
+    check_valid_user(u_id)
+    # make sure the user with u_id is not a owner
+    check_owner_not_exist(u_id, channel_id)
     # check whether the user with user id of token is authorised to use add owner
-    valid_owner(token, channel)
-    owner = valid_user(u_id)
-    channel['owners'].append(owner)
+    check_owner_exist(token, channel_id)
+    data_add_owner(u_id, channel_id)
     return {}
 
 # Remove user with user id u_id an owner of this channel
 def channel_removeowner(token, channel_id, u_id):
-    channel = valid_channel(channel_id)
-    valid_owner(u_id, channel)
-    owner_id = valid_owner(token, channel)
-    owner = valid_user(owner_id)
-    channel['owners'].remove(owner)
+    check_valid_channel(channel_id)
+    check_valid_user(token)
+    check_valid_user(u_id)
+    check_owner_exist(u_id, channel_id)
+    check_owner_exist(token, channel_id)
+    data_remove_owner(u_id, channel_id)
     return {}
 
 def valid_user(u_id):
@@ -111,11 +112,7 @@ def valid_user(u_id):
             return user
     raise InputError('User is invalid')
 
-def is_public_channel(channel_id):
-    for channel in data['channels']:
-        if channel['channel_id'] == channel_id:
-            if channel['visibility'] == False:
-                raise AccessError("Channel is private")
+
 
 def valid_channel(channel_id):
     for channel in data['channels']:
