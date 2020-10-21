@@ -58,3 +58,115 @@ def logout(u_id):
 
 def data_u_id():
     return len(data['users'])
+    
+def data_last_channel_id():
+    return data['channels'][-1]['channel_id']
+    
+def data_add_channel(new_channel):
+    data['channels'].append(new_channel)
+    return
+    
+def is_channel_empty():
+    if data['channels'] == []:
+        return True
+    return False
+
+def is_user_exist(u_id):
+    for user in data['users']:
+        if u_id == user['u_id']:
+            return True
+    return False
+
+def is_public_channel(channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            return channel['visibility']
+
+     
+
+def is_channel_exist(channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            return True
+    return False
+
+def data_channels_list():
+    # creat an empty list and append channels to it
+    channels = []
+    for channel in data['channels']:
+        new_channel = {}
+        new_channel['channel_id'] = channel['channel_id']
+        new_channel['name'] = channel['name']
+        channels.append(new_channel)
+    return channels
+
+def data_user_channels(u_id):
+    # create an empty list
+    user_channel = []
+    for channel in data['channels']:
+        for member in channel['members']:
+            # add channel to list if the user is a member of that channel
+            if member['u_id'] == u_id:
+                new_channel = {}
+                new_channel['channel_id'] = channel['channel_id']
+                new_channel['name'] = channel['name']
+                user_channel.append(new_channel)
+                break
+    return user_channel
+
+
+def is_owner_exist(u_id, channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            for owner in channel['owners']:
+                # check if the person who runs this command is owner
+                if u_id == owner['u_id']:
+                    return True
+    return False
+
+def is_member_exist(u_id, channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            for member in channel['members']:
+                # check if the person who runs this command is owner
+                if u_id == member['u_id']:
+                    return True
+    return False
+
+
+
+
+def data_add_owner(u_id, channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            for user in data['users']:
+                if u_id == user['u_id']:
+                    channel['owners'].append(user)
+                    return
+            
+    
+
+def data_remove_owner(u_id, channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            for user in data['users']:
+                if u_id == user['u_id']:
+                    channel['owners'].remove(user)
+                    return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

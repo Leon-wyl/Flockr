@@ -1,29 +1,15 @@
-from database import data
+from database import *
+from utility import *
+from error import InputError
+from error import AccessError
 
 # Provide a list of all channels (and their associated details) 
 # that the authorised user is part of
 def channels_list(token):
     # if token is invalid raise an Exception
-    exist = False
-    for user in data['users']:
-        if token == user['u_id']:
-            exist = True
-            break
-    if not exist:
-        raise Exception(f"Invalid token!")
-    # create an empty list
-    user_channel = []
-    for channel in data['channels']:
-        for member in channel['members']:
-            # add channel to list if the user is a member of that channel
-            if member['u_id'] == token:
-                new_channel = {}
-                new_channel['channel_id'] = channel['channel_id']
-                new_channel['name'] = channel['name']
-                user_channel.append(new_channel)
-                break
+    check_valid_user(token)
     return {
-        'channels': user_channel,
+        'channels': data_user_channels(token),
     }
 
 
@@ -31,43 +17,23 @@ def channels_list(token):
 # Provide a list of all channels (and their associated details)
 def channels_listall(token):
     # if token is invalid raise an Exception
-    exist = False
-    for user in data['users']:
-        if token == user['u_id']:
-            exist = True
-            break
-    if not exist:
-        raise Exception(f"Invalid token!")
-    # creat an empty list and append channels to it
-    channels = []
-    for channel in data['channels']:
-        new_channel = {}
-        new_channel['channel_id'] = channel['channel_id']
-        new_channel['name'] = channel['name']
-        channels.append(new_channel)
+    check_valid_user(token)
     return {
-        'channels': channels,
+        'channels': data_channels_list(),
     }
 
 # Creates a new channel with that name that is 
 # either a public or private channel
 def channels_create(token, name, is_public):
     # if the name is more than 20 or token is invalid raise an Exception
-    if len(name) > 20:
-        raise Exception(f"This name is too long!")
-    exist = False
-    for user in data['users']:
-        if token == user['u_id']:
-            exist = True
-            break
-    if not exist:
-        raise Exception(f"Invalid token!")
-    if data['channels'] == []:
+    check_valid_channel_name(name)
+    check_valid_user(token)
+    if is_channel_empty():
         # when the channel is empty
         channel_id = 0
     else:
         # The last channel's id plus 1
-        channel_id = data['channels'][-1]['channel_id'] + 1
+        channel_id = data_last_channel_id() + 1
     new_channel = {
         'channel_id' : channel_id,
         'name' : name,
@@ -77,7 +43,7 @@ def channels_create(token, name, is_public):
         'messages' : [],
     }
     # add new_channel to the list
-    data['channels'].append(new_channel)
+    data_add_channel(new_channel)
     return {
         'channel_id': channel_id,
     }
