@@ -31,26 +31,21 @@ def data_upload(u_id, email, password, name_first, name_last, handle, token):
         'name_first': name_first,
         'name_last': name_last,
         'handle': handle,
-        'login': False,
         'token': token,
     })
 
-def login(email):
-    '''Change login state'''
-    for user in data['users']:
-        if user['email'] == email:
-            user['login'] = True
+def data_login(u_id, token):
+    data['users'][u_id]['token'] = token
 
-def logout(u_id):
+def data_logout(u_id):
     '''If a valid u_id is given, and the user is successfully
      logged out, returns true, otherwise false.'''
 
-    if u_id in range(len(data['users'])) and data['users'][u_id]['login']:
-        data['users'][u_id]['login'] = False
+    if u_id in range(len(data['users'])):
+        data['users'][u_id]['token'] = None
         return {
             'is_success': True,
         }
-
     return {
         'is_success': False,
     }
