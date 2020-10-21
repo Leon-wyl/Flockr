@@ -35,3 +35,4 @@ def test_echo(url):
     '''
     resp = requests.get(url + 'echo', params={'data': 'hello'})
     assert json.loads(resp.text) == {'data': 'hello'}
+
