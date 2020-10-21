@@ -7,13 +7,13 @@ from error import AccessError
 SECRET = "fri09mango01"
 
 def check_valid_permission_id(permission_id):
-    if permission_id != 1 and permission_id != 2
+    if permission_id != 1 and permission_id != 2:
         raise InputError("Invalid permission_id")
     return
     
     
 def check_global_owner(u_id):
-    if data_permission(u_id) != 1
+    if data_permission(u_id) != 1:
         raise AccessError("You are not owner of flockr")
     return
 
