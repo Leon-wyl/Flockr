@@ -1,3 +1,4 @@
+'''The database for the user and channel data'''
 data = {
     'users': [],
     'channels': [],
@@ -41,10 +42,8 @@ def login(email):
             user['login'] = True
 
 def logout(u_id):
-    '''Given an active u_id, invalidates the taken to
-    log the user out. If a valid u_id is given, and the
-    user is successfully logged out, it returns true,
-    otherwise false.'''
+    '''If a valid u_id is given, and the user is successfully
+     logged out, returns true, otherwise false.'''
 
     if u_id in range(len(data['users'])) and data['users'][u_id]['login']:
         data['users'][u_id]['login'] = False
@@ -57,6 +56,7 @@ def logout(u_id):
     }
 
 def data_u_id():
+    '''Create u_id'''
     return len(data['users'])
     
 def data_last_channel_id():
