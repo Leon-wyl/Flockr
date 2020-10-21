@@ -1,6 +1,9 @@
+import jwt
 from database import *
 from error import InputError
 from error import AccessError
+
+SECRET = "fri09mango01"
 
 def check_valid_user(u_id):
     if not is_user_exist(u_id):
@@ -36,6 +39,10 @@ def check_public_channel(channel_id):
     if not is_public_channel(channel_id):
         raise AccessError("Channel is private")
     return
+
+def token_generate(u_id):
+    '''Return the generated token'''
+    return jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256').decode('utf-8')
 
 
 

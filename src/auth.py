@@ -1,8 +1,10 @@
 import re
 import hashlib
 import jwt
-from database import data_email_search, data_handle, data_upload, login, logout, data_u_id
+from database import data_email_search, data_handle, data_upload, data_login, data_logout, \
+    data_u_id
 from error import InputError
+from utility import token_generate
 
 REGEX = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 SECRET = "fri09mango01"
@@ -12,16 +14,24 @@ def auth_login(email, password):
     password and generates a valid token
     for the user to remain authenticated'''
 
-    correct_u_id_token = auth_login_check(email, password)
-    login(email)
-    return correct_u_id_token
+    correct_u_id = auth_login_check(email, password)
+    token = token_generate(correct_u_id)
+    data_login(correct_u_id, token)
+    return {
+        'u_id': correct_u_id,
+        'token': token
+    }
 
 def auth_logout(token):
     '''Given an active token, invalidates the token to
     log the user out'''
 
-    u_id = auth_u_id_from_token(token)
-    return logout(u_id)
+    if token != None:
+        u_id = auth_u_id_from_token(token)
+        return data_logout(u_id)
+    return {
+        'is_success': False
+    }
 
 def auth_register(email, password, name_first, name_last):
     '''Check whether the input argument email, password, name_first
@@ -32,7 +42,7 @@ def auth_register(email, password, name_first, name_last):
     # Encode password, create u_id, token, handle and upload the data
     password = auth_password_encode(password)
     u_id = data_u_id()
-    token = auth_token_generate(u_id)
+    token = token_generate(u_id)
     handle = data_handle(name_first, name_last, u_id)
     data_upload(u_id, email, password, name_first, name_last, handle, token)
 
@@ -58,10 +68,7 @@ def auth_login_check(email, password):
         # If the password is not correct
         raise InputError("Password is not correct")
 
-    return {
-        'u_id': correct_user['u_id'],
-        'token': correct_user['token'],
-    }
+    return correct_user['u_id']
 
 def auth_register_check(email, password, name_first, name_last):
     ''' Check whether the email, password, name_first,
@@ -92,10 +99,6 @@ def auth_email_check(email):
 def auth_password_encode(password):
     ''' Return the encoded password'''
     return hashlib.sha256(password.encode()).hexdigest()
-
-def auth_token_generate(u_id):
-    '''Return the generated token'''
-    return jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256').decode('utf-8')
 
 def auth_u_id_from_token(token):
     '''Input a token, return its corresponding u_id'''
