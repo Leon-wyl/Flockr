@@ -1,6 +1,5 @@
 import jwt
 from database import *
-from auth import auth_u_id_from_token
 from error import InputError
 from error import AccessError
 
