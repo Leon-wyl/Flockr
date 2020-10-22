@@ -19,7 +19,7 @@ def auth_login(email, password):
     data_login(correct_u_id, token)
     return {
         'u_id': correct_u_id,
-        'token': token
+        'token': token,
     }
 
 def auth_logout(token):

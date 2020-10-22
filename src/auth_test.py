@@ -3,6 +3,7 @@ from auth import auth_register, auth_login, auth_logout
 from other import clear
 from database import data
 from utility import token_generate
+from error import InputError
 
 def test_register():
     clear()
@@ -23,33 +24,33 @@ def test_register():
     assert len(data['users']) == 3
 
     # Invalid email
-    with pytest.raises(Exception):
+    with pytest.raises(InputError):
         auth_register("ufhsdfkshfdhfsfhiw", "uf89rgu", "Andrew", "Williams")
 
 
     # Email has already used to register by another users
     auth_register("uniisfun@gmail.com", "ILoveUniversity", "Hayden", "Smith")
-    with pytest.raises(Exception):
+    with pytest.raises(InputError):
         auth_register("uniisfun@gmail.com", "uf89rgus", "Andrew", "Williams")
 
     # Password is below 6 characters in length
-    with pytest.raises(Exception):
+    with pytest.raises(InputError):
         auth_register("floralamb@hotmail.com", "uf9du", "Andrew", "Williams")
 
     # First name is less than 1 characters in length
-    with pytest.raises(Exception):
+    with pytest.raises(InputError):
         auth_register("xiaolonglin@qq.com", "ijdhfjhfwehf", "", "Lin")
 
     # Last name is less than 1 characters in length
-    with pytest.raises(Exception):
+    with pytest.raises(InputError):
         auth_register("raymond@gmail.com", "ijdhfjhfwehf", "Raymond", "")
 
     # First name is above 50 characters in length
-    with pytest.raises(Exception):
+    with pytest.raises(InputError):
         auth_register("KeisekuKagawa@yahoo.com", "jdsfjigI8dfsa", "K" * 51, "Honda")
 
     # Last name is above 50 characters in length
-    with pytest.raises(Exception):
+    with pytest.raises(InputError):
         auth_register("josemourinho@gmail.com", "ParktheBus", "Jose", "m" * 51)
 
 
@@ -71,19 +72,19 @@ def test_login():
     # Register then logout then provided an invalid email to log in
     info = auth_register("iloveyou@gmail.com", "Idontloveyou", "Jonh", "Sheppard")
     auth_logout(info['token'])
-    with pytest.raises(Exception):
+    with pytest.raises(InputError):
         auth_login("iloveyou.gmail.com", "Idontloveyou")
 
     # Register then logout then provided an email which has not been registered
     info = auth_register("francoise@gmail.com", "Idfasdjfksdj0dfd", "Francoise", "Sheppard")
     auth_logout(info['token'])
-    with pytest.raises(Exception):
+    with pytest.raises(InputError):
         auth_login("francois@gmail.com", "Idfasdjfksdj0dfd")
 
     # Register then provided an email with a wrong password to login
     info = auth_register("eviedunstone@gmail.com", "Qwerty6", "Evie", "Dunstone")
     auth_logout(info['token'])
-    with pytest.raises(Exception):
+    with pytest.raises(InputError):
         auth_login("eviedunstone@gmail.com", "Qwerty8")
 
 def test_logout():
@@ -101,3 +102,6 @@ def test_logout():
     info = auth_register("skysport@gmail.com", "Welovesport", "Sky", "Sport")
     assert auth_logout(info['token']) == {'is_success': True}
     assert auth_logout(data['users'][2]['token']) == {'is_success': False}
+
+    # An invalid token given to logout, which should be fail
+    assert auth_logout(token_generate(5)) == {'is_success': False}

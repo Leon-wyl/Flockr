@@ -23,7 +23,11 @@ def data_handle(name_first, name_last, u_id):
     return handle
 
 def data_upload(u_id, email, password, name_first, name_last, handle, token):
-    '''Upload the data of a new user to the database'''
+    '''If the register is the first register, set this register as a flockr owner. Then
+    upload the data of a new user to the database'''
+    permission_id = 2
+    if u_id == 0:
+        permission_id = 1
     data['users'].append({
         'u_id': u_id,
         'email': email,
@@ -32,6 +36,7 @@ def data_upload(u_id, email, password, name_first, name_last, handle, token):
         'name_last': name_last,
         'handle': handle,
         'token': token,
+        'permission_id': permission_id
     })
 
 def data_login(u_id, token):
