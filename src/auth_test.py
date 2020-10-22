@@ -102,3 +102,6 @@ def test_logout():
     info = auth_register("skysport@gmail.com", "Welovesport", "Sky", "Sport")
     assert auth_logout(info['token']) == {'is_success': True}
     assert auth_logout(data['users'][2]['token']) == {'is_success': False}
+
+    # An invalid token given to logout, which should be fail
+    assert auth_logout(token_generate(5)) == {'is_success': False}
