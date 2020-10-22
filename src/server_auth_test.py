@@ -38,7 +38,7 @@ def test_echo(url):
     resp = requests.get(url + 'echo', params={'data': 'hello'})
     assert json.loads(resp.text) == {'data': 'hello'}
 
-def test_server_auth_register():
+'''def test_server_auth_register():
     clear()
     dataIn1 = {
         'email': "leonwu@gmail.com", 
@@ -91,7 +91,7 @@ def test_server_auth_logout():
     }
     r = requests.post(f"{url}/auth/logout", data=dataIn3)
     return_data4 = r.json()
-    assert return_data4['is_success'] = False
+    assert return_data4['is_success'] == False
 
 def test_server_auth_login():
     clear()
@@ -130,7 +130,7 @@ def test_server_auth_login():
     assert return_data1['u_id'] == 0
     assert return_data1['token'] == token_generate(return_data1['u_id'])
 
-'''def test_server_addowner():
+def test_server_addowner():
     clear()
 
     # Register a user
@@ -162,4 +162,5 @@ def test_server_auth_login():
     }
     r = requests.post(f"{url}/channels/create", data=dataIn3)
     return_data3 = r.json()
-    assert '''
+    
+'''
