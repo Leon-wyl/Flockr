@@ -1,3 +1,5 @@
+from error import AccessError
+
 '''The database for the user and channel data'''
 data = {
     'users': [],
@@ -42,18 +44,17 @@ def data_upload(u_id, email, password, name_first, name_last, handle, token):
 def data_login(u_id, token):
     data['users'][u_id]['token'] = token
 
-def data_logout(u_id):
-    '''If a valid u_id is given, and the user is successfully
-     logged out, returns true, otherwise false.'''
-
-    if u_id in range(len(data['users'])):
-        data['users'][u_id]['token'] = None
-        return {
-            'is_success': True,
-        }
-    return {
-        'is_success': False,
-    }
+def data_logout(token):
+    '''If a valid u_id is given, then turn the token into None to
+     logged out, returns true, otherwise raise AccessError.'''
+    
+    for user in data['users']:
+        if user['token'] == token:
+            user['token'] = None
+            return {
+                'is_success': True
+            }
+    raise AccessError("Error, token is invalid")
 
 def data_u_id():
     '''Create u_id'''
