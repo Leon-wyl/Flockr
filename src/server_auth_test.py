@@ -251,7 +251,7 @@ def test_server_auth_login(url):
     }
     r = requests.post(f"{url}/channel/addowner", json=dataIn5)
     return_data4 = r.json()
-    assert return_data4['code'] == 500
+    assert return_data4['code'] == 400
 
     # The first user add him/herself as an owner, which is invalid
     dataIn6 = {
@@ -261,7 +261,7 @@ def test_server_auth_login(url):
     }
     r = requests.post(f"{url}/channel/addowner", json=dataIn6)
     return_data5 = r.json()
-    assert return_data5['code'] == 500
+    assert return_data5['code'] == 400
 
     # Register the third user
     dataIn7 = {
@@ -288,4 +288,4 @@ def test_server_auth_login(url):
     }
     r = requests.post(f"{url}/channel/addowner", json=dataIn6)
     return_data5 = r.json()
-    assert return_data5['code'] == 500'''
+    assert return_data5['code'] == 400'''
