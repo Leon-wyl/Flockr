@@ -4,6 +4,7 @@ from flask import Flask, request
 from flask_cors import CORS
 from error import InputError
 from auth import auth_login, auth_logout, auth_register
+from database import data
 
 def defaultHandler(err):
     response = err.get_response()
@@ -50,5 +51,10 @@ def server_register():
     return dumps(auth_register(data['email'], data['password'], data['name_first'], \
         data['name_last']))
 
+@APP.route('/channel/addowner', methods=['POST'])
+def server_addowner():
+    data = request.get_json()
+    return dumps(channel_addowner(data['token'], int(data['channel_id']), int(data['u_id'])))
+    
 if __name__ == "__main__":
     APP.run(port=0) # Do not edit this port

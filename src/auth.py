@@ -27,8 +27,8 @@ def auth_logout(token):
     log the user out'''
 
     if token != None:
-        u_id = auth_u_id_from_token(token)
-        return data_logout(u_id)
+        return data_logout(token)
+    # User already logged out
     return {
         'is_success': False
     }

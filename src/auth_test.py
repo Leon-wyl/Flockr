@@ -3,7 +3,7 @@ from auth import auth_register, auth_login, auth_logout
 from other import clear
 from database import data
 from utility import token_generate
-from error import InputError
+from error import InputError, AccessError
 
 def test_register():
     clear()
@@ -104,4 +104,5 @@ def test_logout():
     assert auth_logout(data['users'][2]['token']) == {'is_success': False}
 
     # An invalid token given to logout, which should be fail
-    assert auth_logout(token_generate(5)) == {'is_success': False}
+    with pytest.raises(AccessError):
+        assert auth_logout(token_generate(5))

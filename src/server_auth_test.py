@@ -39,7 +39,7 @@ def test_echo(url):
     assert json.loads(resp.text) == {'data': 'hello'}
 
 def test_server_auth_register(url):
-
+    # Normal register
     dataIn1 = {
         'email': "leonwu@gmail.com", 
         'password': "ihfeh3hgi00d", 
@@ -51,18 +51,67 @@ def test_server_auth_register(url):
     assert return_data['u_id'] == 0
     assert return_data['token'] == token_generate(return_data['u_id'])
 
+    # Invalid email
     dataIn2 = {
         'email': "ufhsdfkshfdhfsfhiw",
         'password': "uf89rgu",
         'name_first': "Andrew",
         'name_last': "Williams",
     }
-    #with pytest.raises(InputError):
     r = requests.post(f"{url}/auth/register", json=dataIn2)
     return_data = r.json()
     assert return_data['message'] == "<p>Email entered is not a valid email</p>"
 
+    # Registered email register again
+    dataIn3 = {
+        'email': "leonwu@gmail.com", 
+        'password': "dfsdfskdfj", 
+        'name_first': "haha",
+        'name_last': "hehe",
+    }
+    r = requests.post(f"{url}/auth/register", json=dataIn3)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Email address leonwu@gmail.com is already being used' \
+        ' by another user</p>'
+
+    # Password too short
+    dataIn4 = {
+        'email': "hahaha@hehe.com", 
+        'password': "dfsdf", 
+        'name_first': "haha",
+        'name_last': "hehe",
+    }
+    r = requests.post(f"{url}/auth/register", json=dataIn4)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Password entered is less than 6 characters long</p>'
+
+    # First Name too long
+    dataIn5 = {
+        'email': "hahaha@hehe.com", 
+        'password': "dfsddfdff", 
+        'name_first': "h" * 51,
+        'name_last': "hehe",
+    }
+    r = requests.post(f"{url}/auth/register", json=dataIn5)
+    return_data = r.json()
+    assert return_data['message'] == '<p>name_first is not between 1 and 50 characters inclusively' \
+        ' in length</p>'
+
+    # Last name too long
+    dataIn6 = {
+        'email': "hahaha@hehe.com", 
+        'password': "dfssdfdfdf", 
+        'name_first': "haha",
+        'name_last': "h" * 51,
+    }
+    r = requests.post(f"{url}/auth/register", json=dataIn6)
+    return_data = r.json()
+    print(return_data)
+    assert return_data['message'] == '<p>name_last is not between 1 and 50 characters inclusively' \
+        ' in length</p>'
+
 def test_server_auth_logout(url):
+    requests.delete(f"{url}/clear")
 
     # Register a user
     dataIn1 = {
@@ -87,10 +136,20 @@ def test_server_auth_logout(url):
         'token': token_generate(5)
     }
     r = requests.post(f"{url}/auth/logout", json=dataIn3)
+    return_data3 = r.json()
+    assert return_data3['message'] == "<p>Error, token is invalid</p>"
+
+    # Logout a None token
+    dataIn4 = {
+        'token': None
+    }
+    r = requests.post(f"{url}/auth/logout", json=dataIn4)
     return_data4 = r.json()
+    print(return_data4)
     assert return_data4['is_success'] == False
 
 def test_server_auth_login(url):
+    requests.delete(f"{url}/clear")
 
     # Register a user
     dataIn1 = {
@@ -116,17 +175,37 @@ def test_server_auth_login(url):
     r = requests.post(f"{url}/auth/login", json=dataIn3)
     return_data1 = r.json()
     assert return_data1['message'] == "<p>Password is not correct</p>"
-    # Login this user again
+
+    # Login with a invalid email
     dataIn4 = {
-        'email': "leonwu@gmail.com",
-        'password': "ihfeh3hgi00d",
+        'email': "dfksjfksjfkse",
+        'password': "djfjskejfewsjf",
     }
     r = requests.post(f"{url}/auth/login", json=dataIn4)
     return_data2 = r.json()
-    assert return_data2['u_id'] == 0
-    assert return_data2['token'] == token_generate(return_data2['u_id'])
+    print(return_data2)
+    assert return_data2['message'] == "<p>Email entered is not a valid email</p>"
 
-def test_server_addowner():
+    # Login this user again
+    dataIn5 = {
+        'email': "leonwu@gmail.com",
+        'password': "ihfeh3hgi00d",
+    }
+    r = requests.post(f"{url}/auth/login", json=dataIn5)
+    return_data3 = r.json()
+    assert return_data3['u_id'] == 0
+    assert return_data3['token'] == token_generate(return_data3['u_id'])
+
+    dataIn6 = {
+        'email': "dfdskfj@fdf.com",
+        'password': "sdfsdjkfsdfe"
+    }
+    r = requests.post(f"{url}/auth/login", json=dataIn6)
+    return_data4 = r.json()
+    assert return_data4['message'] == '<p>Error, email address dfdskfj@fdf.com has not been registered' \
+        ' yet</p>'
+
+'''def test_server_addowner(url):
 
     # Register a user
     dataIn1 = {
@@ -135,7 +214,7 @@ def test_server_addowner():
         'name_first': "Yilang",
         'name_last': "Wu",
     }
-    r = requests.post(f"{url}/auth/register", data=dataIn1)
+    r = requests.post(f"{url}/auth/register", json=dataIn1)
     return_data1 = r.json()
 
     # Register another user
@@ -145,7 +224,7 @@ def test_server_addowner():
         'name_first': "Bill",
         'name_last': "Gates",
     }
-    r = requests.post(f"{url}/auth/register", data=dataIn2)
+    r = requests.post(f"{url}/auth/register", json=dataIn2)
     return_data2 = r.json()
 
     # Channel created by the first user
@@ -154,7 +233,7 @@ def test_server_addowner():
         'name': "group1",
         'is_public': True,
     }
-    r = requests.post(f"{url}/channels/create", data=dataIn3)
+    r = requests.post(f"{url}/channels/create", json=dataIn3)
     return_data3 = r.json()
 
     # The second user join the channel
@@ -162,12 +241,51 @@ def test_server_addowner():
         'token': return_data2['token'],
         'channel_id': 0,
     }
-    r = requests.post(f"{url}/channel/join", data=dataIn4)
+    r = requests.post(f"{url}/channel/join", json=dataIn4)
     
-    # The first user add the second user as an owner
+    # The first user add the second user as an owner to an invalid channel
     dataIn5 = {
-        'token': dataIn1['token'],
-        'channel_id': 0,
-        'u_id': dataIn2['u_id'],
+        'token': return_data1['token'],
+        'channel_id': 5,
+        'u_id': return_data2['u_id'],
     }
-    r = requests.post(f"{url}/channel/addowner", data=dataIn4)
+    r = requests.post(f"{url}/channel/addowner", json=dataIn5)
+    return_data4 = r.json()
+    assert return_data4['code'] == 500
+
+    # The first user add him/herself as an owner, which is invalid
+    dataIn6 = {
+        'token': return_data1['token'],
+        'channel_id': 0,
+        'u_id': return_data1['u_id'],
+    }
+    r = requests.post(f"{url}/channel/addowner", json=dataIn6)
+    return_data5 = r.json()
+    assert return_data5['code'] == 500
+
+    # Register the third user
+    dataIn7 = {
+        'email': "guanbin@gmail.com", 
+        'password': "1234567890", 
+        'name_first': "Guanbin",
+        'name_last': "Wen",
+    }
+    r = requests.post(f"{url}/auth/register", json=dataIn7)
+    return_data6 = r.json()
+
+    # The third user joined the channel    
+    dataIn8 = {
+        'token': return_data6['token'],
+        'channel_id': 0,
+    }
+    r = requests.post(f"{url}/channel/join", json=dataIn8)
+
+    # The second user add the third user as an owner, which is invalid
+    dataIn9 = {
+        'token': return_data2['token'],
+        'channel_id': 0,
+        'u_id': return_data6['u_id'],
+    }
+    r = requests.post(f"{url}/channel/addowner", json=dataIn6)
+    return_data5 = r.json()
+    assert return_data5['code'] == 500'''
