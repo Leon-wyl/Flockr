@@ -184,11 +184,12 @@ def channel_numbers():
 def data_clear():
     data['users'].clear()
     data['channels'].clear()
-
+'''
 def is_login(token):
     for user in data['users']:
         if token == user['token']:
             return user['login']
+'''
     
 def data_users_list():
     user_list = []

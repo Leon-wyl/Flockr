@@ -22,9 +22,7 @@ def check_valid_user(u_id):
     return
     
 def check_valid_token(token): 
-    if not is_token_exist(token):
-        raise AccessError('Token is invalid')
-    if not is_login(token):
+    if not is_token_exist(token) or token == None:
         raise AccessError('Token is invalid')
     return
 
