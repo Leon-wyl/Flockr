@@ -30,11 +30,17 @@ def user_profile_setemail(token, email):
     auth_email_check(email)
     if data_email_search(email) == None:    # if no one has the same email as this one
         user = is_token_exist(token)        # find the user with token
-        user['email'] == email
+        user['email'] = email
         return {
         }
     raise InputError("The email has already been used by another user")
 
 def user_profile_sethandle(token, handle_str):
+    if not is_token_exist(token):
+        raise AccessError('You are not authorised to change handle')
+    user = is_token_exist(token)        # find the user with token
+    check_handle_length(handle_str)
+    check_handle_exist(handle_str)
+    user['handle'] = handle_str
     return {
     }

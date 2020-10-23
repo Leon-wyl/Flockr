@@ -60,6 +60,12 @@ def check_member_not_exist(u_id, channel_id):
         raise InputError('Member already exists')
     return
 
+def check_handle_exist(handle_str):
+    for user in data['users']:
+        if user['handle'] == handle_str:
+            raise InputError('Handle is already used by another user')
+    return
+
 def check_public_channel(channel_id):
     if not is_public_channel(channel_id):
         raise AccessError("Channel is private")
@@ -75,6 +81,11 @@ def check_name_length(name_first, name_last):
             return True
         raise InputError("Lastname is too long!")
     raise InputError("Firstname is too long!")
+
+def check_handle_length(handle_str):
+    if len(handle_str) < 21 and len(handle_str) > 2:
+        return True
+    raise InputError("Handle is too long!")
 
 # Those touch data
 def valid_user(u_id):
