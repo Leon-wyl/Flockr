@@ -136,7 +136,6 @@ def data_channel_owners(channel_id):
                 new_owner['name_first'] = owner['name_first']
                 new_owner['name_last'] = owner['name_last']
                 owners.append(new_owner)
-            
             return owners
             
 def data_channel_members(channel_id):
@@ -166,15 +165,15 @@ def data_channel_messages(channel_id, start, end):
             message_list = []
             if end == -1:
                 for message in channel['messages']:
-                    if message_id > start:
+                    if message['message_id'] > start:
 	                    message_list.append(message)
             else:
 	            for message in channel['messages']:
-	                if message_id > start:
-	                    if message_id < end:
+	                if message['message_id'] > start:
+	                    if message['message_id'] < end:
 	                        message_list.append(message)
     return message_list    
-
+	                     
 def is_owner_exist(u_id, channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
@@ -292,5 +291,4 @@ def data_search_message(query_str, u_id):
                         message_list.append(new_massage)
                 break
     return message_list
-
 
