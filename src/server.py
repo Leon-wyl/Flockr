@@ -144,7 +144,7 @@ def server_all():
 @APP.route('/admin/userpermission/change', methods=['POST'])
 def server_userpermission_change():
     data = request.get_json()
-    return dumps(admin_userpermission_change(data[token], int(data['u_id']), int(data['permission_id'])))
+    return dumps(admin_userpermission_change(data['token'], int(data['u_id']), int(data['permission_id'])))
 
 @APP.route('/search', methods=['GET'])
 def server_search():
