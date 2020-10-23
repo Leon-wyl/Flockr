@@ -5,11 +5,7 @@ from utility import *
 from auth import *
 
 def user_profile(token, u_id):
-<<<<<<< HEAD
     '''user = valid_user(u_id)
-=======
-    user = valid_user(u_id)
->>>>>>> master
     if token == user['token']:
         return {
             'user': {
@@ -18,12 +14,8 @@ def user_profile(token, u_id):
                 'name_first': user[name_first],
                 'name_last': user[name_last],
                 'handle_str': user[handle],
-            },
-<<<<<<< HEAD
+            }
         }'''
-=======
-        }
->>>>>>> master
 
 def user_profile_setname(token, name_first, name_last):
     return {
