@@ -77,6 +77,14 @@ def is_user_exist(u_id):
             return True
     return False
 
+
+def is_token_exist(token):
+    for user in data['users']:
+        if token == user['token']:
+            return True
+    return False
+
+
 def is_public_channel(channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
@@ -117,16 +125,15 @@ def is_owner_exist(u_id, channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
             for owner in channel['owners']:
-                # check if the person who runs this command is owner
                 if u_id == owner['u_id']:
                     return True
     return False
+
 
 def is_member_exist(u_id, channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
             for member in channel['members']:
-                # check if the person who runs this command is owner
                 if u_id == member['u_id']:
                     return True
     return False
@@ -154,17 +161,82 @@ def data_remove_owner(u_id, channel_id):
 
 
 
+def data_add_member(u_id, channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            for user in data['users']:
+                if u_id == user['u_id']:
+                    channel['members'].append(user)
+                    return
+            
+    
+
+def data_remove_member(u_id, channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            for user in data['users']:
+                if u_id == user['u_id']:
+                    channel['members'].remove(user)
+                    return
+
+
+def channel_numbers():
+    return len(data['channels'])
+
+def data_clear():
+    data['users'].clear()
+    data['channels'].clear()
+
+'''
+def is_login(token):
+    for user in data['users']:
+        if token == user['token']:
+            return user['login']
+'''
 
 
 
+def data_users_list():
+    user_list = []
+    for user in data['users']:
+        new_user = {}
+        new_user['u_id'] = user['u_id']
+        new_user['email'] = user['email']
+        new_user['name_first'] = user['name_first']
+        new_user['name_last'] = user['name_last']
+        new_user['handle_str'] = user['handle']
+        user_list.append(new_user)
+    return user_list
+        
+
+def data_permission(u_id):
+    for user in data['users']:
+        if user['u_id'] == u_id:
+            return user['permission_id']
+
+      
+def data_change_permission(u_id, permission_id):
+    for user in data['users']:
+        if user['u_id'] == u_id:
+            user['permission_id'] = permission_id
+            return
 
 
-
-
-
-
-
-
-
+def data_search_message(query_str, u_id):
+    message_list = []
+    for channel in data['channels']:
+        for member in channel['members']:
+            # add channel to list if the user is a member of that channel
+            if member['u_id'] == u_id:
+                for message in channel['messages']:
+                    if query_str in message['message']:
+                        new_massage = {}
+                        new_massage['message_id'] = message['message_id']
+                        new_massage['u_id'] = message['u_id']
+                        new_massage['message'] = message['message']
+                        new_massage['time_created'] = message['time_created']
+                        message_list.append(new_massage)
+                break
+    return message_list
 
 
