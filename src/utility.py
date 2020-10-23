@@ -68,15 +68,16 @@ def check_public_channel(channel_id):
         raise AccessError("Channel is private")
     return
 
+def check_valid_message_start(start, channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            if start > len(channel['messages']):
+                raise InputError("Start is greater than the total number of messages in the channel")
+            return
+
 def token_generate(u_id):
     '''Return the generated token'''
     return jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256').decode('utf-8')
-
-
-
-
-
-
 
 # Those touch data
 def valid_user(u_id):
@@ -106,17 +107,3 @@ def valid_member(channel, u_id):
         if u_id == member['u_id']:
             return member
     raise AccessError('Invalid member id')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
