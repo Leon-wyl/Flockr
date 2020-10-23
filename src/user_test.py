@@ -47,7 +47,7 @@ def test_user_profile_setname_success():
     'Hayden', 'Everest')
     user = auth_login('validemail@gmail.com', '123abc!@#')
     user_profile_setname(user['token'], 'John', 'Smith')
-    newuser = valid_user(user['u_id'])
+    newuser = data_user(user['u_id'])
     assert newuser['name_first'] == 'John'
     assert newuser['name_last'] == 'Smith'
 
@@ -67,7 +67,7 @@ def test_user_profile_setemail_already_used():
     auth_register('validemail2@gmail.com', '123abc!@#', 
     'Dennis', 'Lin')
     with pytest.raises(InputError):
-        user_profile_setemail(user['token'], 'valid2email@gmail.com')
+        user_profile_setemail(user['token'], 'validemail2@gmail.com')
 
 def test_user_profile_setemail_success():
     clear()
@@ -75,7 +75,7 @@ def test_user_profile_setemail_success():
     'Hayden', 'Everest')
     user = auth_login('validemail@gmail.com', '123abc!@#')
     user_profile_setemail(user['token'], 'valid2email@gmail.com')
-    newemail = valid_user(user['u_id'])
+    newemail = data_user(user['u_id'])
     assert newemail['email'] == 'valid2email@gmail.com'
 
 def test_user_profile_sethandle_too_long():
@@ -98,10 +98,11 @@ def test_user_profile_sethandle_already_used():
     clear()
     auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
-    user = auth_login('validemail@gmail.com', '123abc!@#')
+    auth_login('validemail@gmail.com', '123abc!@#')
+    user = data_user(users[0])
     auth_register('validemail2@gmail.com', '123abc!@#', 
     'Dennis', 'Lin')
-    handle_been_used = valid_user(user['handle'])
+    handle_been_used = data_user(user['handle'])
     with pytest.raises(InputError):
         user_profile_sethandle(user['token'], handle_been_used)
 
@@ -111,5 +112,5 @@ def test_user_profile_sethandle_success():
     'Hayden', 'Everest')
     user = auth_login('validemail@gmail.com', '123abc!@#')
     user_profile_sethandle(user['token'], 'abcdefg')
-    handle_changed = valid_user(user['handle'])
+    handle_changed = data_user(user['handle'])
     assert handle_changed == 'abcdefg'

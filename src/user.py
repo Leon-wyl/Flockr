@@ -19,7 +19,7 @@ def user_profile(token, u_id):
         }
 
 def user_profile_setname(token, name_first, name_last):
-    user = check_valid_token(token)
+    user = is_token_exist(token)
     check_name_length(name_first, name_last)
     user['name_first'] = name_first
     user['name_last'] = name_last
@@ -29,10 +29,11 @@ def user_profile_setname(token, name_first, name_last):
 def user_profile_setemail(token, email):
     auth_email_check(email)
     if data_email_search(email) == None:    # if no one has the same email as this one
-        user = check_valid_token(token)
+        user = is_token_exist(token)        # find the user with token
         user['email'] == email
-    return {
-    }
+        return {
+        }
+    raise InputError("The email has already been used by another user")
 
 def user_profile_sethandle(token, handle_str):
     return {
