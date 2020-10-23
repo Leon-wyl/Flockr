@@ -205,7 +205,7 @@ def test_server_auth_login(url):
     assert return_data4['message'] == '<p>Error, email address dfdskfj@fdf.com has not been registered' \
         ' yet</p>'
 
-'''def test_server_addowner(url):
+def test_server_addowner(url):
 
     # Register a user
     dataIn1 = {
@@ -287,5 +287,21 @@ def test_server_auth_login(url):
         'u_id': return_data6['u_id'],
     }
     r = requests.post(f"{url}/channel/addowner", json=dataIn6)
-    return_data5 = r.json()
-    assert return_data5['code'] == 400'''
+    return_data7 = r.json()
+    assert return_data7['code'] == 400
+    
+    # The first user add the second user as an owner
+    dataIn10 = {
+        'token': return_data1['token'],
+        'channel_id': 0,
+        'u_id': return_data2['u_id'],
+    }
+    r = requests.post(f"{url}/channel/addowner", json=dataIn10)
+
+    # The first user obtain a list of all channels
+    dataIn11 = {
+        'token': return_data1['token'],
+    }
+    r = requests.get(f"{url}/channels/listall", params=dataIn11)
+    return_data8 = r.json()
+    assert return_data8[]
