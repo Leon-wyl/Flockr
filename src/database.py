@@ -120,6 +120,60 @@ def data_user_channels(u_id):
                 break
     return user_channel
 
+def data_channel_name(channel_id):
+    for channels in data['channels']:   
+        if channel_id == channels['channel_id']:
+            channel_name = channels['name']
+        return channel_name
+    
+def data_channel_owners(channel_id):
+    for channels in data['channels']:   
+        if channel_id == channels['channel_id']:
+            owners = []
+            for owner in channels['owners']:
+                new_owner = {}
+                new_owner['u_id'] = owner['u_id']
+                new_owner['name_first'] = owner['name_first']
+                new_owner['name_last'] = owner['name_last']
+                owners.append(new_owner)
+            
+            return owners
+            
+def data_channel_members(channel_id):
+    for channels in data['channels']:   
+        if channel_id == channels['channel_id']:            
+            members = []
+            for member in channels['members']:
+                new_member = {}
+                new_member['u_id'] = member['u_id']
+                new_member['name_first'] = member['name_first']
+                new_member['name_last'] = member['name_last']
+                members.append(new_member)
+            return members
+
+def data_channel_messages_end(start, channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            if start + 50 < len(channel['messages']): 
+                end = start + 50
+            else:
+                end = -1
+    return end      
+
+def data_channel_messages(channel_id, start, end):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            message_list = []
+            if end == -1:
+                for message in channel['messages']:
+                    if message_id > start:
+	                    message_list.append(message)
+            else:
+	            for message in channel['messages']:
+	                if message_id > start:
+	                    if message_id < end:
+	                        message_list.append(message)
+    return message_list    
 
 def is_owner_exist(u_id, channel_id):
     for channel in data['channels']:
