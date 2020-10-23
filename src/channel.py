@@ -32,7 +32,7 @@ def channel_details(token, channel_id):
                         new_owner['name_first'] = owner['name_first']
                         new_owner['name_last'] = owner['name_last']
                         owners.append(new_owner)
-                    # Append member in channel into a new list
+                    # Append member in channel into a new list 
                     members = []
                     for member in channels['members']:
                         new_member = {}

@@ -29,7 +29,6 @@ def check_valid_token(token):
         raise AccessError('Token is invalid')
     return
 
-
 def check_valid_channel(channel_id):
     if not is_channel_exist(channel_id):
         raise InputError("Channel is invalid")
@@ -49,7 +48,7 @@ def check_owner_exist(u_id, channel_id):
     
 def check_owner_not_exist(u_id, channel_id):
     if is_owner_exist(u_id, channel_id):
-        raise InputError('Already an owner of the channel')
+        raise InputError('User is already an owner of the channel')
     return
     
 
@@ -64,7 +63,11 @@ def check_member_not_exist(u_id, channel_id):
         raise InputError('Member already exists')
     return
 
-
+def check_handle_exist(handle_str):
+    for user in data['users']:
+        if user['handle'] == handle_str:
+            raise InputError('Handle is already used by another user')
+    return
 
 def check_public_channel(channel_id):
     if not is_public_channel(channel_id):
@@ -75,11 +78,17 @@ def token_generate(u_id):
     '''Return the generated token'''
     return jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256').decode('utf-8')
 
+def check_name_length(name_first, name_last):
+    if len(name_first) > 0 and len(name_first) <= 50:
+        if len(name_last) >0 and len(name_last) <= 50:
+            return True
+        raise InputError("Lastname is too long!")
+    raise InputError("Firstname is too long!")
 
-
-
-
-
+def check_handle_length(handle_str):
+    if len(handle_str) < 21 and len(handle_str) > 2:
+        return True
+    raise InputError("Handle is too long!")
 
 # Those touch data
 def valid_user(u_id):
@@ -87,8 +96,6 @@ def valid_user(u_id):
         if u_id == user['u_id']:
             return user
     raise InputError('User is invalid')
-
-
 
 def valid_channel(channel_id):
     for channel in data['channels']:
