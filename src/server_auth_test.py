@@ -149,7 +149,6 @@ def test_server_addowner():
     return_data2 = r.json()
 
     # Channel created by the first user
-
     dataIn3 = {
         'token': return_data1['token'],
         'name': "group1",
@@ -157,3 +156,18 @@ def test_server_addowner():
     }
     r = requests.post(f"{url}/channels/create", data=dataIn3)
     return_data3 = r.json()
+
+    # The second user join the channel
+    dataIn4 = {
+        'token': return_data2['token'],
+        'channel_id': 0,
+    }
+    r = requests.post(f"{url}/channel/join", data=dataIn4)
+    
+    # The first user add the second user as an owner
+    dataIn5 = {
+        'token': dataIn1['token'],
+        'channel_id': 0,
+        'u_id': dataIn2['u_id'],
+    }
+    r = requests.post(f"{url}/channel/addowner", data=dataIn4)
