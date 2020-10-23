@@ -205,7 +205,7 @@ def test_unauthorised_channel_removeowner():
     with pytest.raises(Exception):
         assert channel.channel_removeowner(1, 0, 0)  
 
-# Test if the function functions normally with one owner and one member in the channel.   
+# Test if the function functions normally with one owner and one member in the channel.
 def test_channel_removeowner():
     clear()
     auth.auth_register('validemail@gmail.com', '123abc!@#', 
