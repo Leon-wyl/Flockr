@@ -71,6 +71,13 @@ def token_generate(u_id):
     '''Return the generated token'''
     return jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256').decode('utf-8')
 
+def check_name_length(name_first, name_last):
+    if len(name_first) > 0 and len(name_first) <= 50:
+        if len(name_last) >0 and len(name_last) <= 50:
+            return True
+        raise InputError("Lastname is too long!")
+    raise InputError("Firstname is too long!")
+
 # Those touch data
 def valid_user(u_id):
     for user in data['users']:
@@ -97,17 +104,5 @@ def valid_member(channel, u_id):
         if u_id == member['u_id']:
             return member
     raise AccessError('Invalid member id')
-
-
-
-
-
-
-
-
-
-
-
-
 
 

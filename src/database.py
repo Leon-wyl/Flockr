@@ -81,9 +81,8 @@ def is_user_exist(u_id):
 def is_token_exist(token):
     for user in data['users']:
         if token == user['token']:
-            return True
+            return user
     return False
-
 
 def is_public_channel(channel_id):
     for channel in data['channels']:
@@ -179,7 +178,6 @@ def data_remove_member(u_id, channel_id):
                     channel['members'].remove(user)
                     return
 
-
 def channel_numbers():
     return len(data['channels'])
 
@@ -187,15 +185,11 @@ def data_clear():
     data['users'].clear()
     data['channels'].clear()
 
-
 def is_login(token):
     for user in data['users']:
         if token == user['token']:
             return user['login']
     
-
-
-
 def data_users_list():
     user_list = []
     for user in data['users']:
@@ -207,7 +201,11 @@ def data_users_list():
         new_user['handle_str'] = user['handle']
         user_list.append(new_user)
     return user_list
-        
+
+def data_user(u_id):
+    for user in data['users']:
+        if u_id == user['u_id']:
+            return user
 
 def data_permission(u_id):
     for user in data['users']:
