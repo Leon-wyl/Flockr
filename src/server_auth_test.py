@@ -126,8 +126,7 @@ def test_server_auth_login(url):
     assert return_data2['u_id'] == 0
     assert return_data2['token'] == token_generate(return_data2['u_id'])
 
-'''def test_server_addowner():
-    clear()
+def test_server_addowner():
 
     # Register a user
     dataIn1 = {
@@ -157,4 +156,4 @@ def test_server_auth_login(url):
         'is_public': True,
     }
     r = requests.post(f"{url}/channels/create", data=dataIn3)
-    return_data3 = r.json()'''
+    return_data3 = r.json()
