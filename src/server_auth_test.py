@@ -205,8 +205,8 @@ def test_server_auth_login(url):
     assert return_data4['message'] == '<p>Error, email address dfdskfj@fdf.com has not been registered' \
         ' yet</p>'
 
-def test_server_addowner(url):
-
+'''def test_server_addowner(url):
+    requests.delete(f"{url}/clear")
     # Register a user
     dataIn1 = {
         'email': "leonwu@gmail.com", 
@@ -298,10 +298,122 @@ def test_server_addowner(url):
     }
     r = requests.post(f"{url}/channel/addowner", json=dataIn10)
 
-    # The first user obtain a list of all channels
+    # The first user obtain the channel details
     dataIn11 = {
         'token': return_data1['token'],
+        'channel_id': 0,
     }
-    r = requests.get(f"{url}/channels/listall", params=dataIn11)
+    r = requests.get(f"{url}/channel/details", params=dataIn11)
     return_data8 = r.json()
-    assert return_data8[]
+    is_owner = False
+    for owner in return_data8['owners']:
+        if return_data2['u_id'] == owner['u_id']:
+            is_owner = True
+    assert is_owner == True
+
+def test_server_removeowner(url):
+    requests.delete(f"{url}/clear")
+    # Register a user
+    dataIn1 = {
+        'email': "leonwu@gmail.com", 
+        'password': "ihfeh3hgi00d", 
+        'name_first': "Yilang",
+        'name_last': "Wu",
+    }
+    r = requests.post(f"{url}/auth/register", json=dataIn1)
+    return_data1 = r.json()
+
+    # Register another user
+    dataIn2 = {
+        'email': "billgates@outlook.com",
+        'password': "VukkFs",
+        'name_first': "Bill",
+        'name_last': "Gates",
+    }
+    r = requests.post(f"{url}/auth/register", json=dataIn2)
+    return_data2 = r.json()
+
+    # Register the third user
+    dataIn3 = {
+        'email': "dennislin@outlook.com",
+        'password': "tgbyhnUJM",
+        'name_first': "Dennis",
+        'name_last': "Lin",
+    }
+    r = requests.post(f"{url}/auth/register", json=dataIn3)
+    return_data3 = r.json()
+
+    # Channel created by the first user
+    dataIn4 = {
+        'token': return_data1['token'],
+        'name': "The first",
+        'is_public': True,
+    }
+    r = requests.post(f"{url}/channels/create", json=dataIn4)
+    return_data4 = r.json()
+
+    # The second user join the channel
+    dataIn5 = {
+        'token': return_data2['token'],
+        'channel_id': 0,
+    }
+    r = requests.post(f"{url}/channel/join", json=dataIn4)
+
+    # The first user add the second user as owner
+    dataIn6 = {
+        'token': return_data1['token'],
+        'channel_id': return_data3['channel_id'],
+        'u_id': return_data2['u_id'],
+    }
+    r = requests.post(f"{url}/channel/addowner", json=dataIn5)
+
+    # The first user remove the owner identity of the second user but input an invalid channel
+    dataIn7 = {
+        'token': return_data1['token'],
+        'channel_id': 5,
+        'u_id': return_data2['u_id'],
+    }
+    r = requests.post(f"{url}/channel/removeowner", json=dataIn6)
+    return_data5 = r.json()
+    assert return_data5['code'] == 400
+
+    # The first user wants to remove the third user out of owner but the third user is not an owner
+    dataIn8 = {
+        'token': return_data1['token'],
+        'channel_id': return_data4['channel_id'],
+        'u_id': return_data3['u_id'],
+    }
+    r = requests.post(f"{url}/channel/removeowner", json=dataIn7)
+    return_data6 = r.json()
+    assert return_data6['code'] == 400
+
+    # The third user wants to remove the second user but user 3 is not an owner
+    dataIn9 = {
+        'token': return_data3['token'],
+        'channel_id': return_data4['channel_id'],
+        'u_id': return_data2['u_id'],
+    }
+    r = requests.post(f"{url}/channel/removeowner", json=dataIn8)
+    return_data7 = r.json()
+    assert return_data7['code'] == 400
+
+    # The first user remove the second user from owner
+    dataIn10 = {
+        'token': return_data3['token'],
+        'channel_id': return_data4['channel_id'],
+        'u_id': return_data2['u_id'],
+    }    
+    r = requests.post(f"{url}/channel/removeowner", json=dataIn9)
+
+    # The first user obtain the channel details
+    dataIn11 = {
+        'token': return_data1['token'],
+        'channel_id': dataIn4['channel_id'],
+    }
+    r = requests.get(f"{url}/channel/details", params=dataIn11)
+    return_data8 = r.json()
+    is_owner = False
+    for owner in return_data8['owners']:
+        if return_data2['u_id'] == owner['u_id']:
+            is_owner = True
+    assert is_owner == False'''
