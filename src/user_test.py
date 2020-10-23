@@ -99,7 +99,6 @@ def test_user_profile_sethandle_already_used():
     auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
     assert len(data['users']) == 1
-    token_value = auth_login('validemail@gmail.com', '123abc!@#')
     user = data['users'][0]
     auth_register('validemail2@gmail.com', '123abc!@#', 
     'Dennis', 'Lin')
