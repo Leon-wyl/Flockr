@@ -7,7 +7,7 @@ import requests
 import json
 from other import clear
 from utility import token_generate
-
+from error import InputError
 
 # Use this fixture to get the URL of the server. It starts the server for you,
 # so you don't need to.
@@ -38,8 +38,8 @@ def test_echo(url):
     resp = requests.get(url + 'echo', params={'data': 'hello'})
     assert json.loads(resp.text) == {'data': 'hello'}
 
-'''def test_server_auth_register():
-    clear()
+def test_server_auth_register(url):
+
     dataIn1 = {
         'email': "leonwu@gmail.com", 
         'password': "ihfeh3hgi00d", 
@@ -49,7 +49,7 @@ def test_echo(url):
     r = requests.post(f"{url}/auth/register", json=dataIn1)
     return_data = r.json()
     assert return_data['u_id'] == 0
-    assert return_data['token'] == token_generate(return_data[u_id])
+    assert return_data['token'] == token_generate(return_data['u_id'])
 
     dataIn2 = {
         'email': "ufhsdfkshfdhfsfhiw",
@@ -57,11 +57,13 @@ def test_echo(url):
         'name_first': "Andrew",
         'name_last': "Williams",
     }
-    with pytest.raises(InputError):
-        r = requests.post(f"{url}/auth/register", json=dataIn2)
+    #with pytest.raises(InputError):
+    r = requests.post(f"{url}/auth/register", json=dataIn2)
+    return_data = r.json()
+    assert return_data['message'] == "<p>Email entered is not a valid email</p>"
 
-def test_server_auth_logout():
-    clear()
+def test_server_auth_logout(url):
+
     # Register a user
     dataIn1 = {
         'email': "leonwu@gmail.com", 
@@ -69,32 +71,26 @@ def test_server_auth_logout():
         'name_first': "Yilang",
         'name_last': "Wu",
     }
-    r = requests.post(f"{url}/auth/register", data=dataIn1)
+    r = requests.post(f"{url}/auth/register", json=dataIn1)
     return_data1 = r.json()
 
     # Logout the user
     dataIn2 = {
         'token': return_data1['token']
     }
-    r = requests.post(f"{url}/auth/logout", data=dataIn2)
+    r = requests.post(f"{url}/auth/logout", json=dataIn2)
     return_data2 = r.json()
     assert return_data2['is_success'] == True
-
-    # Logout again
-    r = requests.post(f"{url}/auth/logout", data=dataIn2)
-    return_data3 = r.json()
-    assert return_data3['is_success'] == False
 
     # Logout an invalid u_id
     dataIn3 = {
         'token': token_generate(5)
     }
-    r = requests.post(f"{url}/auth/logout", data=dataIn3)
+    r = requests.post(f"{url}/auth/logout", json=dataIn3)
     return_data4 = r.json()
     assert return_data4['is_success'] == False
 
-def test_server_auth_login():
-    clear()
+def test_server_auth_login(url):
 
     # Register a user
     dataIn1 = {
@@ -103,34 +99,34 @@ def test_server_auth_login():
         'name_first': "Yilang",
         'name_last': "Wu",
     }
-    r = requests.post(f"{url}/auth/register", data=dataIn1)
+    r = requests.post(f"{url}/auth/register", json=dataIn1)
     return_data1 = r.json()
 
     # Log out this user
     dataIn2 = {
         'token': return_data1['token']
     }
-    r = requests.post(f"{url}/auth/logout", data=dataIn2)
+    r = requests.post(f"{url}/auth/logout", json=dataIn2)
 
     # Log in this user with a wrong password
     dataIn3 = {
         'email': "leonwu@gmail.com",
         'password': "ihfeh3h",
     }
-    with pytest.raises(InputError):
-        r = requests.post(f"{url}/auth/login", data=dataIn3)
-
+    r = requests.post(f"{url}/auth/login", json=dataIn3)
+    return_data1 = r.json()
+    assert return_data1['message'] == "<p>Password is not correct</p>"
     # Login this user again
     dataIn4 = {
         'email': "leonwu@gmail.com",
         'password': "ihfeh3hgi00d",
     }
-    r = requests.post(f"{url}/auth/login", data=dataIn4)
-    return_data1 = r.json()
-    assert return_data1['u_id'] == 0
-    assert return_data1['token'] == token_generate(return_data1['u_id'])
+    r = requests.post(f"{url}/auth/login", json=dataIn4)
+    return_data2 = r.json()
+    assert return_data2['u_id'] == 0
+    assert return_data2['token'] == token_generate(return_data2['u_id'])
 
-def test_server_addowner():
+'''def test_server_addowner():
     clear()
 
     # Register a user
@@ -161,6 +157,4 @@ def test_server_addowner():
         'is_public': True,
     }
     r = requests.post(f"{url}/channels/create", data=dataIn3)
-    return_data3 = r.json()
-    
-'''
+    return_data3 = r.json()'''
