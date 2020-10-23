@@ -24,7 +24,7 @@ def data_handle(name_first, name_last, u_id):
 def data_upload(u_id, email, password, name_first, name_last, handle, token):
     '''Upload the data of a new user to the database'''
     data['users'].append({
-        'u_id': u_id,
+        'u_id': u_id, 
         'email': email,
         'password': password,
         'name_first': name_first,

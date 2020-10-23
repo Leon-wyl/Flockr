@@ -1,7 +1,7 @@
 import re
 from database import data_email_search, data_handle, data_upload, data_login, data_logout, data_u_id
 from error import InputError
-
+ 
 REGEX = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
 def auth_login(email, password):
