@@ -107,3 +107,29 @@ def valid_member(channel, u_id):
         if u_id == member['u_id']:
             return member
     raise AccessError('Invalid member id')
+    
+def check_valid_message_length(message):
+    if len(message) > 1000:
+        raise InputError('Message is more than 1000 characters')
+    return
+
+def check_message_exist(message_id):
+    for channel in data['channels']:
+        for message in channel['messages']:
+            if message_id == message['message_id']:
+                return
+    raise InputError('Message does not exist')
+    
+def check_authorised_member_message(u_id, channel_id, message_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            for owner in channel['owners']:
+                if u_id == owner['u_id']:
+                    return 
+            for message in channel['messages']:
+                if u_id == message['u_id']:
+                    return
+    raise AccessError('User is not the authorised user making this request nor an owner of this channel or the flockr') 
+    
+    
+

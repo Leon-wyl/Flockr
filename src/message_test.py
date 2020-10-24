@@ -105,5 +105,5 @@ def test_message_edit():
     message.message_edit(info['token'], secondmessage, 'changed2nd')
     message.message_edit(info['token'], thirdmessage, '')
     assert len(data['channels'][0]['messages']) == 2
-    assert channel.channel_messages(info['token'], channel_id, 0) == {{ 0, 0, 'changed1st' }, { 1, 0, 'changed2nd' }
+    assert channel.channel_messages(info['token'], channel_id, 0) == {}
         

@@ -292,3 +292,38 @@ def data_search_message(query_str, u_id):
                 break
     return message_list
 
+def data_message_send(channel_id, u_id, message):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:  
+            newmessage = {} 
+            newmessage['message_id'] = len(channel['messages'])
+            newmessage['u_id'] = u_id
+            newmessage['message'] = message
+            newmessage['time_created'] = 0
+            channel['messages'].append(new_message)
+    return newmessage['message_id']
+
+def data_get_channel_id(message_id):
+    for channel in data['channels']:  
+        for message in channel['messages']:
+            if message['message_id'] == message_id:
+                channel_id = channel['channel_id']
+    return channel_id 
+
+def data_message_remove(channel_id, message_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:  
+            for message in channel['messages']:
+                if message_id == message['message_id']:
+                    message.clear()
+                    
+def data_message_remove(channel_id, message_id, message):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:  
+            for message in channel['messages']:
+                if message_id == message['message_id']:
+                    if message == '':
+                        message.clear
+                    else:
+                        message['message'] = message
+                  
