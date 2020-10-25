@@ -201,6 +201,10 @@ def test_integration():
         'channel_id': 1
     }
 
+    # User 2 want to join this newly created channel, which is invalid
+    with pytest.raises(AccessError):
+        channel_join(info3['token'], 1)
+
     # User 0 obtain the infomation of all channels without being add in channel 1
     print(channels_listall(info1['token']))
     assert channels_listall(info1['token']) == \
