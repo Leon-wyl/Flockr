@@ -354,7 +354,7 @@ def test_server_removeowner(url):
         'token': return_data2['token'],
         'channel_id': 0,
     }
-    r = requests.post(f"{url}/channel/join", json=dataIn4)
+    r = requests.post(f"{url}/channel/join", json=dataIn5)
 
     # The first user add the second user as owner
     dataIn6 = {
@@ -362,7 +362,7 @@ def test_server_removeowner(url):
         'channel_id': return_data4['channel_id'],
         'u_id': return_data2['u_id'],
     }
-    r = requests.post(f"{url}/channel/addowner", json=dataIn5)
+    r = requests.post(f"{url}/channel/addowner", json=dataIn6)
 
     # The first user remove the owner identity of the second user but input an invalid channel
     dataIn7 = {
@@ -370,7 +370,7 @@ def test_server_removeowner(url):
         'channel_id': 5,
         'u_id': return_data2['u_id'],
     }
-    r = requests.post(f"{url}/channel/removeowner", json=dataIn6)
+    r = requests.post(f"{url}/channel/removeowner", json=dataIn7)
     return_data5 = r.json()
     assert return_data5['code'] == 400
 
@@ -380,26 +380,26 @@ def test_server_removeowner(url):
         'channel_id': return_data4['channel_id'],
         'u_id': return_data3['u_id'],
     }
-    r = requests.post(f"{url}/channel/removeowner", json=dataIn7)
+    r = requests.post(f"{url}/channel/removeowner", json=dataIn8)
     return_data6 = r.json()
     assert return_data6['code'] == 400
 
-    # The third user wants to remove the second user but user 3 is not an owner
+    # The third user wants to remove the second user but the third is not an owner
     dataIn9 = {
         'token': return_data3['token'],
         'channel_id': return_data4['channel_id'],
         'u_id': return_data2['u_id'],
     }
-    r = requests.post(f"{url}/channel/removeowner", json=dataIn8)
+    r = requests.post(f"{url}/channel/removeowner", json=dataIn9)
     return_data7 = r.json()
     assert return_data7['code'] == 400
 
     # The first user remove the second user from owner
     dataIn10 = {
-        'token': return_data3['token'],
+        'token': return_data1['token'],
         'channel_id': return_data4['channel_id'],
         'u_id': return_data2['u_id'],
-    }    
+    }
     r = requests.post(f"{url}/channel/removeowner", json=dataIn10)
 
     # The first user obtain the channel details
