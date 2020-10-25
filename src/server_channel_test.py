@@ -166,7 +166,6 @@ def test_server_channel_details(url):
         'is_public': True,
     }
     r = requests.post(f"{url}/channels/create", json=dataIn3)
-    return_data3 = r.json()
     
     # The first user tries to get the channel details from an invalid channel
     dataIn4 = {
@@ -226,7 +225,6 @@ def test_server_channel_messages(url):
         'is_public': True,
     }
     r = requests.post(f"{url}/channels/create", json=dataIn3)
-    return_data3 = r.json()
     
     # Message sent by the first user
     dataIn4 = {
@@ -235,7 +233,6 @@ def test_server_channel_messages(url):
         'message': "Hello",
     }
     r = requests.post(f"{url}/message/send", json=dataIn4)
-    return_data4 = r.json()
 
     # The first user tries to get the channel messages from an invalid channel
     dataIn5 = {
@@ -280,7 +277,6 @@ def test_server_channel_messages(url):
         'message': "Hey there first",
     }
     r = requests.post(f"{url}/message/send", json=dataIn9)
-    return_data9 = r.json()
     
     dataIn10 = {
         'token': return_data1['token'],
