@@ -42,7 +42,7 @@ def check_valid_channel_name(name):
 
 def check_owner_exist(u_id, channel_id):
     if not is_owner_exist(u_id, channel_id):
-        raise InputError('Owner does not exist')
+        raise AccessError('Owner does not exist')
     return
     
     
@@ -131,11 +131,11 @@ def valid_owner(u_id, channel):
             return u_id 
     raise InputError('You are not an owner yet! Only an owner have this permission')
 
-def valid_member(channel, u_id):
+def valid_member(channel, token):
     for member in channel['members']:
-        if u_id == member['u_id']:
+        if token == member['token']:
             return member
-    raise AccessError('Invalid member id')
+    raise AccessError('Invalid token')
     
 def check_valid_message_length(message):
     if len(message) > 1000:

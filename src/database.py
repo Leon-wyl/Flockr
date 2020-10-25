@@ -194,9 +194,6 @@ def is_member_exist(u_id, channel_id):
                     return True
     return False
 
-
-
-
 def data_add_owner(u_id, channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
