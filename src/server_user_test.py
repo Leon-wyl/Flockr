@@ -69,11 +69,11 @@ def test_server_user(url):
     # test server user profile invalid user
     FirstUser = {
         'token': token_generate(0),
-        'u_id': 0,
+        'u_id': 1,
     }
     r = requests.get(f"{url}/user/profile", params=FirstUser)
     return_data = r.json()
-    assert return_data == 
+    assert return_data == '</p>User is invalid</p>'
 
     # test server user profile setname
     ChangedName = {
