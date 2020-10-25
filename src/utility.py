@@ -57,12 +57,6 @@ def check_authorised_member(u_id, channel_id):
         raise AccessError('Member does not exist')
     return 
 
-def check_member_exist(u_id, channel_id):
-    if not is_member_exist(u_id, channel_id):
-        raise InputError('Member does not exist')
-    return
-
-
 def check_member_not_exist(u_id, channel_id):
     if is_member_exist(u_id, channel_id):
         raise InputError('Member already exists')
@@ -112,26 +106,11 @@ def check_handle_length(handle_str):
         raise InputError("Handle is too short!")
     return
 
-# Those touch data
-def valid_user(u_id):
-    for user in data['users']:
-        if u_id == user['u_id']:
-            return user
-    raise InputError('User is invalid')
-
 def valid_channel(channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
             return channel
     raise InputError("Channel_id is invalid")
-
-# check if the the user who use add_owner is permitted to add owner
-def valid_owner(u_id, channel):
-    for owner in channel['owners']:
-        # check if the person who runs this command is owner
-        if u_id == owner['u_id']:
-            return u_id 
-    raise InputError('You are not an owner yet! Only an owner have this permission')
 
 def valid_member(channel, token):
     for member in channel['members']:
@@ -144,12 +123,13 @@ def check_valid_message_length(message):
         raise InputError('Message is more than 1000 characters')
     return
     
-def check_message_exist(message_id):
+''' def check_message_exist(message_id):
     for channel in data['channels']:
         for message in channel['messages']:
             if message_id == message['message_id']:
                 return
     raise InputError('Message does not exist')
+    '''
     
 def check_authorised_member_message(u_id, channel_id, message_id):
     for channel in data['channels']:

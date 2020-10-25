@@ -68,8 +68,6 @@ def channel_addowner(token, channel_id, u_id):
     token_id = auth_u_id_from_token(token)
     check_owner_exist(token_id, channel_id)
     data_add_owner(u_id, channel_id)
-    if not is_member_exist(u_id, channel_id):
-        data_add_member(u_id, channel_id)
     return {}
 
 # Remove user with user id u_id an owner of this channel

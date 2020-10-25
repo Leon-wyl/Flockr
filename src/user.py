@@ -36,8 +36,6 @@ def user_profile_setemail(token, email):
     raise InputError("The email has already been used by another user")
 
 def user_profile_sethandle(token, handle_str):
-    if not is_token_exist(token):
-        raise AccessError('You are not authorised to change handle')
     user = is_token_exist(token)        # find the user with token
     check_handle_length(handle_str)
     check_handle_exist(handle_str)
