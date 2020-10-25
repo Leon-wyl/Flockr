@@ -67,13 +67,13 @@ def test_server_user(url):
     }
 
     # test server user profile invalid user
-    FirstUser = {
-        'token': token_generate(0),
-        'u_id': 0,
+    InvalidUser = {
+        'token': 0,
+        'u_id': 1,
     }
-    r = requests.get(f"{url}/user/profile", params=FirstUser)
+    r = requests.get(f"{url}/user/profile", params=InvalidUser)
     return_data = r.json()
-    assert return_data == 
+    assert return_data['message'] == '<p>User is invalid</p>'
 
     # test server user profile setname
     ChangedName = {
@@ -98,6 +98,28 @@ def test_server_user(url):
         }
     }
 
+    # test_user_profile_setname_first_name_too_long
+    TooLongName = {
+        'token': token_generate(0),
+        'name_first': 'Dennissssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss',
+        'name_last': 'Lin',
+    }
+
+    r = requests.put(f"{url}/user/profile/setname", json=TooLongName)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Firstname is too long!</p>'
+
+    # test_user_profile_setname_last_name_too_long
+    TooLongName = {
+        'token': token_generate(0),
+        'name_first': 'Dennis',
+        'name_last': 'Linnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn',
+    }
+
+    r = requests.put(f"{url}/user/profile/setname", json=TooLongName)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Lastname is too long!</p>'
+
     # test server user_profile_setemail
 
     ChangedEmail = {
@@ -120,6 +142,16 @@ def test_server_user(url):
             'handle_str': "yilangwu",
         }
     }
+
+    # test_user_profile_setemail_already_used
+    InvalidEmail = {
+        'token': token_generate(0),
+        'email': '2071807612@qq.com'
+    }
+
+    r = requests.put(f"{url}/user/profile/setemail", json=InvalidEmail)
+    return_data = r.json()
+    assert return_data['message'] == '<p>The email has already been used by another user</p>'
 
     # server test user_profile_sethandle
 
