@@ -13,8 +13,6 @@ def channels_list(token):
         'channels': data_user_channels(u_id),
     }
 
-
-
 # Provide a list of all channels (and their associated details)
 def channels_listall(token):
     # if token is invalid raise an Exception

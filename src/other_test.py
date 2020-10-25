@@ -8,6 +8,7 @@ from other import clear
 from message import message_send
 import pytest
 
+# Test users_all function
 def test_users_all():
     clear()
     auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
@@ -31,7 +32,7 @@ def test_users_all():
         
     ]}
     
-    
+# Test invalid token    
 def test_users_all_except():
     clear()
     auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
@@ -40,15 +41,13 @@ def test_users_all_except():
     with pytest.raises(AccessError):
         users_all(info2['token'] + 'a')
     
-    
-
+# test the number of channels and users in database
 def test_clear():
     clear()
     assert channel_numbers() == 0
-    assert data_u_id() == 0    
-    
+    assert data_u_id() == 0       
  
- 
+# test if the admin_userpermission_change correctly
 def test_admin_userpermission_change():
     clear()
     info1 = auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
@@ -58,8 +57,6 @@ def test_admin_userpermission_change():
     admin_userpermission_change(info1['token'], 1, 1)
     assert data_permission(1) == 1
  
- 
- 
 def test_admin_userpermission_change_invalid_token():
     clear()
     info1 = auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
@@ -68,17 +65,13 @@ def test_admin_userpermission_change_invalid_token():
     with pytest.raises(AccessError):
         admin_userpermission_change(info1['token'] + 'a', 1, 1)
  
- 
- 
- 
 def test_admin_userpermission_change_invalid_user():
     clear()
     info1 = auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
     auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
     auth_login("leonwu@gmail.com", "ihfeh3hgi00d")
     with pytest.raises(InputError):
-        admin_userpermission_change(info1['token'], 3, 1)
- 
+        admin_userpermission_change(info1['token'], 3, 1) 
  
 def test_admin_userpermission_change_invalid_permission():
     clear()
@@ -88,8 +81,6 @@ def test_admin_userpermission_change_invalid_permission():
     with pytest.raises(InputError):
         admin_userpermission_change(info1['token'], 1, 3) 
  
- 
- 
 def test_admin_userpermission_change_not_owner():
     clear()
     auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
@@ -98,7 +89,7 @@ def test_admin_userpermission_change_not_owner():
     with pytest.raises(AccessError):
         admin_userpermission_change(info2['token'], 0, 2)    
     
-  
+# test if the function return correct messages   
 def test_search():
     clear()
     info1 = auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
@@ -142,8 +133,7 @@ def test_search():
         },   
     ]}
 
-
-
+# test if function raises Exception if the token is invalid
 def test_search_except():
     clear()
     info1 = auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
@@ -161,6 +151,3 @@ def test_search_except():
     with pytest.raises(AccessError):
         search(info2['token'] + 'a', 'ok')
 
-
-
- 
