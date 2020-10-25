@@ -222,15 +222,6 @@ def data_add_member(u_id, channel_id):
                     channel['members'].append(user)
                     return
             
-    
-
-def data_remove_member(u_id, channel_id):
-    for channel in data['channels']:
-        if channel['channel_id'] == channel_id:
-            for user in data['users']:
-                if u_id == user['u_id']:
-                    channel['members'].remove(user)
-                    return
 
 def channel_numbers():
     return len(data['channels'])
