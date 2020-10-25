@@ -1,9 +1,10 @@
-from error import AccessError
+from error import AccessError, InputError
 
 '''The database for the user and channel data'''
 data = {
     'users': [],
     'channels': [],
+    'num_message': 0,
 }
 
 def data_email_search(email):
@@ -157,7 +158,7 @@ def data_channel_messages_end(start, channel_id):
                 end = start + 50
             else:
                 end = -1
-    return end      
+    return end
 
 def data_channel_messages(channel_id, start, end):
     for channel in data['channels']:
@@ -296,34 +297,34 @@ def data_search_message(query_str, u_id):
 
 def data_message_send(channel_id, u_id, message):
     for channel in data['channels']:
-        if channel['channel_id'] == channel_id:  
+        if channel['channel_id'] == channel_id: 
             newmessage = {
-                'message_id': len(channel['messages']),
+                'message_id': data['num_message'],
                 'u_id': u_id,
                 'message': message,
                 'time_created': 0,
-            } 
-            
+            }  
             channel['messages'].append(newmessage)
+            data['num_message'] += 1
     return newmessage['message_id']
 
 def data_get_channel_id(message_id):
-    for channel in data['channels']:  
-        for message in channel['messages']:
-            if message_id == message['message_id']:
-                return channel['channel_id']    
-        
+    for channel in data['channels']:
+        if channel['messages'] != []:
+            for message in channel['messages']:
+                if message_id == message['message_id']:
+                    return channel['channel_id']
+    raise InputError ("Message does not exist")
+
     
         
     
 
 def data_message_remove(channel_id, message_id):
     for channel in data['channels']:
-        if channel['channel_id'] == channel_id:  
-            for message in channel['messages']:
-            
-                if message_id == message['message_id']:
-                    message.clear()
+        if channel['channel_id'] == channel_id:
+            channel['messages'] = [i for i in channel['messages'] if not i['message_id'] \
+                == message_id]
                     
 def data_message_edit(channel_id, message_id, message):
     for channel in data['channels']:
