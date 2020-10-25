@@ -1,25 +1,26 @@
-'''from auth import *
+from auth import *
 from channel import *
 from channels import *
 from message import *
 from user import *
 from other import *
 from database import data
+import pytest
 
 def test_integration():
     clear();
 
     # Valid information has been summitted to register from the first user
     info1 = auth_register("yilangwu@gmail.com", "516haha289dfdf", "Yilang", "Wu")
-    assert (info1['u_id'] == 0 and info['token'] == token_generate(0))
+    assert (info1['u_id'] == 0 and info1['token'] == token_generate(0))
 
     # Vadid information has been summitted to register from the second user
     info2 = auth_register("moniquejohnson@outlook.com", "MMMoneyyy", "Monique", "Jonhson")
-    assert (info2['u_id'] == 1 and info['token'] == token_generate(1))
+    assert (info2['u_id'] == 1 and info2['token'] == token_generate(1))
 
     # Vadid information has been summitted to register from the third user
     info3 = auth_register("ilovemaths@icloud.com", "Ihateenglish", "Maths", "English")
-    assert (info3['u_id'] == 2 and info['token'] == token_generate(2))
+    assert (info3['u_id'] == 2 and info3['token'] == token_generate(2))
 
     # Invalid information has been summitted
     with pytest.raises(InputError):
@@ -27,7 +28,7 @@ def test_integration():
     
     # User 0 create a channel
     info4 = channels_create(info1['token'], "The first channel", True)
-    assert (info4['channel_id'] = 0)
+    assert (info4['channel_id'] == 0)
 
     # User 0 invite user 1 to join the channel
     channel_invite(info1['token'], info4['channel_id'], info2['u_id'])
@@ -62,5 +63,5 @@ def test_integration():
 
     # User 2 leaves the channel 0
     channel_leave(info3['token'], info4['channel_id'])
-    assert (len(data['channels'][0]['members']) == 2)'''
+    assert (len(data['channels'][0]['members']) == 2)
 
