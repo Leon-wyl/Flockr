@@ -333,8 +333,8 @@ def data_message_edit(channel_id, message_id, message):
         if channel['channel_id'] == channel_id: 
             if message == "":
                 channel['messages'] = [i for i in channel['messages'] if not i['message_id'] \
-                    == message_id] 
-            for message in channel['messages']:
-                if message_id == message['message_id']:
-                    message['message'] = message
+                    == message_id]
+            for item in channel['messages']:
+                if message_id == item['message_id']:
+                    item['message'] = message
                   

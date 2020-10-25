@@ -94,7 +94,6 @@ def test_message_edit():
     message.message_edit(info['token'], secondmessage['message_id'], 'changed2nd')
     message.message_edit(info['token'], thirdmessage['message_id'], '')
     assert len(data['channels'][0]['messages']) == 2
-    print(channel.channel_messages(info['token'], channel_id['channel_id'], 0))
     assert channel.channel_messages(info['token'], channel_id['channel_id'], 0) == \
     {
         'message_list': 

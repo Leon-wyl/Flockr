@@ -38,7 +38,7 @@ def channel_messages(token, channel_id, start):
     return {
         'message_list': message_list, 
         'start': start, 
-        'end': end
+        'end': end,
     }
 
 def channel_leave(token, channel_id):
