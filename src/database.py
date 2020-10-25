@@ -1,9 +1,10 @@
-from error import AccessError
+from error import AccessError, InputError
 
 '''The database for the user and channel data'''
 data = {
     'users': [],
     'channels': [],
+    'num_message': 0,
 }
 
 def data_email_search(email):
@@ -120,7 +121,62 @@ def data_user_channels(u_id):
                 break
     return user_channel
 
+def data_channel_name(channel_id):
+    for channels in data['channels']:   
+        if channel_id == channels['channel_id']:
+            channel_name = channels['name']
+        return channel_name
+    
+def data_channel_owners(channel_id):
+    for channels in data['channels']:   
+        if channel_id == channels['channel_id']:
+            owners = []
+            for owner in channels['owners']:
+                new_owner = {}
+                new_owner['u_id'] = owner['u_id']
+                new_owner['name_first'] = owner['name_first']
+                new_owner['name_last'] = owner['name_last']
+                owners.append(new_owner)
+            return owners
+            
+def data_channel_members(channel_id):
+    for channels in data['channels']:   
+        if channel_id == channels['channel_id']:            
+            members = []
+            for member in channels['members']:
+                new_member = {}
+                new_member['u_id'] = member['u_id']
+                new_member['name_first'] = member['name_first']
+                new_member['name_last'] = member['name_last']
+                members.append(new_member)
+            return members
 
+def data_channel_messages_end(start, channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            if start + 49 < len(channel['messages']): 
+                end = start + 50
+            else:
+                end = -1
+    return end
+
+def data_channel_messages(channel_id, start, end):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            message_list = []
+            if end == -1:
+                i = 0
+                for message in channel['messages']:
+                    if i >= start:
+	                    message_list.append(message)
+                    i += 1
+            else:
+	            for message in channel['messages']:
+	                if message['message_id'] >= start:
+	                    if message['message_id'] < end:
+	                        message_list.append(message)
+    return message_list    
+	                     
 def is_owner_exist(u_id, channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
@@ -137,9 +193,6 @@ def is_member_exist(u_id, channel_id):
                 if u_id == member['u_id']:
                     return True
     return False
-
-
-
 
 def data_add_owner(u_id, channel_id):
     for channel in data['channels']:
@@ -232,13 +285,53 @@ def data_search_message(query_str, u_id):
             if member['u_id'] == u_id:
                 for message in channel['messages']:
                     if query_str in message['message']:
-                        new_massage = {}
-                        new_massage['message_id'] = message['message_id']
-                        new_massage['u_id'] = message['u_id']
-                        new_massage['message'] = message['message']
-                        new_massage['time_created'] = message['time_created']
-                        message_list.append(new_massage)
+                        new_message = {}
+                        new_message['message_id'] = message['message_id']
+                        new_message['u_id'] = message['u_id']
+                        new_message['message'] = message['message']
+                        new_message['time_created'] = message['time_created']
+                        message_list.append(new_message)
                 break
     return message_list
 
+def data_message_send(channel_id, u_id, message):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id: 
+            newmessage = {
+                'message_id': data['num_message'],
+                'u_id': u_id,
+                'message': message,
+                'time_created': 0,
+            }  
+            channel['messages'].append(newmessage)
+            data['num_message'] += 1
+    return newmessage['message_id']
 
+def data_get_channel_id(message_id):
+    for channel in data['channels']:
+        if channel['messages'] != []:
+            for message in channel['messages']:
+                if message_id == message['message_id']:
+                    return channel['channel_id']
+    raise InputError ("Message does not exist")
+
+    
+        
+    
+
+def data_message_remove(channel_id, message_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            channel['messages'] = [i for i in channel['messages'] if not i['message_id'] \
+                == message_id]
+                    
+def data_message_edit(channel_id, message_id, message):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id: 
+            if message == "":
+                channel['messages'] = [i for i in channel['messages'] if not i['message_id'] \
+                    == message_id]
+            for item in channel['messages']:
+                if message_id == item['message_id']:
+                    item['message'] = message
+                  
