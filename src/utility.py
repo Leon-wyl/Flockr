@@ -42,9 +42,8 @@ def check_valid_channel_name(name):
 
 def check_owner_exist(u_id, channel_id):
     if not is_owner_exist(u_id, channel_id):
-        raise InputError('Owner does not exist')
+        raise AccessError('Owner does not exist')
     return
-    
     
 def check_owner_not_exist(u_id, channel_id):
     if is_owner_exist(u_id, channel_id):
@@ -57,6 +56,10 @@ def check_member_exist(u_id, channel_id):
         raise InputError('Member does not exist')
     return
 
+def check_authorised_member(u_id, channel_id):
+    if not is_member_exist(u_id, channel_id):
+        raise AccessError('Member does not exist')
+    return 
 
 def check_member_not_exist(u_id, channel_id):
     if is_member_exist(u_id, channel_id):
@@ -74,10 +77,24 @@ def check_public_channel(channel_id):
         raise AccessError("Channel is private")
     return
 
+def check_valid_message_start(start, channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            if start > len(channel['messages']):
+                raise InputError("Start is greater than the total number of messages in the channel")
+            return
+
+def check_valid_message_id(message_id):
+    for channel in data['channels']:
+        for message in channel['messages']: 
+            if message_id == message['message_id']:
+                return
+    raise InputError("message_id is invalid")
+               
 def token_generate(u_id):
     '''Return the generated token'''
     return jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256').decode('utf-8')
-
+    
 def check_name_length(name_first, name_last):
     if len(name_first) > 0 and len(name_first) <= 50:
         if len(name_last) >0 and len(name_last) <= 50:
@@ -111,12 +128,34 @@ def valid_owner(u_id, channel):
             return u_id 
     raise InputError('You are not an owner yet! Only an owner have this permission')
 
-def valid_member(channel, u_id):
+def valid_member(channel, token):
     for member in channel['members']:
-        if u_id == member['u_id']:
+        if token == member['token']:
             return member
     raise AccessError('Invalid member id')
-
+    
+def check_valid_message_length(message):
+    if len(message) > 1000:
+        raise InputError('Message is more than 1000 characters')
+    return
+    
+def check_message_exist(message_id):
+    for channel in data['channels']:
+        for message in channel['messages']:
+            if message_id == message['message_id']:
+                return
+    raise InputError('Message does not exist')
+    
+def check_authorised_member_message(u_id, channel_id, message_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            for owner in channel['owners']:
+                if u_id == owner['u_id']:
+                    return 
+            for message in channel['messages']:
+                if u_id == message['u_id'] and message_id == message['message_id']:
+                    return
+    raise AccessError('User is not the authorised user making this request nor an owner of this channel or the flockr') 
 
 def email_check(email):
     '''Test whether the email input is valid. If not, raise exception'''
@@ -167,7 +206,14 @@ def password_encode(password):
     ''' Return the encoded password'''
     return hashlib.sha256(password.encode()).hexdigest()
 
-
+def check_authorised_member_channel(channel_id, u_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            for member in channel['members']:
+                if u_id == member['u_id']:
+                    return
+    raise AccessError("User is not in channel")
+    
 
 
 

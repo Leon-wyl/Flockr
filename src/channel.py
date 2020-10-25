@@ -10,69 +10,36 @@ def channel_invite(token, channel_id, u_id):
     # valid_channel returns the info of channel of given channel_id
     check_valid_channel(channel_id)
     token_id = auth_u_id_from_token(token)
-    check_member_exist(token_id, channel_id)
+    check_authorised_member(token_id, channel_id)
     check_member_not_exist(u_id, channel_id)
     data_add_member(u_id, channel_id)
     return {}
 
-# Given a Channel with ID channel_id that the authorised user is part of, provide basic details about the channel.
 def channel_details(token, channel_id):
-    for channels in data['channels']:
-        # Check for valid channel ID inputted
-        if channel_id == channels['channel_id']:
-            for members in channels['members']:
-                # Check if user is in the channel
-                if token == members['u_id']:
-                    channel_name = channels['name']
-                    owners = []
-                    # Append owner in channel into a new list
-                    for owner in channels['owners']:
-                        new_owner = {}
-                        new_owner['u_id'] = owner['u_id']
-                        new_owner['name_first'] = owner['name_first']
-                        new_owner['name_last'] = owner['name_last']
-                        owners.append(new_owner)
-                    # Append member in channel into a new list 
-                    members = []
-                    for member in channels['members']:
-                        new_member = {}
-                        new_member['u_id'] = member['u_id']
-                        new_member['name_first'] = member['name_first']
-                        new_member['name_last'] = member['name_last']
-                        members.append(new_member)
-                    # Return channel name, owner list and member list
-                    return {
-                        'name': channel_name,
-                        'owner_members': owners,
-                        'all_members': members,
-                    }
-                
-            raise AccessError("You are unauthorised to obtain the details of this channel")
-    raise InputError("You have entered an invalid channel ID")
-
-# Given a Channel with ID channel_id that the authorised user is part of, 
-# return up to 50 messages between index "start" and "start + 50". 
-# Message with index 0 is the most recent message in the channel. 
-# This function returns a new index "end" which is the value of "start + 50", 
-# or, if this function has returned the least recent messages in the channel, 
-# returns -1 in "end" to indicate there are no more messages to load after this return.
+    check_valid_token(token)
+    check_valid_channel(channel_id)
+    u_id = auth_u_id_from_token(token)
+    check_authorised_member_channel(channel_id, u_id)
+    return {
+        'name': data_channel_name(channel_id),
+        'owner_members': data_channel_owners(channel_id),
+        'all_members': data_channel_members(channel_id),
+    }
 
 def channel_messages(token, channel_id, start):
-    channel = valid_channel(channel_id)
-    valid_member(channel, token)
-    message_count = 0
-    # Check if message start is a valid start, raise InputError if invalid 
-    if start > len(channel['messages']):
-        raise InputError("You message is greater than the total number of messages in the channel")
-    if message_count > 50:
-        end = start + 50
-    else:
-        end = -1
-    # Append message in channel into a new list, return the list
-    message_list = []
-    for message in channel['messages']:
-	    message_list.append(message)
-    return message_list, start, end
+    check_valid_token(token)
+    check_valid_channel(channel_id)
+    u_id = auth_u_id_from_token(token)
+    check_authorised_member_channel(channel_id, u_id)
+    check_valid_message_start(start, channel_id)
+    end = data_channel_messages_end(start, channel_id)
+    message_list = data_channel_messages(channel_id, start, end)
+    
+    return {
+        'message_list': message_list, 
+        'start': start, 
+        'end': end
+    }
 
 def channel_leave(token, channel_id):
     channel = valid_channel(channel_id)
