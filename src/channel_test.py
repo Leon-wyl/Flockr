@@ -271,7 +271,7 @@ def test_channel_join_invalid_channel():
 def test_channel_join_channel_already_joined():
     clear()
     userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')                # return u_id and token
-    channel_id = channels.channels_create(userA['token'], 'validchannelname', True) # return channel_id
+    channels.channels_create(userA['token'], 'validchannelname', True) # return channel_id
     with pytest.raises(InputError):
         channel.channel_join(userA['token'], 0)
 
@@ -312,6 +312,6 @@ def test_channel_leave_unauthorised():
 def test_channel_leave_invalid_channel():
     clear()
     userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')        
-    newchannel = channels.channels_create(userA['token'], 'validchannelname', True) 
+    channels.channels_create(userA['token'], 'validchannelname', True) 
     with pytest.raises(InputError):
         channel.channel_leave(userA['token'], 1) # channel_id = 1 does not exist
