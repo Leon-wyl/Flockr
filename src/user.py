@@ -7,16 +7,16 @@ from auth import *
 def user_profile(token, u_id):
     check_valid_user(u_id)
     user = data_user(u_id)
-    if token == user['token']:
-        return {
-            'user': {
-                'u_id': u_id,
-                'email': user['email'],
-                'name_first': user['name_first'],
-                'name_last': user['name_last'],
-                'handle_str': user['handle'],
-            }
+    check_valid_token(token)
+    return {
+        'user': {
+            'u_id': u_id,
+            'email': user['email'],
+            'name_first': user['name_first'],
+            'name_last': user['name_last'],
+            'handle_str': user['handle'],
         }
+    }
 
 def user_profile_setname(token, name_first, name_last):
     user = is_token_exist(token)
