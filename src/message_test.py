@@ -12,7 +12,6 @@ from other import clear
 def test_invalid_long_message():
     clear()
     info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
-    auth.auth_login("leonwu@gmail.com", "ihfeh3hgi00d")
     channel_id = channels.channels_create(info['token'], 'validchannelname', True)
     with pytest.raises(InputError):
         assert message.message_send(info['token'], channel_id['channel_id'], 'abcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghioabcdefghio') 
@@ -21,17 +20,14 @@ def test_invalid_long_message():
 def test_unauthorised_message_send():
     clear()
     info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
-    auth.auth_login("leonwu@gmail.com", "ihfeh3hgi00d")
     channel_id = channels.channels_create(info['token'], 'validchannelname', True)
     secondinfo = auth.auth_register("guanbin@gmail.com", "ttteh3hgi00d", "Billy", "Gale")  
-    auth.auth_login("guanbin@gmail.com", "ttteh3hgi00d") 
     with pytest.raises(AccessError):
         assert message.message_send(secondinfo['token'], channel_id['channel_id'], 'hello') 
 
 def test_message_send():
     clear()
     info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
-    auth.auth_login("leonwu@gmail.com", "ihfeh3hgi00d")
     channel_id = channels.channels_create(info['token'], 'validchannelname', True)
     assert message.message_send(info['token'], channel_id['channel_id'], 'hello') == {'message_id':0}
     assert message.message_send(info['token'], channel_id['channel_id'], 'My name') == {'message_id':1}
@@ -42,7 +38,6 @@ def test_message_send():
 def test_invalid_message_remove():
     clear()
     info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
-    auth.auth_login("leonwu@gmail.com", "ihfeh3hgi00d")
     channel_id = channels.channels_create(info['token'], 'validchannelname', True)
     with pytest.raises(InputError):
         assert message.message_remove(info['token'], 0)
@@ -55,21 +50,17 @@ def test_invalid_message_remove():
 def test_unauthorised_message_remove():
     clear()
     info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
-    auth.auth_login("leonwu@gmail.com", "ihfeh3hgi00d")
     channel_id = channels.channels_create(info['token'], 'validchannelname', True)
     firstmessage = message.message_send(info['token'], channel_id['channel_id'], 'hello')
     secondinfo = auth.auth_register("guanbin@gmail.com", "ttteh3hgi00d", "Billy", "Gale")  
-    auth.auth_login("guanbin@gmail.com", "ttteh3hgi00d") 
     with pytest.raises(AccessError):
         assert message.message_remove(secondinfo['token'], firstmessage['message_id'])
          
 def test_message_self_remove():
     clear()
     info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
-    auth.auth_login("leonwu@gmail.com", "ihfeh3hgi00d")
     channel_id = channels.channels_create(info['token'], 'validchannelname', True)
     secondinfo = auth.auth_register("guanbin@gmail.com", "ttteh3hgi00d", "Billy", "Gale")  
-    auth.auth_login("guanbin@gmail.com", "ttteh3hgi00d")
     channel.channel_join(secondinfo['token'], channel_id['channel_id'])
     firstmessage = message.message_send(secondinfo['token'], channel_id['channel_id'], 'hello')
     message.message_remove(secondinfo['token'], firstmessage['message_id'])
@@ -84,21 +75,17 @@ def test_message_self_remove():
 def test_unauthorised_message_edit():
     clear()
     info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
-    auth.auth_login("leonwu@gmail.com", "ihfeh3hgi00d")
     channel_id = channels.channels_create(info['token'], 'validchannelname', True)
     firstmessage = message.message_send(info['token'], channel_id['channel_id'], 'hello')
     secondinfo = auth.auth_register("guanbin@gmail.com", "ttteh3hgi00d", "Billy", "Gale")  
-    auth.auth_login("guanbin@gmail.com", "ttteh3hgi00d") 
     with pytest.raises(AccessError):
         assert message.message_edit(secondinfo['token'], firstmessage['message_id'], 'changing')
         
 def test_message_edit():
     clear()
     info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
-    auth.auth_login("leonwu@gmail.com", "ihfeh3hgi00d")
     channel_id = channels.channels_create(info['token'], 'validchannelname', True)
     secondinfo = auth.auth_register("guanbin@gmail.com", "ttteh3hgi00d", "Billy", "Gale")  
-    auth.auth_login("guanbin@gmail.com", "ttteh3hgi00d")
     channel.channel_join(secondinfo['token'], channel_id['channel_id'])
     firstmessage = message.message_send(secondinfo['token'], channel_id['channel_id'], 'first')
     secondmessage = message.message_send(secondinfo['token'], channel_id['channel_id'], 'second')
@@ -107,5 +94,24 @@ def test_message_edit():
     message.message_edit(info['token'], secondmessage['message_id'], 'changed2nd')
     message.message_edit(info['token'], thirdmessage['message_id'], '')
     assert len(data['channels'][0]['messages']) == 2
-    assert channel.channel_messages(info['token'], channel_id, 0) == {}
+    print(channel.channel_messages(info['token'], channel_id['channel_id'], 0))
+    assert channel.channel_messages(info['token'], channel_id['channel_id'], 0) == \
+    {
+        'message_list': 
+            [{
+                'message_id': 7,
+                'u_id': 1,
+                'message': 'changed1st',
+                'time_created': 0,
+            }, 
+            {
+                'message_id': 8,
+                'u_id': 1,
+                'message': 'changed2nd',
+                'time_created': 0,
+            }],
+        'start': 0,
+        'end': -1,
+    }
+
         

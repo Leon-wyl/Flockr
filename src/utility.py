@@ -42,8 +42,9 @@ def check_valid_channel_name(name):
 
 def check_owner_exist(u_id, channel_id):
     if not is_owner_exist(u_id, channel_id):
-        raise AccessError('Owner does not exist')
+        raise InputError('Owner does not exist')
     return
+    
     
 def check_owner_not_exist(u_id, channel_id):
     if is_owner_exist(u_id, channel_id):
@@ -56,10 +57,6 @@ def check_member_exist(u_id, channel_id):
         raise InputError('Member does not exist')
     return
 
-def check_authorised_member(u_id, channel_id):
-    if not is_member_exist(u_id, channel_id):
-        raise AccessError('Member does not exist')
-    return 
 
 def check_member_not_exist(u_id, channel_id):
     if is_member_exist(u_id, channel_id):
@@ -91,6 +88,7 @@ def check_valid_message_id(message_id):
                 return
     raise InputError("message_id is invalid")
                
+
 def token_generate(u_id):
     '''Return the generated token'''
     return jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256').decode('utf-8')
@@ -128,9 +126,9 @@ def valid_owner(u_id, channel):
             return u_id 
     raise InputError('You are not an owner yet! Only an owner have this permission')
 
-def valid_member(channel, token):
+def valid_member(channel, u_id):
     for member in channel['members']:
-        if token == member['token']:
+        if u_id == member['u_id']:
             return member
     raise AccessError('Invalid member id')
     

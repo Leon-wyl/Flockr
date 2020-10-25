@@ -154,7 +154,7 @@ def data_channel_members(channel_id):
 def data_channel_messages_end(start, channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
-            if start + 50 < len(channel['messages']): 
+            if start + 49 < len(channel['messages']): 
                 end = start + 50
             else:
                 end = -1
@@ -165,9 +165,11 @@ def data_channel_messages(channel_id, start, end):
         if channel['channel_id'] == channel_id:
             message_list = []
             if end == -1:
+                i = 0
                 for message in channel['messages']:
-                    if message['message_id'] >= start:
+                    if i >= start:
 	                    message_list.append(message)
+                    i += 1
             else:
 	            for message in channel['messages']:
 	                if message['message_id'] >= start:
@@ -328,11 +330,11 @@ def data_message_remove(channel_id, message_id):
                     
 def data_message_edit(channel_id, message_id, message):
     for channel in data['channels']:
-        if channel['channel_id'] == channel_id:  
+        if channel['channel_id'] == channel_id: 
+            if message == "":
+                channel['messages'] = [i for i in channel['messages'] if not i['message_id'] \
+                    == message_id] 
             for message in channel['messages']:
                 if message_id == message['message_id']:
-                    if message == '':
-                        message.clear()
-                    else:
-                        message['message'] = message
+                    message['message'] = message
                   
