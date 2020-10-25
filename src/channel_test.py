@@ -313,8 +313,6 @@ def test_channel_leave_unauthorised():
     with pytest.raises(AccessError):
         channel.channel_leave(userB['token'], newchannel['channel_id'])
 
-
-
 # InputError: Channel ID is not a valid channel
 def test_channel_leave_invalid_channel():
     clear()
