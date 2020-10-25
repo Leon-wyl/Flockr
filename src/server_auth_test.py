@@ -202,7 +202,7 @@ def test_server_auth_login(url):
     assert return_data4['message'] == '<p>Error, email address dfdskfj@fdf.com has not been registered' \
         ' yet</p>'
 
-'''def test_server_addowner(url):
+def test_server_addowner(url):
     requests.delete(f"{url}/clear")
     # Register a user
     dataIn1 = {
@@ -302,8 +302,9 @@ def test_server_auth_login(url):
     }
     r = requests.get(f"{url}/channel/details", params=dataIn11)
     return_data8 = r.json()
+    print(return_data8)
     is_owner = False
-    for owner in return_data8['owners']:
+    for owner in return_data8['owner_members']:
         if return_data2['u_id'] == owner['u_id']:
             is_owner = True
     assert is_owner == True
@@ -359,7 +360,7 @@ def test_server_removeowner(url):
     # The first user add the second user as owner
     dataIn6 = {
         'token': return_data1['token'],
-        'channel_id': return_data3['channel_id'],
+        'channel_id': return_data4['channel_id'],
         'u_id': return_data2['u_id'],
     }
     r = requests.post(f"{url}/channel/addowner", json=dataIn5)
@@ -405,12 +406,12 @@ def test_server_removeowner(url):
     # The first user obtain the channel details
     dataIn11 = {
         'token': return_data1['token'],
-        'channel_id': dataIn4['channel_id'],
+        'channel_id': return_data4['channel_id'],
     }
     r = requests.get(f"{url}/channel/details", params=dataIn11)
     return_data8 = r.json()
     is_owner = False
-    for owner in return_data8['owners']:
+    for owner in return_data8['owner_members']:
         if return_data2['u_id'] == owner['u_id']:
             is_owner = True
-    assert is_owner == False'''
+    assert is_owner == False
