@@ -64,11 +64,5 @@ def test_server_user_profile(url):
             }
         }
 
-    dataIn = {
-        token': token_generate(0),
-        'u_id': 0,
 
-    r = requests.post(f"{url}/auth/register", json=dataIn2)
-    return_data = r.json()
-    assert return_data['message'] == "<p>Email entered is not a valid email</p>"
 
