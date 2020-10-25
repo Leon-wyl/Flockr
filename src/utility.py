@@ -50,7 +50,12 @@ def check_owner_not_exist(u_id, channel_id):
     if is_owner_exist(u_id, channel_id):
         raise InputError('User is already an owner of the channel')
     return
-    
+
+
+def check_authorised_member(u_id, channel_id):
+    if not is_member_exist(u_id, channel_id):
+        raise AccessError('Member does not exist')
+    return 
 
 def check_member_exist(u_id, channel_id):
     if not is_member_exist(u_id, channel_id):
