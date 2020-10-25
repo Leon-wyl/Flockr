@@ -239,12 +239,6 @@ def data_clear():
     data['users'].clear()
     data['channels'].clear()
     data['num_message'] = 0
-'''
-def is_login(token):
-    for user in data['users']:
-        if token == user['token']:
-            return user['login']
-'''
 
 
 
@@ -282,7 +276,7 @@ def data_search_message(query_str, u_id):
     message_list = []
     for channel in data['channels']:
         for member in channel['members']:
-            # add channel to list if the user is a member of that channel
+            # add message to list if the user is a member of that channel
             if member['u_id'] == u_id:
                 for message in channel['messages']:
                     if query_str in message['message']:

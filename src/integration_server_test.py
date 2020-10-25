@@ -219,6 +219,3 @@ def test_integration(url):
         ]
     }  
    
-
-
-

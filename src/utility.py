@@ -216,11 +216,3 @@ def check_authorised_member_channel(channel_id, u_id):
                 if u_id == member['u_id']:
                     return
     raise AccessError("User is not in channel")
-    
-
-
-
-
-
-
-
