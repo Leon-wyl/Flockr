@@ -37,32 +37,54 @@ def test_echo(url):
     resp = requests.get(url + 'echo', params={'data': 'hey'})
     assert json.loads(resp.text) == {'data': 'hey'}
 
-def test_server_user_profile(url):
-    # Register a user
-    dataIn = {
+def test_server_user(url):
+    # test server user profile
+    FirstUser1 = {
         'email': "leonwu@gmail.com", 
         'password': "ihfeh3hgi00d", 
         'name_first': "Yilang",
         'name_last': "Wu",
     }
-    r = requests.post(f"{url}/auth/register", json=dataIn)
-    return_data1 = r.json()
+    r = requests.post(f"{url}/auth/register", json=FirstUser1)
+    return_data = r.json()
+    assert return_data['u_id'] == 0
+    assert return_data['token'] == token_generate(return_data['u_id'])
 
-    dataIn = {
+    FirstUser = {
         'token': token_generate(0),
         'u_id': 0,
     }
-    r = requests.post(f"{url}/user/profile", json=dataIn)
+    r = requests.get(f"{url}/user/profile", params=FirstUser)
     return_data = r.json()
     assert return_data == {
-            'user': {
-                'u_id': 0,
-                'email': "leonwu@gmail.com",
-                'name_first': "Yilang",
-                'name_last': "Wu",
-                'handle_str': "yilangwu",
-            }
+        'user': {
+            'u_id': 0,
+            'email': "leonwu@gmail.com",
+            'name_first': "Yilang",
+            'name_last': "Wu",
+            'handle_str': "yilangwu",
         }
+    }
 
+    # test server user profile setname
+    ChangedName = {
+        'token': token_generate(0),
+        'name_first': 'Dennis',
+        'name_last': 'Lin',
+    }
 
+    r = requests.put(f"{url}/user/profile/setname", json=ChangedName)
+    return_data = r.json()
+    assert return_data == {}
 
+    r = requests.get(f"{url}/user/profile", params=FirstUser)
+    return_data = r.json()
+    assert return_data == {
+        'user': {
+            'u_id': 0,
+            'email': "leonwu@gmail.com",
+            'name_first': "Dennis",
+            'name_last': "Lin",
+            'handle_str': "yilangwu",
+        }
+    }

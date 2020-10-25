@@ -268,17 +268,12 @@ def test_channel_join_invalid_channel():
     with pytest.raises(InputError):
         channel.channel_join(userA['token'], 0)
 
-
-
-
-'''
 def test_channel_join_channel_already_joined():
+    clear()
     userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')                # return u_id and token
-    channel_id = channels.channels_create('token', 'validchannelname', 'is_public') # return channel_id
-    channel.channel_join(user.token, channel_id)
-    assert channel.channel_join(user.token, channel_id) == 'join failed, you already joined this channel'
-'''
-
+    channel_id = channels.channels_create(userA['token'], 'validchannelname', True) # return channel_id
+    with pytest.raises(InputError):
+        channel.channel_join(userA['token'], 0)
 
 # AccessError: when channel_id refers to a channel that is private (when the authorised user is not a global owner)
 def test_channel_join_is_private():
