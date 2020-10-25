@@ -10,7 +10,7 @@ def channel_invite(token, channel_id, u_id):
     # valid_channel returns the info of channel of given channel_id
     check_valid_channel(channel_id)
     token_id = auth_u_id_from_token(token)
-    check_member_exist(token_id, channel_id)
+    check_authorised_member(token_id, channel_id)
     check_member_not_exist(u_id, channel_id)
     data_add_member(u_id, channel_id)
     return {}
