@@ -22,7 +22,7 @@ def data_handle(name_first, name_last, u_id):
             handle = handle[:6] + str(u_id)
             handle = handle[:20]
             break
-    return handle
+    return handle[:20]
 
 def data_upload(u_id, email, password, name_first, name_last, handle, token):
     '''If the register is the first register, set this register as a flockr owner. Then

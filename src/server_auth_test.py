@@ -6,7 +6,6 @@ from time import sleep
 import requests
 import json
 from other import clear
-from utility import token_generate
 from error import InputError
 
 # Use this fixture to get the URL of the server. It starts the server for you,
@@ -49,7 +48,6 @@ def test_server_auth_register(url):
     r = requests.post(f"{url}/auth/register", json=dataIn1)
     return_data = r.json()
     assert return_data['u_id'] == 0
-    assert return_data['token'] == token_generate(return_data['u_id'])
 
     # Invalid email
     dataIn2 = {
@@ -133,7 +131,7 @@ def test_server_auth_logout(url):
 
     # Logout an invalid u_id
     dataIn3 = {
-        'token': token_generate(5)
+        'token': "fdfjskdfjwekjf"
     }
     r = requests.post(f"{url}/auth/logout", json=dataIn3)
     return_data3 = r.json()
@@ -194,7 +192,6 @@ def test_server_auth_login(url):
     r = requests.post(f"{url}/auth/login", json=dataIn5)
     return_data3 = r.json()
     assert return_data3['u_id'] == 0
-    assert return_data3['token'] == token_generate(return_data3['u_id'])
 
     dataIn6 = {
         'email': "dfdskfj@fdf.com",
