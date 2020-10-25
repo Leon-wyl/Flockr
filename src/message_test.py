@@ -98,13 +98,13 @@ def test_message_edit():
     {
         'message_list': 
             [{
-                'message_id': 7,
+                'message_id': 0,
                 'u_id': 1,
                 'message': 'changed1st',
                 'time_created': 0,
             }, 
             {
-                'message_id': 8,
+                'message_id': 1,
                 'u_id': 1,
                 'message': 'changed2nd',
                 'time_created': 0,
