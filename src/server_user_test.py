@@ -38,7 +38,7 @@ def test_echo(url):
     assert json.loads(resp.text) == {'data': 'hey'}
 
 def test_server_user(url):
-    # test server user profile
+    # test server user profile success
     FirstUser1 = {
         'email': "leonwu@gmail.com", 
         'password': "ihfeh3hgi00d", 
@@ -66,6 +66,15 @@ def test_server_user(url):
         }
     }
 
+    # test server user profile invalid user
+    FirstUser = {
+        'token': token_generate(0),
+        'u_id': 0,
+    }
+    r = requests.get(f"{url}/user/profile", params=FirstUser)
+    return_data = r.json()
+    assert return_data == 
+
     # test server user profile setname
     ChangedName = {
         'token': token_generate(0),
@@ -86,5 +95,51 @@ def test_server_user(url):
             'name_first': "Dennis",
             'name_last': "Lin",
             'handle_str': "yilangwu",
+        }
+    }
+
+    # test server user_profile_setemail
+
+    ChangedEmail = {
+        'token': token_generate(0),
+        'email': '2071807612@qq.com'
+    }
+
+    r = requests.put(f"{url}/user/profile/setemail", json=ChangedEmail)
+    return_data = r.json()
+    assert return_data == {}
+
+    r = requests.get(f"{url}/user/profile", params=FirstUser)
+    return_data = r.json()
+    assert return_data == {
+        'user': {
+            'u_id': 0,
+            'email': "2071807612@qq.com",
+            'name_first': "Dennis",
+            'name_last': "Lin",
+            'handle_str': "yilangwu",
+        }
+    }
+
+    # server test user_profile_sethandle
+
+    ChangedHandle = {
+        'token': token_generate(0),
+        'handle_str': 'dennislin'
+    }
+
+    r = requests.put(f"{url}/user/profile/sethandle", json=ChangedHandle)
+    return_data = r.json()
+    assert return_data == {}
+
+    r = requests.get(f"{url}/user/profile", params=FirstUser)
+    return_data = r.json()
+    assert return_data == {
+        'user': {
+            'u_id': 0,
+            'email': "2071807612@qq.com",
+            'name_first': "Dennis",
+            'name_last': "Lin",
+            'handle_str': "dennislin",
         }
     }
