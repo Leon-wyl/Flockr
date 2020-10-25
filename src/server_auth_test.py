@@ -104,7 +104,6 @@ def test_server_auth_register(url):
     }
     r = requests.post(f"{url}/auth/register", json=dataIn6)
     return_data = r.json()
-    print(return_data)
     assert return_data['message'] == '<p>name_last is not between 1 and 50 characters inclusively' \
         ' in length</p>'
 
@@ -143,7 +142,6 @@ def test_server_auth_logout(url):
     }
     r = requests.post(f"{url}/auth/logout", json=dataIn4)
     return_data4 = r.json()
-    print(return_data4)
     assert return_data4['is_success'] == False
 
 def test_server_auth_login(url):
@@ -181,7 +179,6 @@ def test_server_auth_login(url):
     }
     r = requests.post(f"{url}/auth/login", json=dataIn4)
     return_data2 = r.json()
-    print(return_data2)
     assert return_data2['message'] == "<p>Email entered is not a valid email</p>"
 
     # Login this user again
@@ -301,7 +298,6 @@ def test_server_addowner(url):
     }
     r = requests.get(f"{url}/channel/details", params=dataIn11)
     return_data8 = r.json()
-    print(return_data8)
     is_owner = False
     for owner in return_data8['owner_members']:
         if return_data2['u_id'] == owner['u_id']:
