@@ -192,26 +192,19 @@ def test_channel_removeowner():
 
 def test_channel_invite_success():
     clear()
-    # register the user who invites people
-    userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')              # return u_id and token
-    # let the user login 
-    # register and join the channel
-    newchannel = channels.channels_create(userA['token'], 'validchannelname', True) # return channel_id
-    # register for the user being invited
+    userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin') 
+    newchannel = channels.channels_create(userA['token'], 'validchannelname', True)
     userB = auth.auth_register('validemail2@gmail.com', '123abc!@#', 'Guanbin', 'Wen')
-    channel.channel_invite(userA['token'], newchannel['channel_id'], userB['u_id']) 
+    channel.channel_invite(userA['token'], newchannel['channel_id'], userB['u_id'])
     assert len(data['channels'][0]['members']) == 2
-       # clear user data
+
 
 
 # InputError: u_id does not refer to a valid user
 def test_channel_invite_invalid_user():
     clear()
-    # register the user who invites people
-    userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')              # return u_id and token
-    # let the user login 
-    # register and join the channel
-    channels.channels_create(userA['token'], 'validchannelname', True) # return channel_id
+    userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')
+    channels.channels_create(userA['token'], 'validchannelname', True)
     with pytest.raises(InputError):
         channel.channel_invite(userA['token'], 0, 1) 
     
@@ -221,22 +214,23 @@ def test_channel_invite_invalid_user():
 def test_channel_invite_unauthorised():
     clear()
     userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')
-    newchannel = channels.channels_create(userA['token'], 'validchannelname', True) # return channel_id
-    # register for the user being invited
+    newchannel = channels.channels_create(userA['token'], 'validchannelname', True)
     userB = auth.auth_register('validemail2@gmail.com', '123abc!@#', 'Guanbin', 'Wen')
     userC = auth.auth_register('validemail3@gmail.com', '123abc!@#', 'Zixiang', 'Wen')
     with pytest.raises(AccessError):
         channel.channel_invite(userC['token'], newchannel['channel_id'], userB['u_id']) 
 
 
-'''
-clear(channel_id)
-def test_channel_invite_user_already_joined():
-    user = auth.auth_register('email', '123abc!@#', 'Dennis', 'Lin')              # return u_id and token
-    channel_id = channels.channels_create('token', 'validchannelname', True) # return channel_id
 
-    assert channel.channel_invite(user.token, channel_id, user.u_id) == 'Invitation failed, user is already in the channel'
-'''
+def test_channel_invite_user_already_joined():
+    clear()
+    userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')
+    userB = auth.auth_register('validemail2@gmail.com', '123abc!@#', 'Guanbin', 'Wen')       
+    channels.channels_create(userA['token'], 'validchannelname', True)
+    channel.channel_join(userB['token'], 0)
+    with pytest.raises(InputError):
+        channel.channel_invite(userB['token'], 0, 1)
+
 
 # InputError: channel_id does not refer to a valid channel.
 def test_channel_invite_invalid_channel():
@@ -267,6 +261,8 @@ def test_channel_join_invalid_channel():
     userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')
     with pytest.raises(InputError):
         channel.channel_join(userA['token'], 0)
+
+        
 
 def test_channel_join_channel_already_joined():
     clear()

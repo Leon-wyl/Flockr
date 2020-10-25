@@ -106,9 +106,11 @@ def check_name_length(name_first, name_last):
     raise InputError("Firstname is too long!")
 
 def check_handle_length(handle_str):
-    if len(handle_str) < 21 and len(handle_str) > 2:
-        return True
-    raise InputError("Handle is too long!")
+    if len(handle_str) > 20:
+        raise InputError("Handle is too long!")
+    if len(handle_str) < 3:
+        raise InputError("Handle is too short!")
+    return
 
 # Those touch data
 def valid_user(u_id):
