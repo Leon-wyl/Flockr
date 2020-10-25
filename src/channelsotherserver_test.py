@@ -140,7 +140,7 @@ def test_admin_userpermission_change(url):
 
     
 
-'''
+
 
 def test_search(url):
     requests.delete(f"{url}/clear")
@@ -149,16 +149,16 @@ def test_search(url):
     requests.post(f"{url}/auth/login", json={'email': 'leonwu@gmail.com', 'password': 'ihfeh3hgi00d'})
     requests.post(f"{url}/channels/create", json={'token': info1['token'], 'name': 'first', 'is_public': True})
     requests.post(f"{url}/message/send", json={'token': info1['token'], 'channel_id': 0, 'message': "I am ok haha"})
-    resp = requests.get(f"{url}/search", json={'token': info1['token'], 'query_str': 'ok'})
+    resp = requests.get(f"{url}/search", params={'token': info1['token'], 'query_str': 'ok'})
     resp = resp.json()
     assert resp == {'messages': [
         {
             'message_id': 0,
             'u_id': 0,
             'message': "I am ok haha",
-            'time_created': ,
+            'time_created': 0,
         }         
     ]}
-'''
+
 
 
