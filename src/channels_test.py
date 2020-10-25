@@ -44,7 +44,6 @@ def test_channels_list():
     [{'channel_id': 0, 'name': 'first'},
      {'channel_id': 2, 'name': 'third'}]
 
-
 # test if the function raises an Exception if token is invalid
 def test_channels_list_except():
     clear()
@@ -76,7 +75,6 @@ def test_channels_listall():
      {'channel_id': 2, 'name': 'third'},
      {'channel_id': 3, 'name': 'fourth'}]
 
-
 # test if the function raises an Exception if token is invalid
 def test_channels_listall_except():
     clear()
@@ -86,6 +84,3 @@ def test_channels_listall_except():
     channels.channels_create(info['token'], 'second', True)
     with pytest.raises(AccessError):
         channels.channels_listall(info['token'] + 'a')
-
-
-
