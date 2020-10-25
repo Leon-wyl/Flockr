@@ -5,6 +5,7 @@ from channel import *
 from database import *
 from error import AccessError, InputError
 from other import clear
+from message import message_send
 import pytest
 
 def test_users_all():
@@ -97,7 +98,7 @@ def test_admin_userpermission_change_not_owner():
     with pytest.raises(AccessError):
         admin_userpermission_change(info2['token'], 0, 2)    
     
-'''    
+  
 def test_search():
     clear()
     info1 = auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
@@ -119,25 +120,25 @@ def test_search():
             'message_id': 0,
             'u_id': 1,
             'message': "I am ok haha",
-            'time_created': ,
+            'time_created': 0,
         },
         {
             'message_id': 1,
             'u_id': 1,
             'message': "he is ok haha",
-            'time_created': ,
+            'time_created': 0,
         },
         {
             'message_id': 3,
             'u_id': 1,
             'message': "bangindgdliok",
-            'time_created': ,
+            'time_created': 0,
         },
         {
             'message_id': 5,
             'u_id': 1,
             'message': "ok in abcdefg",
-            'time_created': ,
+            'time_created': 0,
         },   
     ]}
 
@@ -161,5 +162,5 @@ def test_search_except():
         search(info2['token'] + 'a', 'ok')
 
 
-'''
+
  

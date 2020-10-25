@@ -119,12 +119,12 @@ def test_integration(url):
     # Permission change
     requests.post(f"{url}/admin/userpermission/change", \
         json={'token': return_data['token'], 'u_id': 1, 'permission_id': 1})
-    '''
+    
     # User profile
     resp = requests.get(f"{url}/user/profile", \
         params={'token': return_data['token'], 'u_id': 1})
     resp = resp.json()
-    assert resp == {'users': [
+    assert resp == {'user': 
         {
             'u_id': 1,
             'email': "eviedunstone@gmail.com",
@@ -132,7 +132,7 @@ def test_integration(url):
             'name_last': "Dunstone",
             'handle_str': 'eviedunstone',
          }
-    ]}
+    }
     # Set name to user_profile
     requests.put(f"{url}/user/profile/setname", \
         json={'token': return_data['token'], 'name_first': 'Yilang', 'name_last': "W"})
@@ -169,41 +169,56 @@ def test_integration(url):
     # Leave channel
     requests.post(f"{url}/channel/leave", \
         json={'token': info['token'], 'channel_id': 0})
-    # Channel details
-    resp = requests.get(f"{url}/channel/details", \
-        params={'token': return_data['token'], 'channel_id': 0})
-    resp = resp.json()
-    assert resp == {
-        'name' : 'first'
-    }
-    
     # Message search
-    resp = requests.get(f"{url}/search", json={'token': return_data['token'], 'query_str': 'ok'})
+    resp = requests.get(f"{url}/search", params={'token': return_data['token'], 'query_str': 'ok'})
     resp = resp.json()
     assert resp == {'messages': [
         {
             'message_id': 0,
             'u_id': 0,
             'message': "areyouok",
-            'time_created': ,
+            'time_created': 0,
         }
          
     ]}
+
     # Channel message
     resp = requests.get(f"{url}/channel/messages", \
         params={'token': return_data['token'], 'channel_id': 0, 'start': 0})
     resp = resp.json()
-    assert resp ==
-
-'''
-
-
-
-
-
-
-
-
+    assert resp == {
+        'message_list': 
+            [{
+            'message_id': 0,
+            'u_id': 0,
+            'message': "areyouok",
+            'time_created': 0,
+        }],
+        'start': 0,
+        'end': -1,
+    }
+    # Channel details
+    resp = requests.get(f"{url}/channel/details", \
+        params={'token': return_data['token'], 'channel_id': 0})
+    resp = resp.json()
+    assert resp == {
+        'name': 'first',
+        'owner_members':[
+            {
+                'u_id': 0,
+                'name_first': 'Yilang',
+                'name_last': 'W',
+            }
+        ],
+        'all_members': [
+            {
+                'u_id': 0,
+                'name_first': 'Yilang',
+                'name_last': 'W',
+            }
+        ]
+    }  
+   
 
 
 

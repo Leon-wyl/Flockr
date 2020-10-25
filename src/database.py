@@ -238,6 +238,7 @@ def channel_numbers():
 def data_clear():
     data['users'].clear()
     data['channels'].clear()
+    data['num_message'] = 0
 '''
 def is_login(token):
     for user in data['users']:
