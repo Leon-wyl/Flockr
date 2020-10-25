@@ -19,7 +19,7 @@ def channel_details(token, channel_id):
     check_valid_token(token)
     check_valid_channel(channel_id)
     u_id = auth_u_id_from_token(token)
-    check_member_exist(u_id, channel_id)
+    check_authorised_member_channel(channel_id, u_id)
     return {
         'name': data_channel_name(channel_id),
         'owner_members': data_channel_owners(channel_id),
@@ -30,12 +30,16 @@ def channel_messages(token, channel_id, start):
     check_valid_token(token)
     check_valid_channel(channel_id)
     u_id = auth_u_id_from_token(token)
-    check_member_exist(u_id, channel_id)
+    check_authorised_member_channel(channel_id, u_id)
     check_valid_message_start(start, channel_id)
     end = data_channel_messages_end(start, channel_id)
     message_list = data_channel_messages(channel_id, start, end)
     
-    return message_list, start, end
+    return {
+        'message_list': message_list, 
+        'start': start, 
+        'end': end
+    }
 
 def channel_leave(token, channel_id):
     channel = valid_channel(channel_id)

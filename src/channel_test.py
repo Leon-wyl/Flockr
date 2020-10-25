@@ -10,76 +10,71 @@ from other import clear
 # Test if the function raises an Input Error if the channel id is invalid.
 def test_invalid_id_channel_details():
     clear()
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 
+    info = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
     auth.auth_login('validemail@gmail.com', '123abc!@#')
-    channels.channels_create(0, 'validchannelname', True)
-    channel.channel_join(0,0)
+    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
     with pytest.raises(InputError):
-        assert channel.channel_details(0, 6)
+        assert channel.channel_details(info['token'], channel_id)
 
 # Test if the function raises an Access Error if user is unauthorised to view the channel details.      
 def test_unauthorised_channel_details():
     clear()
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 
+    info = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
     auth.auth_login('validemail@gmail.com', '123abc!@#')
-    channels.channels_create(0, 'validchannelname', False)
-    auth.auth_register('newemail@gmail.com', '234abc!@#', 
+    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
+    secondinfo = auth.auth_register('newemail@gmail.com', '234abc!@#', 
     'Guanbin', 'Wen')
     auth.auth_login('newemail@gmail.com', '234abc!@#')
     with pytest.raises(AccessError):
-        assert channel.channel_details(1, 0)  
+        assert channel.channel_details(secondinfo['token'], channel_id['channel_id'])  
         
-# Test if the function functions normally with two members in the channel.   
+# Test if the function functions normally with one member in the channel.   
 def test_channel_details():
     clear()
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 
+    info = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
     auth.auth_login('validemail@gmail.com', '123abc!@#')
-    auth.auth_register('newemail@gmail.com', '234abc!@#', 
-    'Guanbin', 'Wen')
-    auth.auth_login('newemail@gmail.com', '234abc!@#')
-    channels.channels_create(0, 'validchannelname', True)
-    channel.channel_join(0,0)
-    channel.channel_join(1,0)
-    assert channel.channel_details(0, 0) == {
+    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
+    assert channel.channel_details(info['token'], channel_id['channel_id']) == {
         'name':'validchannelname',
-        'owner_members': [],
-        'all_members': [{'u_id': 0, 'name_first': 'Hayden', 'name_last': 'Everest'}, {'u_id': 1, 'name_first': 'Guanbin', 'name_last': 'Wen'}]
+        'owner_members': [{'name_first': 'Hayden', 'name_last': 'Everest', 'u_id': 0}],
+        'all_members': [{'name_first': 'Hayden', 'name_last': 'Everest', 'u_id': 0}]
     }
 
 # Test if the function raises an Input Error if the channel id is invalid.    
 def test_invalid_id_channel_messages():
     clear()
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 
+    info = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
     auth.auth_login('validemail@gmail.com', '123abc!@#')
-    channels.channels_create(0, 'validchannelname', True)
-    channel.channel_join(0,0)
+    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
     with pytest.raises(InputError):
-        assert channel.channel_messages(0, 6, 0)
+        assert channel.channel_messages(info['token'], channel_id['channel_id'] + 1, 0)
 
 # Test if the function raises an Input Error if the start of message is invalid.        
 def test_invalid_start_channel_messages():
     clear()
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 
+    info = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
     auth.auth_login('validemail@gmail.com', '123abc!@#')
-    channels.channels_create(0, 'validchannelname', True)
-    channel.channel_join(0,0)
+    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
     with pytest.raises(InputError):
-        assert channel.channel_messages(0, 0, 9)
+        assert channel.channel_messages(info['token'], channel_id['channel_id'], 5)
 
 # Test if the function raises an Access Error if user is unauthorised to view the channel messages.          
 def test_unauthorised_channel_messages():
     clear()
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 
+    info = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
     auth.auth_login('validemail@gmail.com', '123abc!@#')
-    channels.channels_create(0, 'validchannelname', True)
+    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
+    secondinfo = auth.auth_register('newemail@gmail.com', '234abc!@#', 
+    'Guanbin', 'Wen')
+    auth.auth_login('newemail@gmail.com', '234abc!@#')
     with pytest.raises(AccessError):
-        assert channel.channel_messages(1, 0, 0) 
+        assert channel.channel_messages(secondinfo['token'], channel_id['channel_id'], 0) 
         
 # This is not testable as message.message_send function is not yet implemented, will exclude this test for now and write in assumption 
 '''  

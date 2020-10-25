@@ -1,3 +1,5 @@
+from error import AccessError
+
 '''The database for the user and channel data'''
 data = {
     'users': [],
@@ -29,7 +31,7 @@ def data_upload(u_id, email, password, name_first, name_last, handle, token):
     if u_id == 0:
         permission_id = 1
     data['users'].append({
-        'u_id': u_id,
+        'u_id': u_id, 
         'email': email,
         'password': password,
         'name_first': name_first,
@@ -42,18 +44,17 @@ def data_upload(u_id, email, password, name_first, name_last, handle, token):
 def data_login(u_id, token):
     data['users'][u_id]['token'] = token
 
-def data_logout(u_id):
-    '''If a valid u_id is given, and the user is successfully
-     logged out, returns true, otherwise false.'''
-
-    if u_id in range(len(data['users'])):
-        data['users'][u_id]['token'] = None
-        return {
-            'is_success': True,
-        }
-    return {
-        'is_success': False,
-    }
+def data_logout(token):
+    '''If a valid u_id is given, then turn the token into None to
+     logged out, returns true, otherwise raise AccessError.'''
+    
+    for user in data['users']:
+        if user['token'] == token:
+            user['token'] = None
+            return {
+                'is_success': True
+            }
+    raise AccessError("Error, token is invalid")
 
 def data_u_id():
     '''Create u_id'''
@@ -81,9 +82,8 @@ def is_user_exist(u_id):
 def is_token_exist(token):
     for user in data['users']:
         if token == user['token']:
-            return True
+            return user
     return False
-
 
 def is_public_channel(channel_id):
     for channel in data['channels']:
@@ -165,11 +165,11 @@ def data_channel_messages(channel_id, start, end):
             message_list = []
             if end == -1:
                 for message in channel['messages']:
-                    if message['message_id'] > start:
+                    if message['message_id'] >= start:
 	                    message_list.append(message)
             else:
 	            for message in channel['messages']:
-	                if message['message_id'] > start:
+	                if message['message_id'] >= start:
 	                    if message['message_id'] < end:
 	                        message_list.append(message)
     return message_list    
@@ -232,14 +232,12 @@ def data_remove_member(u_id, channel_id):
                     channel['members'].remove(user)
                     return
 
-
 def channel_numbers():
     return len(data['channels'])
 
 def data_clear():
     data['users'].clear()
     data['channels'].clear()
-
 '''
 def is_login(token):
     for user in data['users']:
@@ -260,7 +258,11 @@ def data_users_list():
         new_user['handle_str'] = user['handle']
         user_list.append(new_user)
     return user_list
-        
+
+def data_user(u_id):
+    for user in data['users']:
+        if u_id == user['u_id']:
+            return user
 
 def data_permission(u_id):
     for user in data['users']:
@@ -283,47 +285,53 @@ def data_search_message(query_str, u_id):
             if member['u_id'] == u_id:
                 for message in channel['messages']:
                     if query_str in message['message']:
-                        new_massage = {}
-                        new_massage['message_id'] = message['message_id']
-                        new_massage['u_id'] = message['u_id']
-                        new_massage['message'] = message['message']
-                        new_massage['time_created'] = message['time_created']
-                        message_list.append(new_massage)
+                        new_message = {}
+                        new_message['message_id'] = message['message_id']
+                        new_message['u_id'] = message['u_id']
+                        new_message['message'] = message['message']
+                        new_message['time_created'] = message['time_created']
+                        message_list.append(new_message)
                 break
     return message_list
 
 def data_message_send(channel_id, u_id, message):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:  
-            newmessage = {} 
-            newmessage['message_id'] = len(channel['messages'])
-            newmessage['u_id'] = u_id
-            newmessage['message'] = message
-            newmessage['time_created'] = 0
-            channel['messages'].append(new_message)
+            newmessage = {
+                'message_id': len(channel['messages']),
+                'u_id': u_id,
+                'message': message,
+                'time_created': 0,
+            } 
+            
+            channel['messages'].append(newmessage)
     return newmessage['message_id']
 
 def data_get_channel_id(message_id):
     for channel in data['channels']:  
         for message in channel['messages']:
-            if message['message_id'] == message_id:
-                channel_id = channel['channel_id']
-    return channel_id 
+            if message_id == message['message_id']:
+                return channel['channel_id']    
+        
+    
+        
+    
 
 def data_message_remove(channel_id, message_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:  
             for message in channel['messages']:
+            
                 if message_id == message['message_id']:
                     message.clear()
                     
-def data_message_remove(channel_id, message_id, message):
+def data_message_edit(channel_id, message_id, message):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:  
             for message in channel['messages']:
                 if message_id == message['message_id']:
                     if message == '':
-                        message.clear
+                        message.clear()
                     else:
                         message['message'] = message
                   
