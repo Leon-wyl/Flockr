@@ -33,7 +33,19 @@ def test_message_send():
     assert message.message_send(info['token'], channel_id['channel_id'], 'My name') == {'message_id':1}
     assert message.message_send(info['token'], channel_id['channel_id'], '1s sam!') == {'message_id':2}
     assert channel.channel_messages(info['token'], channel_id['channel_id'], 0) == {'end': -1, 'message_list': [{'message': 'hello', 'message_id': 0, 'time_created': 0, 'u_id': 0}, {'message': 'My name', 'message_id': 1, 'time_created': 0, 'u_id': 0}, {'message': '1s sam!', 'message_id': 2, 'time_created': 0, 'u_id': 0}], 'start': 0}
-            
+
+def test_message_send2():
+    clear()
+    info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
+    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
+    i = 0
+    while i < 51:
+        message.message_send(info['token'], channel_id['channel_id'], 'hello')
+        i += 1
+    print(channel.channel_messages(info['token'], channel_id['channel_id'], 0))
+    assert len(channel.channel_messages(info['token'], channel_id['channel_id'], 0)['message_list']) \
+        == 50
+
 # Test if message_remove function raises an InputError when the message (based on ID) no longer exists
 def test_invalid_message_remove():
     clear()

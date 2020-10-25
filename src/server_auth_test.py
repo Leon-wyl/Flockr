@@ -231,7 +231,6 @@ def test_server_addowner(url):
         'is_public': True,
     }
     r = requests.post(f"{url}/channels/create", json=dataIn3)
-    return_data3 = r.json()
 
     # The second user join the channel
     dataIn4 = {
@@ -283,7 +282,7 @@ def test_server_addowner(url):
         'channel_id': 0,
         'u_id': return_data6['u_id'],
     }
-    r = requests.post(f"{url}/channel/addowner", json=dataIn6)
+    r = requests.post(f"{url}/channel/addowner", json=dataIn9)
     return_data7 = r.json()
     assert return_data7['code'] == 400
     
@@ -401,7 +400,7 @@ def test_server_removeowner(url):
         'channel_id': return_data4['channel_id'],
         'u_id': return_data2['u_id'],
     }    
-    r = requests.post(f"{url}/channel/removeowner", json=dataIn9)
+    r = requests.post(f"{url}/channel/removeowner", json=dataIn10)
 
     # The first user obtain the channel details
     dataIn11 = {
