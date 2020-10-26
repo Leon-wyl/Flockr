@@ -125,7 +125,7 @@ def data_channel_name(channel_id):
     for channels in data['channels']:   
         if channel_id == channels['channel_id']:
             channel_name = channels['name']
-        return channel_name
+    return channel_name
     
 def data_channel_owners(channel_id):
     for channels in data['channels']:   
@@ -200,6 +200,7 @@ def data_add_owner(u_id, channel_id):
             for user in data['users']:
                 if u_id == user['u_id']:
                     channel['owners'].append(user)
+                    return
             
     
 
@@ -209,6 +210,7 @@ def data_remove_owner(u_id, channel_id):
             for user in data['users']:
                 if u_id == user['u_id']:
                     channel['owners'].remove(user)
+                    return
 
 
 
