@@ -56,8 +56,8 @@ def test_invalid_message_remove():
     with pytest.raises(InputError):
         assert message.message_remove(info['token'], 0)
     firstmessage = message.message_send(info['token'], channel_id['channel_id'], 'hello')
-    secondmessage = message.message_send(info1['token'], channel_id2['channel_id'], 'hi')
-    thirdmessage = message.message_send(info1['token'], channel_id2['channel_id'], 'Salut')
+    message.message_send(info1['token'], channel_id2['channel_id'], 'hi')
+    message.message_send(info1['token'], channel_id2['channel_id'], 'Salut')
     message.message_remove(info['token'], firstmessage['message_id'])
     with pytest.raises(InputError):
         message.message_remove(info1['token'], 5)
@@ -102,7 +102,7 @@ def test_unauthorised_message_edit():
 def test_message_edit():
     clear()
     info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
-    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
+    channels.channels_create(info['token'], 'validchannelname', True)
     channel_id2 = channels.channels_create(info['token'], 'validchannelname2', True)
     secondinfo = auth.auth_register("guanbin@gmail.com", "ttteh3hgi00d", "Billy", "Gale")  
     channel.channel_join(secondinfo['token'], channel_id2['channel_id'])
