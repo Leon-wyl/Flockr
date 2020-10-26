@@ -76,7 +76,7 @@ def test_channel_messages():
     user0 = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
     channel0 = channels.channels_create(user0['token'], 'validchannelname', True)
-    message_info = message.message_send(user0['token'], channel0['channel_id'], "Hello")
+    message.message_send(user0['token'], channel0['channel_id'], "Hello")
     print(channel.channel_messages(user0['token'], channel0['channel_id'], 0))
     assert channel.channel_messages(user0['token'], channel0['channel_id'], 0) == \
     {
