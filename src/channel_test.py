@@ -6,6 +6,7 @@ from error import AccessError
 import channels
 from database import data
 from other import clear
+import message
 
 # Test if the function raises an Input Error if the channel id is invalid.
 def test_invalid_id_channel_details():
@@ -69,28 +70,29 @@ def test_unauthorised_channel_messages():
         assert channel.channel_messages(secondinfo['token'], channel_id['channel_id'], 0) 
         
 # This is not testable as message.message_send function is not yet implemented, will exclude this test for now and write in assumption 
-'''  
+  
 def test_channel_messages():
     clear()
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 
+    user0 = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
-    channels.channels_create(0, 'validchannelname', True)
-    channel.channel_join(0,0)
-    message.message_send()
-    data['channels'][0]['messages'].append(new_message)
-    assert channel.channel_messages(0, 0, 0) == {
-        'messages': [
+    channel0 = channels.channels_create(user0['token'], 'validchannelname', True)
+    message_info = message.message_send(user0['token'], channel0['channel_id'], "Hello")
+    print(channel.channel_messages(user0['token'], channel0['channel_id'], 0))
+    assert channel.channel_messages(user0['token'], channel0['channel_id'], 0) == \
+    {
+        'message_list':
+        [
             {
-                'message_id': 1,
-                'u_id': 1,
-                'message': 'Hello world',
-                'time_created': 1582426789,
+                'message_id': 0,
+                'u_id': 0,
+                'message': 'Hello',
+                'time_created': 0,
             }
         ],
         'start': 0,
-        'end': -1,
+        'end': -1
     }
-'''
+
 # Test if the function raises an Input Error if the channel id is invalid.
 def test_invalid_id_channel_addowner():
     clear()
