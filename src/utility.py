@@ -79,15 +79,8 @@ def check_valid_message_start(start, channel_id):
             if start > len(channel['messages']):
                 raise InputError("Start is greater than the total number of messages in the channel")
             return
-
-def check_valid_message_id(message_id):
-    for channel in data['channels']:
-        for message in channel['messages']: 
-            if message_id == message['message_id']:
-                return
-    raise InputError("message_id is invalid")
+    raise InputError("Channel is invalid")
                
-
 def token_generate(u_id):
     '''Return the generated token'''
     return jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256').decode('utf-8')
