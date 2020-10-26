@@ -136,3 +136,155 @@ def test_server_channel(url):
     r = requests.post(f"{url}/channel/invite", json={'token': token1, 'channel_id': 4, 'u_id': 1})
     return_data = r.json()
     assert return_data['message'] == '<p>Channel is invalid</p>'
+
+def test_server_channel_details(url):
+
+    # Register a user
+    dataIn1 = {
+        'email': "leonwu@gmail.com", 
+        'password': "ihfeh3hgi00d", 
+        'name_first': "Yilang",
+        'name_last': "Wu",
+    }
+    r = requests.post(f"{url}/auth/register", json=dataIn1)
+    return_data1 = r.json()
+
+    # Register another user
+    dataIn2 = {
+        'email': "billgates@outlook.com",
+        'password': "VukkFs",
+        'name_first': "Bill",
+        'name_last': "Gates",
+    }
+    r = requests.post(f"{url}/auth/register", json=dataIn2)
+    return_data2 = r.json()
+
+    # Channel created by the first user
+    dataIn3 = {
+        'token': return_data1['token'],
+        'name': "group1",
+        'is_public': True,
+    }
+    r = requests.post(f"{url}/channels/create", json=dataIn3)
+    
+    # The first user tries to get the channel details from an invalid channel
+    dataIn4 = {
+        'token': return_data1['token'],
+        'channel_id': 4,
+    }
+    r = requests.get(f"{url}/channel/details", params=dataIn4)
+    return_data4 = r.json()
+    assert return_data4['code'] == 400
+
+    # The second user tries to get the channel details of the channel created by the first user, which is unauthorised    
+    dataIn5 = {
+        'token': return_data2['token'],
+        'channel_id': 0,
+    }
+    r = requests.get(f"{url}/channel/details", params=dataIn5)
+    return_data5 = r.json()
+    assert return_data5['code'] == 400
+    
+    # The second user join the channel
+    dataIn6 = {
+        'token': return_data2['token'],
+        'channel_id': 0,
+    }
+    r = requests.post(f"{url}/channel/join", json=dataIn6)
+    
+    resp = requests.get(f"{url}/channel/details", params=dataIn6) 
+    resp = resp.json()
+    assert resp == {'all_members': [{'name_first': 'Yilang', 'name_last': 'Wu', 'u_id': 0}, {'name_first': 'Bill', 'name_last': 'Gates', 'u_id': 1}], 'name': 'group1', 'owner_members': [{'name_first': 'Yilang', 'name_last': 'Wu', 'u_id': 0}]}
+
+def test_server_channel_messages(url):
+
+    # Register a user
+    dataIn1 = {
+        'email': "leonwu@gmail.com", 
+        'password': "ihfeh3hgi00d", 
+        'name_first': "Yilang",
+        'name_last': "Wu",
+    }
+    r = requests.post(f"{url}/auth/register", json=dataIn1)
+    return_data1 = r.json()
+
+    # Register another user
+    dataIn2 = {
+        'email': "billgates@outlook.com",
+        'password': "VukkFs",
+        'name_first': "Bill",
+        'name_last': "Gates",
+    }
+    r = requests.post(f"{url}/auth/register", json=dataIn2)
+    return_data2 = r.json()
+
+    # Channel created by the first user
+    dataIn3 = {
+        'token': return_data1['token'],
+        'name': "group1",
+        'is_public': True,
+    }
+    r = requests.post(f"{url}/channels/create", json=dataIn3)
+    
+    # Message sent by the first user
+    dataIn4 = {
+        'token': return_data1['token'],
+        'channel_id': 0,
+        'message': "Hello",
+    }
+    r = requests.post(f"{url}/message/send", json=dataIn4)
+
+    # The first user tries to get the channel messages from an invalid channel
+    dataIn5 = {
+        'token': return_data1['token'],
+        'channel_id': 5,
+        'start': 0
+    }
+    r = requests.get(f"{url}/channel/messages", params=dataIn5)
+    return_data5 = r.json()
+    assert return_data5['code'] == 400
+    
+    # The first user tries to get the channel messages from channel with an invalid start
+    dataIn6 = {
+        'token': return_data1['token'],
+        'channel_id': 0,
+        'start': 10
+    }
+    r = requests.get(f"{url}/channel/messages", params=dataIn6)
+    return_data6 = r.json()
+    assert return_data6['code'] == 400
+
+    # The second user tries to get the channel messages of the channel created by the first user, which is unauthorised    
+    dataIn7 = {
+        'token': return_data2['token'],
+        'channel_id': 0,
+    }
+    r = requests.get(f"{url}/channel/details", params=dataIn7)
+    return_data7 = r.json()
+    assert return_data7['code'] == 400   
+    
+    # The second user join the channel
+    dataIn8 = {
+        'token': return_data2['token'],
+        'channel_id': 0,
+    }
+    r = requests.post(f"{url}/channel/join", json=dataIn8)
+    
+    # Message sent by the second user
+    dataIn9 = {
+        'token': return_data2['token'],
+        'channel_id': 0,
+        'message': "Hey there first",
+    }
+    r = requests.post(f"{url}/message/send", json=dataIn9)
+    
+    dataIn10 = {
+        'token': return_data1['token'],
+        'channel_id': 0,
+        'start': 0
+    }
+    
+    resp = requests.get(f"{url}/channel/messages", params=dataIn10) 
+    resp = resp.json()
+    assert resp == {'end': -1, 'message_list': [{'message': 'Hello', 'message_id': 0, 'time_created': 0, 'u_id': 0}, {'message': 'Hey there first', 'message_id': 1, 'time_created': 0, 'u_id': 1}], 'start': 0}    
+    
