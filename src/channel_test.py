@@ -33,7 +33,7 @@ def test_channel_details():
     clear()
     info = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
-    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
+    channels.channels_create(info['token'], 'validchannelname', True)
     second_channel_id = channels.channels_create(info['token'], 'secondchannelname', True)
     assert channel.channel_details(info['token'], second_channel_id['channel_id']) == {
         'name':'secondchannelname',
@@ -75,7 +75,7 @@ def test_unauthorised_channel_messages():
 def test_channel_messages():
     clear()
     info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
-    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
+    channels.channels_create(info['token'], 'validchannelname', True)
     second_channel_id = channels.channels_create(info['token'], 'secondchannelname', True)
     message.message_send(info['token'], second_channel_id['channel_id'], 'hello')
     message.message_send(info['token'], second_channel_id['channel_id'], 'My name')
@@ -172,7 +172,7 @@ def test_unauthorised_channel_removeowner():
 def test_channel_removeowner():
     clear()
     info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
-    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
+    channels.channels_create(info['token'], 'validchannelname', True)
     secondinfo = auth.auth_register("guanbin@gmail.com", "ttteh3hgi00d", "Billy", "Gale")
     second_channel_id = channels.channels_create(info['token'], 'secondchannelname', True) 
     channel.channel_join(secondinfo['token'], second_channel_id['channel_id'])
