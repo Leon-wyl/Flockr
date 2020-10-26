@@ -87,6 +87,13 @@ def test_login():
     with pytest.raises(InputError):
         auth_login("eviedunstone@gmail.com", "Qwerty8")
 
+    # Register then logout then login the login again
+    info = auth_register("hello@gmail.com", "fsdfsdfsDS23", "Hello", "Hi")
+    auth_logout(info['token'])
+    auth_login("hello@gmail.com", "fsdfsdfsDS23")
+    with pytest.raises(AccessError):
+        auth_login("hello@gmail.com", "fsdfsdfsDS23")
+
 def test_logout():
     clear()
 

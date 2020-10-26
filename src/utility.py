@@ -178,6 +178,9 @@ def login_check(email, password):
         # If the password is not correct
         raise InputError("Password is not correct")
 
+    if correct_user['token'] is not None:
+        raise AccessError("User has already logged in")
+
     return correct_user['u_id']
 
 def password_encode(password):

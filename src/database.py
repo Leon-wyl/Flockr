@@ -90,6 +90,7 @@ def is_public_channel(channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
             return channel['visibility']
+    raise InputError("Channel is invalid")
 
 def is_channel_exist(channel_id):
     for channel in data['channels']:
