@@ -15,13 +15,15 @@ def test_user_profile_success():
     clear()
     user = auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
-    assert user_profile(user['token'], 0) == {
+    user = auth_register('validee@gmail.com', '124abc!@#', 
+    'Hay', 'Eve')
+    assert user_profile(user['token'], 1) == {
         'user': {
-        	'u_id': 0,
-        	'email': 'validemail@gmail.com',
-        	'name_first': 'Hayden',
-        	'name_last': 'Everest',
-        	'handle_str': 'haydeneverest',
+        	'u_id': 1,
+        	'email': 'validee@gmail.com',
+        	'name_first': 'Hay',
+        	'name_last': 'Eve',
+        	'handle_str': 'hayeve',
         },
     }
 def test_user_profile_setname_first_name_too_long():
