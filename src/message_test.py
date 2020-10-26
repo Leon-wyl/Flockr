@@ -50,11 +50,17 @@ def test_message_send2():
 def test_invalid_message_remove():
     clear()
     info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
+    info1 = auth.auth_register("zixianglin@outlook.com", "dsfsjjfsekjf", "Zixiang", "Lin")
     channel_id = channels.channels_create(info['token'], 'validchannelname', True)
+    channel_id2 = channels.channels_create(info1['token'], 'the second channel', False)
     with pytest.raises(InputError):
         assert message.message_remove(info['token'], 0)
     firstmessage = message.message_send(info['token'], channel_id['channel_id'], 'hello')
+    secondmessage = message.message_send(info1['token'], channel_id2['channel_id'], 'hi')
+    thirdmessage = message.message_send(info1['token'], channel_id2['channel_id'], 'Salut')
     message.message_remove(info['token'], firstmessage['message_id'])
+    with pytest.raises(InputError):
+        message.message_remove(info1['token'], 5)
     with pytest.raises(InputError):
         assert message.message_remove(info['token'], firstmessage['message_id'])
             
