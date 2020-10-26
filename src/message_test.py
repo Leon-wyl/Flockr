@@ -103,16 +103,17 @@ def test_message_edit():
     clear()
     info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
     channel_id = channels.channels_create(info['token'], 'validchannelname', True)
+    channel_id2 = channels.channels_create(info['token'], 'validchannelname2', True)
     secondinfo = auth.auth_register("guanbin@gmail.com", "ttteh3hgi00d", "Billy", "Gale")  
-    channel.channel_join(secondinfo['token'], channel_id['channel_id'])
-    firstmessage = message.message_send(secondinfo['token'], channel_id['channel_id'], 'first')
-    secondmessage = message.message_send(secondinfo['token'], channel_id['channel_id'], 'second')
-    thirdmessage = message.message_send(secondinfo['token'], channel_id['channel_id'], 'third')
+    channel.channel_join(secondinfo['token'], channel_id2['channel_id'])
+    firstmessage = message.message_send(secondinfo['token'], channel_id2['channel_id'], 'first')
+    secondmessage = message.message_send(secondinfo['token'], channel_id2['channel_id'], 'second')
+    thirdmessage = message.message_send(secondinfo['token'], channel_id2['channel_id'], 'third')
     message.message_edit(secondinfo['token'], firstmessage['message_id'], 'changed1st')
     message.message_edit(info['token'], secondmessage['message_id'], 'changed2nd')
     message.message_edit(info['token'], thirdmessage['message_id'], '')
-    assert len(data['channels'][0]['messages']) == 2
-    assert channel.channel_messages(info['token'], channel_id['channel_id'], 0) == \
+    assert len(data['channels'][1]['messages']) == 2
+    assert channel.channel_messages(info['token'], channel_id2['channel_id'], 0) == \
     {
         'message_list': 
             [{

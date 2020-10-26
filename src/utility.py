@@ -79,6 +79,7 @@ def check_valid_message_start(start, channel_id):
             if start > len(channel['messages']):
                 raise InputError("Start is greater than the total number of messages in the channel")
             return
+    raise InputError("Channel is invalid")
                
 def token_generate(u_id):
     '''Return the generated token'''
