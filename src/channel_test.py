@@ -8,16 +8,15 @@ from database import data
 from other import clear
 import message
 
-# Test if the function raises an Input Error if the channel id is invalid.
-def test_invalid_id_channel_details():
+def test_channel_details_invalid_channel_id():
     clear()
     info = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
-    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
+    channels.channels_create(info['token'], 'validchannelname', True) # gives channel id 0
     with pytest.raises(InputError):
-        assert channel.channel_details(info['token'], channel_id)
+        assert channel.channel_details(info['token'], 1)
 
-# Test if the function raises an Access Error if user is unauthorised to view the channel details.      
+# User is not an member of channel     
 def test_unauthorised_channel_details():
     clear()
     info = auth.auth_register('validemail@gmail.com', '123abc!@#', 
@@ -28,7 +27,7 @@ def test_unauthorised_channel_details():
     with pytest.raises(AccessError):
         assert channel.channel_details(secondinfo['token'], channel_id['channel_id'])  
         
-# Test if the function functions normally with two member in the channel.   
+# Test if the function functions normally with two member in the channel.  
 def test_channel_details():
     clear()
     info = auth.auth_register('validemail@gmail.com', '123abc!@#', 
@@ -40,9 +39,8 @@ def test_channel_details():
         'owner_members': [{'name_first': 'Hayden', 'name_last': 'Everest', 'u_id': 0}],
         'all_members': [{'name_first': 'Hayden', 'name_last': 'Everest', 'u_id': 0}],
     }
-
-# Test if the function raises an Input Error if the channel id is invalid.    
-def test_invalid_id_channel_messages():
+    
+def test_channel_messages_invalid_channel_id():
     clear()
     info = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
@@ -59,8 +57,8 @@ def test_invalid_start_channel_messages():
     with pytest.raises(InputError):
         assert channel.channel_messages(info['token'], channel_id['channel_id'], 5)
 
-# Test if the function raises an Access Error if user is unauthorised to view the channel messages.          
-def test_unauthorised_channel_messages():
+# User is not an member of the channel         
+def test_channel_messages_unauthorised():
     clear()
     info = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
@@ -69,8 +67,7 @@ def test_unauthorised_channel_messages():
     'Guanbin', 'Wen')
     with pytest.raises(AccessError):
         assert channel.channel_messages(secondinfo['token'], channel_id['channel_id'], 0) 
-        
-# This is not testable as message.message_send function is not yet implemented, will exclude this test for now and write in assumption 
+
   
 def test_channel_messages():
     clear()
@@ -94,8 +91,8 @@ def test_channel_messages():
         'end': -1
     }
 
-# Test if the function raises an Input Error if the channel id is invalid.
-def test_invalid_id_channel_addowner():
+
+def test_channel_addowner_invalid_channel_id():
     clear()
     user = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
@@ -104,9 +101,9 @@ def test_invalid_id_channel_addowner():
     with pytest.raises(InputError):
         assert channel.channel_addowner(user['token'], 6, 0)
 
-# Test if the function raises an Input Error if the user is already an owner of the channel.
 
-def test_already_owner_channel_addowner():
+# If the user is already an owner of the channel.
+def test_channel_addowner_already_owner():
     clear()
     user = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
@@ -116,8 +113,8 @@ def test_already_owner_channel_addowner():
     with pytest.raises(InputError):
         assert channel.channel_addowner(user['token'], 0, 0)
 
-# Test if the function raises an Access Error if user is unauthorised to add owner to this channel.      
-def test_unauthorised_channel_addowner():
+# When the user who uses add owner is not an owner of the channel of flockr
+def test_channel_addowner_unauthorised():
     clear()
     user = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
@@ -143,8 +140,8 @@ def test_channel_addowner():
     channel.channel_addowner(user1['token'], 0, 1)
     assert len(data['channels'][0]['owners']) == 2
 
-# Test if the function raises an Input Error if the channel id is invalid.
-def test_invalid_id_channel_removeowner():
+
+def test_channel_removeowner_invalid_channel_id():
     clear()
     user = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
@@ -152,8 +149,8 @@ def test_invalid_id_channel_removeowner():
     with pytest.raises(InputError):
         assert channel.channel_removeowner(user['token'], 6, 0)
 
-# if the user is not yet an owner of the channel
-def test_not_owner_channel_removeowner():
+# If the user is not yet an owner of the channel
+def test_channel_removeowner_not_owner():
     clear()
     user = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
@@ -165,8 +162,8 @@ def test_not_owner_channel_removeowner():
     with pytest.raises(AccessError):
         assert channel.channel_removeowner(user2['token'], 0, 0)
 
-# Test if the function raises an Access Error if user is unauthorised to remove owner from this channel.      
-def test_unauthorised_channel_removeowner():
+# When the user who uses remove owner is not an owner of the channel of flockr    
+def test_channel_removeowner_unauthorised():
     clear()
     user = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
@@ -225,7 +222,7 @@ def test_channel_invite_unauthorised():
         channel.channel_invite(userC['token'], newchannel['channel_id'], userB['u_id']) 
 
 
-
+# User has already joined the channel
 def test_channel_invite_user_already_joined():
     clear()
     userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')
@@ -239,7 +236,7 @@ def test_channel_invite_user_already_joined():
 # InputError: channel_id does not refer to a valid channel.
 def test_channel_invite_invalid_channel():
     clear()
-    userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')              # return u_id and token
+    userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')           # return u_id and token
     userB = auth.auth_register('validemail2@gmail.com', '123abc!@#', 'Guanbin', 'Wen')
     with pytest.raises(InputError):
         channel.channel_invite(userA['token'], 0, userB['u_id'])
@@ -270,7 +267,7 @@ def test_channel_join_invalid_channel():
 
 def test_channel_join_channel_already_joined():
     clear()
-    userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')                # return u_id and token
+    userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')           # return u_id and token
     channels.channels_create(userA['token'], 'validchannelname', True) # return channel_id
     with pytest.raises(InputError):
         channel.channel_join(userA['token'], 0)
