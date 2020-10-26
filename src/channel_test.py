@@ -6,6 +6,7 @@ from error import AccessError
 import channels
 from database import data
 from other import clear
+import message
 
 # Test if the function raises an Input Error if the channel id is invalid.
 def test_invalid_id_channel_details():
@@ -27,16 +28,17 @@ def test_unauthorised_channel_details():
     with pytest.raises(AccessError):
         assert channel.channel_details(secondinfo['token'], channel_id['channel_id'])  
         
-# Test if the function functions normally with one member in the channel.   
+# Test if the function functions normally with two member in the channel.   
 def test_channel_details():
     clear()
     info = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
     channel_id = channels.channels_create(info['token'], 'validchannelname', True)
-    assert channel.channel_details(info['token'], channel_id['channel_id']) == {
-        'name':'validchannelname',
+    second_channel_id = channels.channels_create(info['token'], 'secondchannelname', True)
+    assert channel.channel_details(info['token'], second_channel_id['channel_id']) == {
+        'name':'secondchannelname',
         'owner_members': [{'name_first': 'Hayden', 'name_last': 'Everest', 'u_id': 0}],
-        'all_members': [{'name_first': 'Hayden', 'name_last': 'Everest', 'u_id': 0}]
+        'all_members': [{'name_first': 'Hayden', 'name_last': 'Everest', 'u_id': 0}],
     }
 
 # Test if the function raises an Input Error if the channel id is invalid.    
@@ -68,34 +70,28 @@ def test_unauthorised_channel_messages():
     with pytest.raises(AccessError):
         assert channel.channel_messages(secondinfo['token'], channel_id['channel_id'], 0) 
         
-# This is not testable as message.message_send function is not yet implemented, will exclude this test for now and write in assumption 
-'''  
+# Test normal channel_messages
+ 
 def test_channel_messages():
     clear()
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 
-    'Hayden', 'Everest')
-    channels.channels_create(0, 'validchannelname', True)
-    channel.channel_join(0,0)
-    message.message_send()
-    data['channels'][0]['messages'].append(new_message)
-    assert channel.channel_messages(0, 0, 0) == {
-        'messages': [
-            {
-                'message_id': 1,
-                'u_id': 1,
-                'message': 'Hello world',
-                'time_created': 1582426789,
-            }
-        ],
-        'start': 0,
-        'end': -1,
-    }
-'''
+    info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
+    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
+    second_channel_id = channels.channels_create(info['token'], 'secondchannelname', True)
+    message.message_send(info['token'], second_channel_id['channel_id'], 'hello')
+    message.message_send(info['token'], second_channel_id['channel_id'], 'My name')
+    message.message_send(info['token'], second_channel_id['channel_id'], '1s sam!')
+    assert channel.channel_messages(info['token'], second_channel_id['channel_id'], 1) == {'end': -1, 'message_list': [{'message': 'My name', 'message_id': 1, 'time_created': 0, 'u_id': 0}, {'message': '1s sam!', 'message_id': 2, 'time_created': 0, 'u_id': 0}], 'start': 1}
+    i = 0
+    while i < 50:
+        message.message_send(info['token'], second_channel_id['channel_id'], 'hello')
+        i += 1
+    assert channel.channel_messages(info['token'], second_channel_id['channel_id'], 1) == {'message_list': [{'message_id': 1, 'u_id': 0, 'message': 'My name', 'time_created': 0}, {'message_id': 2, 'u_id': 0, 'message': '1s sam!', 'time_created': 0}, {'message_id': 3, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 4, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 5, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 6, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 7, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 8, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 9, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 10, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 11, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 12, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 13, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 14, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 15, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 16, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 17, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 18, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 19, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 20, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 21, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 22, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 23, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 24, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 25, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 26, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 27, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 28, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 29, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 30, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 31, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 32, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 33, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 34, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 35, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 36, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 37, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 38, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 39, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 40, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 41, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 42, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 43, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 44, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 45, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 46, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 47, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 48, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 49, 'u_id': 0, 'message': 'hello', 'time_created': 0}, {'message_id': 50, 'u_id': 0, 'message': 'hello', 'time_created': 0}], 'start': 1, 'end': 51}
 # Test if the function raises an Input Error if the channel id is invalid.
 def test_invalid_id_channel_addowner():
     clear()
     user = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
+    
     channels.channels_create(user['token'], 'validchannelname', True)
     with pytest.raises(InputError):
         assert channel.channel_addowner(user['token'], 6, 0)
@@ -175,16 +171,16 @@ def test_unauthorised_channel_removeowner():
 # Test if the function functions normally with one owner and one member in the channel.
 def test_channel_removeowner():
     clear()
-    user = auth.auth_register('validemail@gmail.com', '123abc!@#', 
-    'Hayden', 'Everest')
-    channels.channels_create(user['token'], 'validchannelname', True)
-    user2 = auth.auth_register('newemail@gmail.com', '234abc!@#', 
-    'Guanbin', 'Wen')
-    channel.channel_join(user2['token'],0)
-    channel.channel_addowner(user['token'], 0, user2['u_id'])
-    assert len(data['channels'][0]['owners']) == 2
-    channel.channel_removeowner(user['token'], 0, 1)
-    assert len(data['channels'][0]['owners']) == 1
+    info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
+    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
+    secondinfo = auth.auth_register("guanbin@gmail.com", "ttteh3hgi00d", "Billy", "Gale")
+    second_channel_id = channels.channels_create(info['token'], 'secondchannelname', True) 
+    channel.channel_join(secondinfo['token'], second_channel_id['channel_id'])
+    second_u_id = auth.auth_u_id_from_token(secondinfo['token'])
+    channel.channel_addowner(info['token'], second_channel_id['channel_id'], second_u_id)
+    assert len(data['channels'][1]['owners']) == 2
+    channel.channel_removeowner(info['token'], second_channel_id['channel_id'], second_u_id)
+    assert len(data['channels'][1]['owners']) == 1
 
 # Test chanel_invite
 #
