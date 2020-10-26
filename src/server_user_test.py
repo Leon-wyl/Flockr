@@ -5,8 +5,6 @@ import signal
 from time import sleep
 import requests
 import json
-from other import clear
-from utility import token_generate
 from error import InputError
 
 # Use this fixture to get the URL of the server. 
@@ -38,6 +36,7 @@ def test_echo(url):
     assert json.loads(resp.text) == {'data': 'hey'}
 
 def test_server_user(url):
+    requests.delete(f"{url}/clear")
     # test server user profile success
     FirstUser1 = {
         'email': "leonwu@gmail.com", 
@@ -48,10 +47,11 @@ def test_server_user(url):
     r = requests.post(f"{url}/auth/register", json=FirstUser1)
     return_data = r.json()
     assert return_data['u_id'] == 0
-    assert return_data['token'] == token_generate(return_data['u_id'])
+    token1 = return_data['token']
+    assert return_data['token'] == token1
 
     FirstUser = {
-        'token': token_generate(0),
+        'token': return_data['token'],
         'u_id': 0,
     }
     r = requests.get(f"{url}/user/profile", params=FirstUser)
@@ -77,7 +77,7 @@ def test_server_user(url):
 
     # test server user profile setname
     ChangedName = {
-        'token': token_generate(0),
+        'token': token1,
         'name_first': 'Dennis',
         'name_last': 'Lin',
     }
@@ -100,7 +100,7 @@ def test_server_user(url):
 
     # test_user_profile_setname_first_name_too_long
     TooLongName = {
-        'token': token_generate(0),
+        'token': token1,
         'name_first': 'Dennissssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss',
         'name_last': 'Lin',
     }
@@ -111,7 +111,7 @@ def test_server_user(url):
 
     # test_user_profile_setname_last_name_too_long
     TooLongName = {
-        'token': token_generate(0),
+        'token': token1,
         'name_first': 'Dennis',
         'name_last': 'Linnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn',
     }
@@ -123,7 +123,7 @@ def test_server_user(url):
     # test server user_profile_setemail
 
     ChangedEmail = {
-        'token': token_generate(0),
+        'token': token1,
         'email': '2071807612@qq.com'
     }
 
@@ -143,9 +143,19 @@ def test_server_user(url):
         }
     }
 
+    # test_user_profile_setemail_invalid_email
+    InvalidEmail = {
+        'token': token1,
+        'email': '2071807612qq.com'
+    }
+
+    r = requests.put(f"{url}/user/profile/setemail", json=InvalidEmail)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Email entered is not a valid email</p>'
+
     # test_user_profile_setemail_already_used
     InvalidEmail = {
-        'token': token_generate(0),
+        'token': token1,
         'email': '2071807612@qq.com'
     }
 
@@ -156,7 +166,7 @@ def test_server_user(url):
     # server test user_profile_sethandle
 
     ChangedHandle = {
-        'token': token_generate(0),
+        'token': token1,
         'handle_str': 'dennislin'
     }
 
@@ -175,3 +185,45 @@ def test_server_user(url):
             'handle_str': "dennislin",
         }
     }
+
+    # test_user_profile_sethandle_too_long
+    ChangedHandle = {
+        'token': token1,
+        'handle_str': 'dennislinnnnnnnnnnnnnnnnnn'
+    }
+
+    r = requests.put(f"{url}/user/profile/sethandle", json=ChangedHandle)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Handle is too long!</p>'
+
+    # test_user_profile_sethandle_too_short
+    ChangedHandle = {
+        'token': token1,
+        'handle_str': 'de'
+    }
+
+    r = requests.put(f"{url}/user/profile/sethandle", json=ChangedHandle)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Handle is too short!</p>'
+
+    # test_user_profile_sethandle_already_used
+    SecondUser = {
+        'email': "leonwu@gmail.com", 
+        'password': "ihfeh3hgi00d", 
+        'name_first': "Zixiang", # the handle string of this user would be zixianglin
+        'name_last': "Lin",
+    }
+    r = requests.post(f"{url}/auth/register", json=SecondUser)
+    return_data = r.json()
+    assert return_data['u_id'] == 1
+    token2 = return_data['token']
+    assert return_data['token'] == token2
+
+    ChangedHandle = {
+        'token': token2,
+        'handle_str': 'zixianglin'
+    }
+
+    r = requests.put(f"{url}/user/profile/sethandle", json=ChangedHandle)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Handle is already used by another user</p>'
