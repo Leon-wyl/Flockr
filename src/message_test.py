@@ -71,7 +71,7 @@ def test_unauthorised_message_remove():
 def test_message_remove():
     clear()
     info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
-    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
+    channels.channels_create(info['token'], 'validchannelname', True)
     second_channel_id = channels.channels_create(info['token'], 'validchannelname', True)
     secondinfo = auth.auth_register("guanbin@gmail.com", "ttteh3hgi00d", "Billy", "Gale")  
     channel.channel_join(secondinfo['token'], second_channel_id['channel_id'])
@@ -81,7 +81,7 @@ def test_message_remove():
     secondmessage = message.message_send(secondinfo['token'], second_channel_id['channel_id'], 'second')
     message.message_remove(info['token'], secondmessage['message_id'])
     assert len(data['channels'][1]['messages']) == 0
-    thirdmessage = message.message_send(secondinfo['token'], second_channel_id['channel_id'], 'third')
+    message.message_send(secondinfo['token'], second_channel_id['channel_id'], 'third')
     assert len(data['channels'][1]['messages']) == 1
 
 # Test if message_edit function raises an AccessError when the user is not the authorised user making this request nor an owner of this channel or the flockr
@@ -97,7 +97,7 @@ def test_unauthorised_message_edit():
 def test_message_edit():
     clear()
     info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
-    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
+    channels.channels_create(info['token'], 'validchannelname', True)
     second_channel_id = channels.channels_create(info['token'], 'validchannel', True)
     secondinfo = auth.auth_register("guanbin@gmail.com", "ttteh3hgi00d", "Billy", "Gale")  
     channel.channel_join(secondinfo['token'], second_channel_id['channel_id'])
