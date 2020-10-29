@@ -79,15 +79,8 @@ def check_valid_message_start(start, channel_id):
             if start > len(channel['messages']):
                 raise InputError("Start is greater than the total number of messages in the channel")
             return
-
-def check_valid_message_id(message_id):
-    for channel in data['channels']:
-        for message in channel['messages']: 
-            if message_id == message['message_id']:
-                return
-    raise InputError("message_id is invalid")
+    raise InputError("Channel is invalid")
                
-
 def token_generate(u_id):
     '''Return the generated token'''
     return jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256').decode('utf-8')
@@ -184,6 +177,9 @@ def login_check(email, password):
     if correct_user['password'] != password:
         # If the password is not correct
         raise InputError("Password is not correct")
+
+    if correct_user['token'] is not None:
+        raise AccessError("User has already logged in")
 
     return correct_user['u_id']
 

@@ -6,6 +6,7 @@ from error import AccessError
 import channels
 from database import data
 from other import clear
+import message
 
 # Test if the function raises an Input Error if the channel id is invalid.
 def test_invalid_id_channel_details():
@@ -27,16 +28,17 @@ def test_unauthorised_channel_details():
     with pytest.raises(AccessError):
         assert channel.channel_details(secondinfo['token'], channel_id['channel_id'])  
         
-# Test if the function functions normally with one member in the channel.   
+# Test if the function functions normally with two member in the channel.   
 def test_channel_details():
     clear()
     info = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
-    channel_id = channels.channels_create(info['token'], 'validchannelname', True)
-    assert channel.channel_details(info['token'], channel_id['channel_id']) == {
-        'name':'validchannelname',
+    channels.channels_create(info['token'], 'validchannelname', True)
+    second_channel_id = channels.channels_create(info['token'], 'secondchannelname', True)
+    assert channel.channel_details(info['token'], second_channel_id['channel_id']) == {
+        'name':'secondchannelname',
         'owner_members': [{'name_first': 'Hayden', 'name_last': 'Everest', 'u_id': 0}],
-        'all_members': [{'name_first': 'Hayden', 'name_last': 'Everest', 'u_id': 0}]
+        'all_members': [{'name_first': 'Hayden', 'name_last': 'Everest', 'u_id': 0}],
     }
 
 # Test if the function raises an Input Error if the channel id is invalid.    
@@ -69,33 +71,35 @@ def test_unauthorised_channel_messages():
         assert channel.channel_messages(secondinfo['token'], channel_id['channel_id'], 0) 
         
 # This is not testable as message.message_send function is not yet implemented, will exclude this test for now and write in assumption 
-'''  
+  
 def test_channel_messages():
     clear()
-    auth.auth_register('validemail@gmail.com', '123abc!@#', 
+    user0 = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
-    channels.channels_create(0, 'validchannelname', True)
-    channel.channel_join(0,0)
-    message.message_send()
-    data['channels'][0]['messages'].append(new_message)
-    assert channel.channel_messages(0, 0, 0) == {
-        'messages': [
+    channel0 = channels.channels_create(user0['token'], 'validchannelname', True)
+    message.message_send(user0['token'], channel0['channel_id'], "Hello")
+    print(channel.channel_messages(user0['token'], channel0['channel_id'], 0))
+    assert channel.channel_messages(user0['token'], channel0['channel_id'], 0) == \
+    {
+        'message_list':
+        [
             {
-                'message_id': 1,
-                'u_id': 1,
-                'message': 'Hello world',
-                'time_created': 1582426789,
+                'message_id': 0,
+                'u_id': 0,
+                'message': 'Hello',
+                'time_created': 0,
             }
         ],
         'start': 0,
-        'end': -1,
+        'end': -1
     }
-'''
+
 # Test if the function raises an Input Error if the channel id is invalid.
 def test_invalid_id_channel_addowner():
     clear()
     user = auth.auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
+    
     channels.channels_create(user['token'], 'validchannelname', True)
     with pytest.raises(InputError):
         assert channel.channel_addowner(user['token'], 6, 0)
@@ -175,16 +179,16 @@ def test_unauthorised_channel_removeowner():
 # Test if the function functions normally with one owner and one member in the channel.
 def test_channel_removeowner():
     clear()
-    user = auth.auth_register('validemail@gmail.com', '123abc!@#', 
-    'Hayden', 'Everest')
-    channels.channels_create(user['token'], 'validchannelname', True)
-    user2 = auth.auth_register('newemail@gmail.com', '234abc!@#', 
-    'Guanbin', 'Wen')
-    channel.channel_join(user2['token'],0)
-    channel.channel_addowner(user['token'], 0, user2['u_id'])
-    assert len(data['channels'][0]['owners']) == 2
-    channel.channel_removeowner(user['token'], 0, 1)
-    assert len(data['channels'][0]['owners']) == 1
+    info = auth.auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Bill", "Gates")
+    channels.channels_create(info['token'], 'validchannelname', True)
+    secondinfo = auth.auth_register("guanbin@gmail.com", "ttteh3hgi00d", "Billy", "Gale")
+    second_channel_id = channels.channels_create(info['token'], 'secondchannelname', True) 
+    channel.channel_join(secondinfo['token'], second_channel_id['channel_id'])
+    second_u_id = auth.auth_u_id_from_token(secondinfo['token'])
+    channel.channel_addowner(info['token'], second_channel_id['channel_id'], second_u_id)
+    assert len(data['channels'][1]['owners']) == 2
+    channel.channel_removeowner(info['token'], second_channel_id['channel_id'], second_u_id)
+    assert len(data['channels'][1]['owners']) == 1
 
 # Test chanel_invite
 #
