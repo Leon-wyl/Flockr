@@ -18,7 +18,6 @@ def message_remove(token, message_id):
     check_valid_token(token)
     u_id = auth_u_id_from_token(token)
     channel_id = data_get_channel_id(message_id)
-    check_authorised_member_channel(channel_id, u_id)
     check_authorised_member_message(u_id, channel_id, message_id)
     data_message_remove(channel_id, message_id)
 
