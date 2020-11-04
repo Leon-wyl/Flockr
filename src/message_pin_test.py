@@ -150,6 +150,9 @@ def test_message_pin_invalid2():
         message_pin(user0_info['token'], message0_info['message_id'])
 
 def test_message_pin_invalid3():
+    '''The authorised user is not an owner'''
+    clear()
+
     # Register user 0
     user0_info = auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
     # Register user 1
