@@ -27,14 +27,14 @@ def test_message_pin_valid0():
     # User 0 join channel1
     channel_join(user0_info['token'], channel1_info['channel_id'])
     # User 2 send a message
-    message0_info = message_send(user2_info['token'], channel0_info['channel_id'], "Hello")
+    message0_info = message_send(user2_info['token'], channel1_info['channel_id'], "Hello")
     # USer 1 send a message
-    message_send(user1_info['token'], channel0_info['channel_id'], "Hi")
+    message_send(user1_info['token'], channel1_info['channel_id'], "Hi")
     # User 1 pin the message sent by user 2
     message_pin(user1_info['token'], message0_info['message_id'])
     # User 0 get all channel messages
-    all_message_info = channel_messages(user0_info['token'], channel0_info['channel_id'], 0)
-    assert all_message_info['message_list'][1]['is_pinned'] == True
+    all_message_info = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
+    assert all_message_info['message_list'][0]['is_pinned'] == True
 
 def test_message_pin_valid1():
     '''Owner of the flockr joins the channel and pin a message sent by a member'''
@@ -57,11 +57,11 @@ def test_message_pin_valid1():
     # User 0 join channel1
     channel_join(user0_info['token'], channel1_info['channel_id'])
     # User 2 send a message
-    message0_info = message_send(user2_info['token'], channel0_info['channel_id'], "Hello")
+    message0_info = message_send(user2_info['token'], channel1_info['channel_id'], "Hello")
     # User 0 pin the message sent by user 2
     message_pin(user0_info['token'], message0_info['message_id'])
     # User 0 get all channel messages
-    all_message_info = channel_messages(user0_info['token'], channel0_info['channel_id'], 0)
+    all_message_info = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
     assert all_message_info['message_list'][0]['is_pinned'] == True
 
 def test_message_pin_invalid0():
@@ -85,10 +85,9 @@ def test_message_pin_invalid0():
     # User 0 join channel1
     channel_join(user0_info['token'], channel1_info['channel_id'])
     # User 2 send a message
-    message_send(user2_info['token'], channel0_info['channel_id'], "Hello")
+    message_send(user2_info['token'], channel1_info['channel_id'], "Hello")
     # User 1 send a message
-    message_send(user1_info['token'], channel0_info['channel_id'], "Hi")
-    # User 1 pin the message with a invalid message_id
+    message_send(user1_info['token'], channel1_info['channel_id'], "Hi")
     with pytest.raises(InputError):
         # User 0 pin a message with wrong message_id
         message_pin(user0_info['token'], 2)
@@ -114,7 +113,7 @@ def test_message_pin_invalid1():
     # User 0 join channel1
     channel_join(user0_info['token'], channel1_info['channel_id'])
     # User 2 send a message
-    message0_info = message_send(user2_info['token'], channel0_info['channel_id'], "Hello")
+    message0_info = message_send(user2_info['token'], channel1_info['channel_id'], "Hello")
     # USer 1 send a message
     message_send(user1_info['token'], channel0_info['channel_id'], "Hi")
     # User 1 pin the message sent by user 2
@@ -142,12 +141,12 @@ def test_message_pin_invalid2():
     # User 2 join channel1
     channel_join(user2_info['token'], channel1_info['channel_id'])
     # User 2 send a message
-    message0_info = message_send(user2_info['token'], channel0_info['channel_id'], "Hello")
+    message0_info = message_send(user2_info['token'], channel1_info['channel_id'], "Hello")
     # USer 1 send a message
     message_send(user1_info['token'], channel0_info['channel_id'], "Hi")
     with pytest.raises(AccessError):
         # User 0 pin a message in channel1 which he is not in
-        message_pin(user0_info['token'], message0_info['message_id'])
+        message_pin(user2_info['token'], message0_info['message_id'])
 
 def test_message_pin_invalid3():
     '''The authorised user is not an owner'''
@@ -170,7 +169,7 @@ def test_message_pin_invalid3():
     # User 0 join channel1
     channel_join(user0_info['token'], channel1_info['channel_id'])
     # User 2 send a message
-    message0_info = message_send(user2_info['token'], channel0_info['channel_id'], "Hello")
+    message0_info = message_send(user2_info['token'], channel1_info['channel_id'], "Hello")
     with pytest.raises(AccessError):
         # User 2 pin the message sent by himself
-        message_pin(user0_info['token'], message0_info['message_id'])
+        message_pin(user2_info['token'], message0_info['message_id'])
