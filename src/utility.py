@@ -194,3 +194,7 @@ def check_authorised_member_channel(channel_id, u_id):
                 if u_id == member['u_id']:
                     return
     raise AccessError("User is not in channel")
+
+def check_message_pinned(message_id, channel_id):
+    if data_message_pinned(message_id, channel_id) == True:
+        raise InputError("message has already been")

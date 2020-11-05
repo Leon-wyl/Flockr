@@ -289,6 +289,7 @@ def data_message_send(channel_id, u_id, message):
                 'u_id': u_id,
                 'message': message,
                 'time_created': 0,
+                'is_pinned': False,
             }  
             channel['messages'].append(newmessage)
             data['num_message'] += 1
@@ -321,4 +322,17 @@ def data_message_edit(channel_id, message_id, message):
             for item in channel['messages']:
                 if message_id == item['message_id']:
                     item['message'] = message
-                  
+
+def data_message_pinned(message_id, channel_id):
+    message_info = data_find_message(message_id, channel_id)
+    if message_info['message_id'] == message_id:
+        if message_info['is_pinned'] == True:
+            return True
+        message_info['is_pinned'] = True
+        return False
+
+def data_find_message(message_id, channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            for item in channel['messages']:
+                return item
