@@ -324,12 +324,15 @@ def data_message_edit(channel_id, message_id, message):
                     item['message'] = message
 
 def data_message_pinned(message_id, channel_id):
-    global data
+    message_info = data_find_message(message_id, channel_id)
+    if message_info['message_id'] == message_id:
+        if message_info['is_pinned'] == True:
+            return True
+        message_info['is_pinned'] = True
+        return False
+
+def data_find_message(message_id, channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
             for item in channel['messages']:
-                if item['message_id'] == message_id:
-                    if item['is_pinned'] == True:
-                        return True
-                    item['is_pinned'] = True
-                    return False
+                return item
