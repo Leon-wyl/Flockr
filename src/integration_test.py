@@ -132,13 +132,15 @@ def test_integration():
                 'message_id': 0,
                 'u_id': 0,
                 'message': 'Hello?',
-                'time_created': 0
+                'time_created': 0,
+                'is_pinned': False,
             },
             {
                 'message_id': 1,
                 'u_id': 1,
                 'message': 'My name is Monique',
                 'time_created': 0,
+                'is_pinned': False,
             }
         ],
         'start': 0,
@@ -175,6 +177,7 @@ def test_integration():
                 'u_id': 0,
                 'message': 'Sorry',
                 'time_created': 0,
+                'is_pinned': False,
             }
         ],
         'start': 0,

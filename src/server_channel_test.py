@@ -286,5 +286,28 @@ def test_server_channel_messages(url):
     
     resp = requests.get(f"{url}/channel/messages", params=dataIn10) 
     resp = resp.json()
-    assert resp == {'end': -1, 'message_list': [{'message': 'Hello', 'message_id': 0, 'time_created': 0, 'u_id': 0}, {'message': 'Hey there first', 'message_id': 1, 'time_created': 0, 'u_id': 1}], 'start': 0}    
+    print(resp)
+    assert resp == \
+    {
+        'message_list': 
+        [
+            {
+                'message_id': 0,
+                'u_id': 0,
+                'message': 'Hello',
+                'time_created': 0,
+                'is_pinned': False
+            },
+            {
+                'message_id': 1,
+                'u_id': 1,
+                'message': 'Hey there first',
+                'time_created': 0,
+                'is_pinned': False
+            }
+        ],
+        'start': 0,
+        'end': -1,
+    }
+    
     
