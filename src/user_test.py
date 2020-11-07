@@ -6,10 +6,12 @@ from error import AccessError, InputError
 from auth import *
 from other import clear
 
+
 def test_user_profile_invalid_u_id():
     clear()
     with pytest.raises(InputError):
         user_profile(0, 0)
+
 
 def test_user_profile_success():
     clear()
@@ -26,6 +28,8 @@ def test_user_profile_success():
         	'handle_str': 'hayeve',
         },
     }
+
+
 def test_user_profile_setname_first_name_too_long():
     clear()
     user = auth_register('validemail@gmail.com', '123abc!@#', 
@@ -33,12 +37,14 @@ def test_user_profile_setname_first_name_too_long():
     with pytest.raises(InputError):
         user_profile_setname(user['token'], 'Haydennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn', 'Jaycob')
 
+
 def test_user_profile_setname_last_name_too_long():
     clear()
     user = auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
     with pytest.raises(InputError):
         user_profile_setname(user['token'], 'Hay', 'Evvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv')
+
 
 def test_user_profile_setname_success():
     clear()
@@ -49,12 +55,14 @@ def test_user_profile_setname_success():
     assert newuser['name_first'] == 'John'
     assert newuser['name_last'] == 'Smith'
 
+
 def test_user_profile_setemail_invalid_email():
     clear()
     user = auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
     with pytest.raises(InputError):
         user_profile_setemail(user['token'], 'invalidemailgmail.com')
+
 
 def test_user_profile_setemail_already_used():
     clear()
@@ -65,6 +73,7 @@ def test_user_profile_setemail_already_used():
     with pytest.raises(InputError):
         user_profile_setemail(user['token'], 'validemail2@gmail.com')
 
+
 def test_user_profile_setemail_success():
     clear()
     user = auth_register('validemail@gmail.com', '123abc!@#', 
@@ -73,6 +82,7 @@ def test_user_profile_setemail_success():
     user_profile_setemail(user['token'], 'abcdefg@gmail.com')
     assert data['users'][0]['email'] == 'abcdefg@gmail.com'
 
+
 def test_user_profile_sethandle_too_long():
     clear()
     user = auth_register('validemail@gmail.com', '123abc!@#', 
@@ -80,12 +90,14 @@ def test_user_profile_sethandle_too_long():
     with pytest.raises(InputError):
         user_profile_sethandle(user['token'], 'abcdefghijklmnopqrstuvwxyz')
 
+
 def test_user_profile_sethandle_too_short():
     clear()
     user = auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
     with pytest.raises(InputError):
         user_profile_sethandle(user['token'], 'ab')
+
 
 def test_user_profile_sethandle_already_used():
     clear()
@@ -99,6 +111,7 @@ def test_user_profile_sethandle_already_used():
     with pytest.raises(InputError):
         user_profile_sethandle(user['token'], handle_been_used)
 
+
 def test_user_profile_sethandle_success():
     clear()
     auth_register('validemail@gmail.com', '123abc!@#', 
@@ -106,3 +119,9 @@ def test_user_profile_sethandle_success():
     user = data['users'][0]
     user_profile_sethandle(user['token'], 'abcdefg')
     assert user['handle'] == 'abcdefg'
+
+def test_user_profile_uploadphoto_wrong_dimension():
+    clear()
+    user = auth_register('validemail@gmail.com', '123abc!@#', 
+    'Hayden', 'Everest')
+    user_uploadphoto(user['token'], 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.jpg', x_start, y_start, x_end, y_end)
