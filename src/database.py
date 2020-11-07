@@ -336,3 +336,11 @@ def data_find_message(message_id, channel_id):
         if channel['channel_id'] == channel_id:
             for item in channel['messages']:
                 return item
+
+def data_message_unpinned(message_id, channel_id):
+    message_info = data_find_message(message_id, channel_id)
+    if message_info['message_id'] == message_id:
+        if message_info['is_pinned'] == False:
+            return True
+        message_info['is_pinned'] = False
+        return False
