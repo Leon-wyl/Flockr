@@ -91,8 +91,7 @@ def test_login():
     info = auth_register("hello@gmail.com", "fsdfsdfsDS23", "Hello", "Hi")
     auth_logout(info['token'])
     auth_login("hello@gmail.com", "fsdfsdfsDS23")
-    with pytest.raises(AccessError):
-        auth_login("hello@gmail.com", "fsdfsdfsDS23")
+    assert auth_login("hello@gmail.com", "fsdfsdfsDS23") == info
 
 def test_logout():
     clear()
