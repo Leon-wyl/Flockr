@@ -137,6 +137,11 @@ def server_profile_sethandle():
     data = request.get_json()
     return dumps(user_profile_sethandle(data['token'], data['handle_str']))
 
+@APP.route('/user/profile/uploadphoto', methods=['POST'])
+def server_profile_uploadphoto():
+    data = request.get_json()
+    return dumps(user_profile_uploadphoto(data['token'], data['img_url'], data['x_start'], data['y_start'], data['x_end'], data['y_end'])))
+
 @APP.route('/users/all', methods=['GET'])
 def server_all():
     return dumps(users_all(request.args.get('token')))

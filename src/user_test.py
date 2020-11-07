@@ -120,8 +120,11 @@ def test_user_profile_sethandle_success():
     user_profile_sethandle(user['token'], 'abcdefg')
     assert user['handle'] == 'abcdefg'
 
-def test_user_profile_uploadphoto_wrong_dimension():
+
+def test_user_profile_uploadphoto_not_jpg():
     clear()
     user = auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
-    user_uploadphoto(user['token'], 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.jpg', x_start, y_start, x_end, y_end)
+    with pytest.raises(InputError):
+        test_user_profile_uploadphoto(user['token'], abcdef.img, 0, 0, 0, 0)
+        
