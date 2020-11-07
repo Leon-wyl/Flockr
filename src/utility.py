@@ -195,3 +195,7 @@ def check_authorised_member_channel(channel_id, u_id):
 def check_message_pinned(message_id, channel_id):
     if data_message_pinned(message_id, channel_id) == True:
         raise InputError("Message has already been pinned")
+
+def check_message_unpinned(message_id, channel_id):
+    if data_message_unpinned(message_id, channel_id) == True:
+        raise InputError("Message is not pinned already")

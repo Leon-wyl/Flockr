@@ -37,3 +37,12 @@ def message_pin(token, message_id):
     if not is_owner_exist(u_id, channel_id):
         check_global_owner(u_id)
     check_message_pinned(message_id, channel_id)
+
+def message_unpin(token, message_id):
+    check_valid_token(token)
+    u_id = auth_u_id_from_token(token)
+    channel_id = data_get_channel_id(message_id)
+    check_authorised_member_channel(channel_id, u_id)
+    if not is_owner_exist(u_id, channel_id):
+        check_global_owner(u_id)
+    check_message_unpinned(message_id, channel_id)
