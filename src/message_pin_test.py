@@ -5,6 +5,7 @@ from message import message_send, message_pin
 from other import clear
 from error import InputError, AccessError
 import pytest
+from database import data
 
 def test_message_pin_valid0():
     '''Owner of the channel pin the message sent by a member'''
@@ -132,11 +133,11 @@ def test_message_pin_invalid2():
     user1_info = auth_register("billgates@outlook.com", "VukkFs", "Bill", "Gates")
     # Register user 2
     user2_info = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
-    # User 0 create a channel
+    # User 0 create channel0
     channel0_info = channels_create(user0_info['token'], "channel0", True)
-    # User 1 join the channel
+    # User 1 join channel0
     channel_join(user1_info['token'], channel0_info['channel_id'])
-    # User 1 create another channel
+    # User 1 create channel1
     channel1_info = channels_create(user1_info['token'], "channel1", True)
     # User 2 join channel1
     channel_join(user2_info['token'], channel1_info['channel_id'])
@@ -146,7 +147,7 @@ def test_message_pin_invalid2():
     message_send(user1_info['token'], channel0_info['channel_id'], "Hi")
     with pytest.raises(AccessError):
         # User 0 pin a message in channel1 which he is not in
-        message_pin(user2_info['token'], message0_info['message_id'])
+        message_pin(user0_info['token'], message0_info['message_id'])
 
 def test_message_pin_invalid3():
     '''The authorised user is not an owner'''
