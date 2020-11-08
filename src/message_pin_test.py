@@ -85,7 +85,7 @@ def test_message_pin_valid2():
     # User 0 join channel1
     channel_join(user0_info['token'], channel1_info['channel_id'])
     # User 2 send a message
-    message0_info = message_send(user2_info['token'], channel1_info['channel_id'], "Hello")
+    message_send(user2_info['token'], channel1_info['channel_id'], "Hello")
     # USer 1 send a message
     message1_info = message_send(user1_info['token'], channel1_info['channel_id'], "Hi")
     # User 0 pin the message sent by user 1
@@ -115,7 +115,7 @@ def test_message_pin_valid3():
     # User 0 join channel1
     channel_join(user0_info['token'], channel1_info['channel_id'])
     # User 2 send a message
-    message0_info = message_send(user2_info['token'], channel1_info['channel_id'], "Hello")
+    message_send(user2_info['token'], channel1_info['channel_id'], "Hello")
     # USer 0 send a message
     message1_info = message_send(user1_info['token'], channel1_info['channel_id'], "Hi")
     # User 1 pin the message sent by user 0
