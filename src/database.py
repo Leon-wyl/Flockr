@@ -292,12 +292,8 @@ def data_message_send(channel_id, u_id, message):
                 'u_id': u_id,
                 'message': message,
                 'time_created': 0,
-<<<<<<< HEAD
-            }
-=======
                 'is_pinned': False,
             }
->>>>>>> origin/master
             channel['messages'].append(newmessage)
             data['num_message'] += 1
     return newmessage['message_id']

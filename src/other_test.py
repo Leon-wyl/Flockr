@@ -221,6 +221,7 @@ def test_standup_send():
         [
             {
                 'message_id': 0,
+                'is_pinned': False,
                 'u_id': 0,
                 'message': 'MJohnson: hello\nMJohnson: asd\nMJohnson: dfg\nMJohnson: abc\n',
                 'time_created': 0,
