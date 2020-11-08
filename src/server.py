@@ -7,7 +7,7 @@ from auth import auth_login, auth_logout, auth_register
 from channels import channels_list, channels_listall, channels_create
 from channel import channel_invite, channel_details, channel_messages, channel_leave, \
     channel_join, channel_addowner, channel_removeowner
-from message import message_send, message_remove, message_edit
+from message import message_send, message_remove, message_edit, message_pin, message_unpin
 from user import user_profile, user_profile_setname, user_profile_setemail, user_profile_sethandle
 from other import clear, users_all, admin_userpermission_change, search
 
@@ -153,6 +153,16 @@ def server_search():
 @APP.route('/clear', methods=['DELETE'])
 def server_clear():
     return dumps(clear())
+
+@APP.route('/message/pin', methods=['POST'])
+def server_pin():
+    data = request.get_json()
+    return dumps(message_pin(data['token'], int(data['message_id'])))
+
+@APP.route('/message/unpin', methods=['POST'])
+def server_unpin():
+    data = request.get_json()
+    return dumps(message_unpin(data['token'], int(data['message_id'])))
 
 if __name__ == "__main__":
     APP.run(port=0) # Do not edit this port
