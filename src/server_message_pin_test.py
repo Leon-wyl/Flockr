@@ -127,7 +127,6 @@ def test_message_pin_valid0(url):
         'message': "Hi",
     }
     r = requests.post(f"{url}/message/send", json=user1_message_input)
-    user1_message_output = r.json()
 
     # User 1 pin the message sent by user 2
     user1_pin_input = {
@@ -236,7 +235,6 @@ def test_message_pin_valid1(url):
         'message': "Hi",
     }
     r = requests.post(f"{url}/message/send", json=user1_message_input)
-    user1_message_output = r.json()
 
     # User 0 pin the message sent by user 2
     user0_pin_input = {
@@ -335,7 +333,6 @@ def test_message_pin_valid2(url):
         'message': "Hello",
     }
     r = requests.post(f"{url}/message/send", json=user2_message_input)
-    user2_message_output = r.json()
 
     # User 1 send a message
     user1_message_input = {
@@ -443,7 +440,6 @@ def test_message_pin_valid3(url):
         'message': "Hello",
     }
     r = requests.post(f"{url}/message/send", json=user2_message_input)
-    user2_message_output = r.json()
 
     # User 0 send a message
     user0_message_input = {
@@ -551,7 +547,6 @@ def test_message_pin_invalid0(url):
         'message': "Hello",
     }
     r = requests.post(f"{url}/message/send", json=user2_message_input)
-    user2_message_output = r.json()
 
     # User 1 send a message
     user1_message_input = {
@@ -560,7 +555,6 @@ def test_message_pin_invalid0(url):
         'message': "Hi",
     }
     r = requests.post(f"{url}/message/send", json=user1_message_input)
-    user1_message_output = r.json()
 
     # User 1 pin a non exist message
     user1_pin_input = {
@@ -660,7 +654,6 @@ def test_message_pin_invalid1(url):
         'message': "Hi",
     }
     r = requests.post(f"{url}/message/send", json=user1_message_input)
-    user1_message_output = r.json()
 
     # User 1 pin the message sent by user 2
     user1_pin_input = {
@@ -760,7 +753,6 @@ def test_message_pin_invalid2(url):
         'message': "Hi",
     }
     r = requests.post(f"{url}/message/send", json=user1_message_input)
-    user1_message_output = r.json()
 
     # User 0 pin the message sent by user 2
     user1_pin_input = {
@@ -860,7 +852,6 @@ def test_message_pin_invalid3(url):
         'message': "Hi",
     }
     r = requests.post(f"{url}/message/send", json=user1_message_input)
-    user1_message_output = r.json()
 
     # User 2 pin the message sent by user 2
     user2_pin_input = {
@@ -961,7 +952,6 @@ def test_message_unpin_valid0(url):
         'message': "Hi",
     }
     r = requests.post(f"{url}/message/send", json=user1_message_input)
-    user1_message_output = r.json()
 
     # User 1 pin the message sent by user 2
     user1_pin_input = {
@@ -1077,7 +1067,6 @@ def test_message_unpin_valid1(url):
         'message': "Hi",
     }
     r = requests.post(f"{url}/message/send", json=user1_message_input)
-    user1_message_output = r.json()
 
     # User 0 pin the message sent by user 2
     user0_pin_input = {
@@ -1192,7 +1181,6 @@ def test_message_unpin_invalid0(url):
         'message': "Hi",
     }
     r = requests.post(f"{url}/message/send", json=user1_message_input)
-    user1_message_output = r.json()
 
     # User 0 pin the message sent by user 2
     user0_pin_input = {
@@ -1299,7 +1287,6 @@ def test_message_unpin_invalid1(url):
         'message': "Hi",
     }
     r = requests.post(f"{url}/message/send", json=user1_message_input)
-    user1_message_output = r.json()
 
     # User 0 pin the message sent by user 2
     user0_pin_input = {
@@ -1406,7 +1393,6 @@ def test_message_unpin_invalid2(url):
         'message': "Hi",
     }
     r = requests.post(f"{url}/message/send", json=user1_message_input)
-    user1_message_output = r.json()
 
     # User 1 pin the message sent by user 2
     user1_pin_input = {
@@ -1506,7 +1492,6 @@ def test_message_unpin_invalid3(url):
         'message': "Hi",
     }
     r = requests.post(f"{url}/message/send", json=user1_message_input)
-    user1_message_output = r.json()
 
     # User 1 pin the message sent by user 2
     user1_pin_input = {
