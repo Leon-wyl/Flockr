@@ -191,7 +191,6 @@ def test_standup_active_invalid_channel():
     clear()
     info2 = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
     channels_create(info2['token'], 'first', True)
-    time = datetime.now() + timedelta(seconds=20)
     standup_start(info2['token'], 0, 20)
     with pytest.raises(InputError):
         standup_active(info2['token'], 2)
@@ -202,7 +201,6 @@ def test_standup_active_invalid_token():
     clear()
     info2 = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
     channels_create(info2['token'], 'first', True)
-    time = datetime.now() + timedelta(seconds=20)
     standup_start(info2['token'], 0, 20)
     with pytest.raises(AccessError):
         standup_active(info2['token'] + 'a', 0)
