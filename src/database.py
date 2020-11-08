@@ -1,4 +1,7 @@
 from error import AccessError, InputError
+from datetime import datetime, timezone, timedelta
+from time import sleep
+import _thread
 
 '''The database for the user and channel data'''
 data = {
@@ -32,7 +35,7 @@ def data_upload(u_id, email, password, name_first, name_last, handle, token):
     if u_id == 0:
         permission_id = 1
     data['users'].append({
-        'u_id': u_id, 
+        'u_id': u_id,
         'email': email,
         'password': password,
         'name_first': name_first,
@@ -48,7 +51,7 @@ def data_login(u_id, token):
 def data_logout(token):
     '''If a valid u_id is given, then turn the token into None to
      logged out, returns true, otherwise raise AccessError.'''
-    
+
     for user in data['users']:
         if user['token'] == token:
             user['token'] = None
@@ -60,14 +63,14 @@ def data_logout(token):
 def data_u_id():
     '''Create u_id'''
     return len(data['users'])
-    
+
 def data_last_channel_id():
     return data['channels'][-1]['channel_id']
-    
+
 def data_add_channel(new_channel):
     data['channels'].append(new_channel)
     return
-    
+
 def is_channel_empty():
     if data['channels'] == []:
         return True
@@ -123,13 +126,13 @@ def data_user_channels(u_id):
     return user_channel
 
 def data_channel_name(channel_id):
-    for channels in data['channels']:   
+    for channels in data['channels']:
         if channel_id == channels['channel_id']:
             channel_name = channels['name']
     return channel_name
-    
+
 def data_channel_owners(channel_id):
-    for channels in data['channels']:   
+    for channels in data['channels']:
         if channel_id == channels['channel_id']:
             owners = []
             for owner in channels['owners']:
@@ -139,10 +142,10 @@ def data_channel_owners(channel_id):
                 new_owner['name_last'] = owner['name_last']
                 owners.append(new_owner)
             return owners
-            
+
 def data_channel_members(channel_id):
-    for channels in data['channels']:   
-        if channel_id == channels['channel_id']:            
+    for channels in data['channels']:
+        if channel_id == channels['channel_id']:
             members = []
             for member in channels['members']:
                 new_member = {}
@@ -155,7 +158,7 @@ def data_channel_members(channel_id):
 def data_channel_messages_end(start, channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
-            if start + 49 < len(channel['messages']): 
+            if start + 49 < len(channel['messages']):
                 end = start + 50
             else:
                 end = -1
@@ -176,8 +179,8 @@ def data_channel_messages(channel_id, start, end):
 	                if message['message_id'] >= start:
 	                    if message['message_id'] < end:
 	                        message_list.append(message)
-    return message_list    
-	                     
+    return message_list
+
 def is_owner_exist(u_id, channel_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
@@ -202,8 +205,8 @@ def data_add_owner(u_id, channel_id):
                 if u_id == user['u_id']:
                     channel['owners'].append(user)
                     return
-            
-    
+
+
 
 def data_remove_owner(u_id, channel_id):
     for channel in data['channels']:
@@ -222,7 +225,7 @@ def data_add_member(u_id, channel_id):
                 if u_id == user['u_id']:
                     channel['members'].append(user)
                     return
-            
+
 
 def channel_numbers():
     return len(data['channels'])
@@ -256,7 +259,7 @@ def data_permission(u_id):
         if user['u_id'] == u_id:
             return user['permission_id']
 
-      
+
 def data_change_permission(u_id, permission_id):
     for user in data['users']:
         if user['u_id'] == u_id:
@@ -283,13 +286,13 @@ def data_search_message(query_str, u_id):
 
 def data_message_send(channel_id, u_id, message):
     for channel in data['channels']:
-        if channel['channel_id'] == channel_id: 
+        if channel['channel_id'] == channel_id:
             newmessage = {
                 'message_id': data['num_message'],
                 'u_id': u_id,
                 'message': message,
                 'time_created': 0,
-            }  
+            }
             channel['messages'].append(newmessage)
             data['num_message'] += 1
     return newmessage['message_id']
@@ -302,23 +305,71 @@ def data_get_channel_id(message_id):
                     return channel['channel_id']
     raise InputError ("Message does not exist")
 
-    
-        
-    
+
+
+
 
 def data_message_remove(channel_id, message_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
             channel['messages'] = [i for i in channel['messages'] if not i['message_id'] \
                 == message_id]
-                    
+
 def data_message_edit(channel_id, message_id, message):
     for channel in data['channels']:
-        if channel['channel_id'] == channel_id: 
+        if channel['channel_id'] == channel_id:
             if message == "":
                 channel['messages'] = [i for i in channel['messages'] if not i['message_id'] \
                     == message_id]
             for item in channel['messages']:
                 if message_id == item['message_id']:
                     item['message'] = message
-                  
+
+def is_standup_active(channel_id):
+    for channel in data['channels']:
+        if channel_id == channel['channel_id']:
+            return channel['is_active']
+
+
+def data_standup_start(u_id, channel_id, length):
+    for channel in data['channels']:
+        if channel_id == channel['channel_id']:
+            channel['is_active'] = True
+            time = (datetime.now() + timedelta(seconds=length)).replace(tzinfo=timezone.utc).timestamp()
+            channel['time_finish'] = time = round(time, 0)
+            try:
+                _thread.start_new_thread(sleep_when_standup, (length, channel, u_id))
+            except:
+                raise Exception('Cannot start thread MUDAMUDAMUDA!')
+            return time
+
+def sleep_when_standup(length, channel, u_id):
+    sleep(length)
+    channel['is_active'] = False
+    channel['time_finish'] = None
+    if channel['standup_message'] != '':
+        data_message_send(channel['channel_id'], u_id, channel['standup_message'])
+    channel['standup_message'] = ''
+    return
+
+def data_standup_status(channel_id):
+    for channel in data['channels']:
+        if channel_id == channel['channel_id']:
+            return {
+                'is_active': channel['is_active'],
+                'time_finish': channel['time_finish']
+            }
+
+
+def data_message_buffer(u_id, message, channel_id):
+    for user in data['users']:
+        if u_id == user['u_id']:
+            name = user['name_first'] + user['name_last']
+            break
+    message = f"{name}: {message}\n"
+    for channel in data['channels']:
+        if channel_id == channel['channel_id']:
+            channel['standup_message'] += message
+            break
+    return
+

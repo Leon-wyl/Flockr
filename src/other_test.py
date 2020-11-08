@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from other import *
 from auth import *
 from channels import *
@@ -6,6 +6,7 @@ from channel import *
 from database import *
 from error import AccessError, InputError
 from other import clear
+from time import sleep
 from message import message_send
 import pytest
 
@@ -145,9 +146,9 @@ def test_standup_start():
     clear()
     info2 = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
     channels_create(info2['token'], 'first', True)
-    time = datetime.datetime.now() + datetime.timedelta(seconds=6)
+    time = datetime.now() + timedelta(seconds=6)
     assert standup_start(info2['token'], 0, 6) == {
-        time_finish: time.replace(tzinfo=timezone.utc).timestamp(),
+        'time_finish': round(time.replace(tzinfo=timezone.utc).timestamp(), 0),
     }
 
 def test_standup_start_invalid_channel():
@@ -156,7 +157,7 @@ def test_standup_start_invalid_channel():
     channels_create(info2['token'], 'first', True)
     with pytest.raises(InputError):
         standup_start(info2['token'], 2, 6)
-        standup
+
 def test_standup_start_already_active():
     clear()
     info2 = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
@@ -177,11 +178,11 @@ def test_standup_active():
     clear()
     info2 = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
     channels_create(info2['token'], 'first', True)
-    time = datetime.datetime.now() + datetime.timedelta(seconds=20)
-    standup_start(info2['token'], 0, 20)
+    time = datetime.now() + timedelta(seconds=10)
+    standup_start(info2['token'], 0, 10)
     assert standup_active(info2['token'], 0) == {
-        is_active: True,
-        time_finish = time.replace(tzinfo=timezone.utc).timestamp(),
+        'is_active': True,
+        'time_finish': round(time.replace(tzinfo=timezone.utc).timestamp(), 0),
     }
 
 
@@ -190,7 +191,7 @@ def test_standup_active_invalid_channel():
     clear()
     info2 = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
     channels_create(info2['token'], 'first', True)
-    time = datetime.datetime.now() + datetime.timedelta(seconds=20)
+    time = datetime.now() + timedelta(seconds=20)
     standup_start(info2['token'], 0, 20)
     with pytest.raises(InputError):
         standup_active(info2['token'], 2)
@@ -201,7 +202,7 @@ def test_standup_active_invalid_token():
     clear()
     info2 = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
     channels_create(info2['token'], 'first', True)
-    time = datetime.datetime.now() + datetime.timedelta(seconds=20)
+    time = datetime.now() + timedelta(seconds=20)
     standup_start(info2['token'], 0, 20)
     with pytest.raises(AccessError):
         standup_active(info2['token'] + 'a', 0)
@@ -211,12 +212,28 @@ def test_standup_send():
     clear()
     info2 = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
     channels_create(info2['token'], 'first', True)
-    standup_start(info2['token'], 0, 20)
+    standup_start(info2['token'], 0, 5)
     standup_send(info2['token'], 0, 'hello')
     standup_send(info2['token'], 0, 'asd')
     standup_send(info2['token'], 0, 'dfg')
     standup_send(info2['token'], 0, 'abc')
-    assert
+    sleep(6)
+    assert channel_messages(info2['token'], 0, 0) == {
+        'message_list':
+        [
+            {
+                'message_id': 0,
+                'u_id': 0,
+                'message': 'MJohnson: hello\nMJohnson: asd\nMJohnson: dfg\nMJohnson: abc\n',
+                'time_created': 0,
+            }
+        ],
+        'start': 0,
+        'end': -1
+    }
+
+
+
 
 def test_standup_send_invalid_channel():
     clear()
