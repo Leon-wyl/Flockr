@@ -193,6 +193,7 @@ def test_integration(url):
             'u_id': 0,
             'message': "areyouok",
             'time_created': 0,
+            'is_pinned': False,
         }],
         'start': 0,
         'end': -1,

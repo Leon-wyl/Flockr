@@ -189,9 +189,6 @@ def login_check(email, password):
         # If the password is not correct
         raise InputError("Password is not correct")
 
-    if correct_user['token'] is not None:
-        raise AccessError("User has already logged in")
-
     return correct_user['u_id']
 
 def password_encode(password):
@@ -205,3 +202,11 @@ def check_authorised_member_channel(channel_id, u_id):
                 if u_id == member['u_id']:
                     return
     raise AccessError("User is not in channel")
+
+def check_message_pinned(message_id, channel_id):
+    if data_message_pinned(message_id, channel_id) == True:
+        raise InputError("Message has already been pinned")
+
+def check_message_unpinned(message_id, channel_id):
+    if data_message_unpinned(message_id, channel_id) == True:
+        raise InputError("Message is not pinned already")

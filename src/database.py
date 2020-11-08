@@ -292,7 +292,12 @@ def data_message_send(channel_id, u_id, message):
                 'u_id': u_id,
                 'message': message,
                 'time_created': 0,
+<<<<<<< HEAD
             }
+=======
+                'is_pinned': False,
+            }
+>>>>>>> origin/master
             channel['messages'].append(newmessage)
             data['num_message'] += 1
     return newmessage['message_id']
@@ -373,3 +378,24 @@ def data_message_buffer(u_id, message, channel_id):
             break
     return
 
+def data_message_pinned(message_id, channel_id):
+    message_info = data_find_message(message_id, channel_id)
+    if message_info['message_id'] == message_id:
+        if message_info['is_pinned'] == True:
+            return True
+        message_info['is_pinned'] = True
+        return False
+
+def data_find_message(message_id, channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            for item in channel['messages']:
+                return item
+
+def data_message_unpinned(message_id, channel_id):
+    message_info = data_find_message(message_id, channel_id)
+    if message_info['message_id'] == message_id:
+        if message_info['is_pinned'] == False:
+            return True
+        message_info['is_pinned'] = False
+        return False
