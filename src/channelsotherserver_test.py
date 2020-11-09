@@ -181,7 +181,6 @@ def test_standup_send(url):
     info1 = requests.post(f"{url}/auth/register", json={'email': 'leonwu@gmail.com', 'password': 'ihfeh3hgi00d', 'name_first': 'Yilang', 'name_last': 'W'})
     info1 = info1.json()
     requests.post(f"{url}/channels/create", json={'token': info1['token'], 'name': 'first', 'is_public': True})
-    time = datetime.now() + timedelta(seconds=6)
     requests.post(f"{url}/standup/start", json={'token': info1['token'], 'channel_id': 0, 'length': 6})
     requests.post(f"{url}/standup/send", json={'token': info1['token'], 'channel_id': 0, 'message': 'hello'})
     requests.post(f"{url}/standup/send", json={'token': info1['token'], 'channel_id': 0, 'message': 'asd'})
@@ -199,7 +198,6 @@ def test_standup_send(url):
                 'u_id': 0,
                 'message': 'YilangW: hello\nYilangW: asd\nYilangW: dfg\nYilangW: abc\n',
                 'time_created': 0,
-                'is_pinned': False,
             }
         ],
         'start': 0,
