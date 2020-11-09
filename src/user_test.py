@@ -121,10 +121,10 @@ def test_user_profile_sethandle_success():
     assert user['handle'] == 'abcdefg'
 
 
-def test_user_profile_uploadphoto_not_jpg():
+def test_user_profile_uploadphoto_success():
     clear()
     user = auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')
-    with pytest.raises(InputError):
-        test_user_profile_uploadphoto(user['token'], abcdef.img, 0, 0, 0, 0)
+    assert user_profile_uploadphoto(user['token'], 'https://img1.looper.com/img/gallery/things-only-adults-notice-in-shrek/intro-1573597941.jpg', 0, 0, 500, 500) == {}
+
         

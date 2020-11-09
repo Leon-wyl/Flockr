@@ -243,7 +243,18 @@ def test_user_profile_uploadphoto(url):
     assert return_data['u_id'] == 0     # check if user has been created
     token1 = return_data['token']
 
-
+    correct_input = {
+        'token': token1, 
+        'img_url': 'https://img1.looper.com/img/gallery/things-only-adults-notice-in-shrek/intro-1573597941.jpg', 
+        'x_start': 0, 
+        'y_start': 0, 
+        'x_end': 600, 
+        'y_end': 600,
+    }
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=correct_input)
+    return_data = r.json()
+    assert return_data == {}
+'''
     # Wrong HTTP status
     wrong_url = {
         'token': token1, 
@@ -253,7 +264,7 @@ def test_user_profile_uploadphoto(url):
         'x_end': 0, 
         'y_end': 0,
     }
-    r = requests.post(f"{url}/user/profile/uploadphoto", json=wrong_x_end)
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=wrong_url)
     return_data = r.json()
     assert return_data['message'] == '<p>Wrong HTTP status!</p>'
 
@@ -320,3 +331,4 @@ def test_user_profile_uploadphoto(url):
     r = requests.post(f"{url}/user/profile/uploadphoto", json=not_jpg)
     return_data = r.json()
     assert return_data['message'] == '<p>Image url is not a jpg!</p>'
+    '''

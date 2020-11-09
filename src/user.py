@@ -1,8 +1,11 @@
+import urllib.request
+from PIL import Image
 from error import InputError
 from error import AccessError
 from database import *
 from utility import *
 from auth import *
+
 
 def user_profile(token, u_id):
     check_valid_user(u_id)
@@ -17,6 +20,7 @@ def user_profile(token, u_id):
             'handle_str': user['handle'],
         }
     }
+
 
 def user_profile_setname(token, name_first, name_last):
     user = is_token_exist(token)
@@ -35,6 +39,7 @@ def user_profile_setemail(token, email):
         }
     raise InputError("The email has already been used by another user")
 
+
 def user_profile_sethandle(token, handle_str):
     user = is_token_exist(token)        # find the user with token
     check_handle_length(handle_str)
@@ -42,3 +47,20 @@ def user_profile_sethandle(token, handle_str):
     user['handle'] = handle_str
     return {
     }
+
+
+def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
+    user = is_token_exist(token)        # find the user with token
+    u_id = user['u_id']
+    # create or empty the image file for storing new image
+    open(f'static/{u_id}.jpg', 'w').close() 
+    # Fetching image via url
+    urllib.request.urlretrieve(img_url, f'static/{u_id}.jpg')
+    # Crops the image from img_file.jpg
+    imageObject = Image.open(f'static/{u_id}.jpg')
+    cropped = imageObject.crop((x_start, y_start, x_end, y_end))
+    cropped.save(f'static/{u_id}.jpg')
+    return {
+    }
+
+    

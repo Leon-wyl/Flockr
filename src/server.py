@@ -1,6 +1,6 @@
 import sys
 from json import dumps
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 from flask_cors import CORS
 from error import InputError
 from auth import auth_login, auth_logout, auth_register
@@ -140,7 +140,11 @@ def server_profile_sethandle():
 @APP.route('/user/profile/uploadphoto', methods=['POST'])
 def server_profile_uploadphoto():
     data = request.get_json()
-    return dumps(user_profile_uploadphoto(data['token'], data['img_url'], data['x_start'], data['y_start'], data['x_end'], data['y_end'])))
+    return dumps(user_profile_uploadphoto(data['token'], data['img_url'], int(data['x_start']), int(data['y_start']), int(data['x_end']), int(data['y_end'])))
+
+@APP.route('/static/<path:filename>', methods=['GET'])
+def server_profile_uploadphoto_serve_photo(filename):
+    return send_from_directory('/static/', filename)
 
 @APP.route('/users/all', methods=['GET'])
 def server_all():
