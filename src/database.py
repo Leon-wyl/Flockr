@@ -2,6 +2,7 @@ from error import AccessError, InputError
 from datetime import datetime, timezone, timedelta
 from time import sleep
 import _thread
+import threading
 
 '''The database for the user and channel data'''
 data = {
@@ -246,6 +247,7 @@ def data_users_list():
         new_user['name_first'] = user['name_first']
         new_user['name_last'] = user['name_last']
         new_user['handle_str'] = user['handle']
+        #new_user['profile_img_url'] = user['profile_img_url']
         user_list.append(new_user)
     return user_list
 
@@ -280,6 +282,8 @@ def data_search_message(query_str, u_id):
                         new_message['u_id'] = message['u_id']
                         new_message['message'] = message['message']
                         new_message['time_created'] = message['time_created']
+                        #new_message['reacts'] = message['reacts']
+                        #new_message['is_pinned'] = message['is_pinned']
                         message_list.append(new_message)
                 break
     return message_list
