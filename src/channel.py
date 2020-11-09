@@ -13,6 +13,8 @@ def channel_invite(token, channel_id, u_id):
     check_authorised_member(token_id, channel_id)
     check_member_not_exist(u_id, channel_id)
     data_add_member(u_id, channel_id)
+    if data_permission(u_id) == 1:
+        data_add_owner(u_id, channel_id)
     return {}
 
 def channel_details(token, channel_id):
@@ -33,10 +35,10 @@ def channel_messages(token, channel_id, start):
     check_authorised_member_channel(channel_id, u_id)
     end = data_channel_messages_end(start, channel_id)
     message_list = data_channel_messages(channel_id, start, end)
-    
+
     return {
-        'message_list': message_list, 
-        'start': start, 
+        'message_list': message_list,
+        'start': start,
         'end': end,
     }
 
@@ -53,6 +55,8 @@ def channel_join(token, channel_id):
     # make sure member doesn't exist before joining
     check_member_not_exist(u_id, channel_id)
     data_add_member(u_id, channel_id)
+    if data_permission(u_id) == 1:
+        data_add_owner(u_id, channel_id)
     return {}
 
 # Make user with user id u_id an owner of this channel

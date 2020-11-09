@@ -6,9 +6,10 @@ from channel import *
 from database import *
 from error import AccessError, InputError
 from other import clear
-from time import sleep
+from time import sleep, time
 from message import message_send
 import pytest
+import threading
 
 # Test users_all function
 def test_users_all():
@@ -206,7 +207,7 @@ def test_standup_active_invalid_token():
         standup_active(info2['token'] + 'a', 0)
 
 
-def test_standup_send():
+def test_standup_send1():
     clear()
     info2 = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
     channels_create(info2['token'], 'first', True)
@@ -232,7 +233,30 @@ def test_standup_send():
     }
 
 
-
+def test_standup_send2():
+    clear()
+    info2 = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
+    channels_create(info2['token'], 'first', True)
+    standup_start(info2['token'], 0, 5)
+    standup_send(info2['token'], 0, 'hello')
+    standup_send(info2['token'], 0, 'asd')
+    standup_send(info2['token'], 0, 'dfg')
+    standup_send(info2['token'], 0, 'abc')
+    sleep(6)
+    assert channel_messages(info2['token'], 0, 0) == {
+        'message_list':
+        [
+            {
+                'message_id': 0,
+                'is_pinned': False,
+                'u_id': 0,
+                'message': 'MJohnson: hello\nMJohnson: asd\nMJohnson: dfg\nMJohnson: abc\n',
+                'time_created': 0,
+            }
+        ],
+        'start': 0,
+        'end': -1
+    }
 
 def test_standup_send_invalid_channel():
     clear()

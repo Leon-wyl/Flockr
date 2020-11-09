@@ -9,7 +9,7 @@ from channel import channel_invite, channel_details, channel_messages, channel_l
     channel_join, channel_addowner, channel_removeowner
 from message import message_send, message_remove, message_edit, message_pin, message_unpin
 from user import user_profile, user_profile_setname, user_profile_setemail, user_profile_sethandle
-from other import clear, users_all, admin_userpermission_change, search
+from other import clear, users_all, admin_userpermission_change, search, standup_active, standup_send, standup_start
 
 def defaultHandler(err):
     response = err.get_response()
@@ -163,6 +163,20 @@ def server_pin():
 def server_unpin():
     data = request.get_json()
     return dumps(message_unpin(data['token'], int(data['message_id'])))
+
+@APP.route('/standup/start', methods=['POST'])
+def server_start_standup():
+    data = request.get_json()
+    return dumps(standup_start(data['token'], int(data['channel_id']), data['length']))
+
+@APP.route('/standup/active', methods=['GET'])
+def server_active_standup():
+    return dumps(standup_active(request.args.get('token'), int(request.args.get('channel_id'))))
+
+@APP.route('/standup/send', methods=['POST'])
+def server_send_standup():
+    data = request.get_json()
+    return dumps(standup_send(data['token'], int(data['channel_id']), data['message']))
 
 if __name__ == "__main__":
     APP.run(port=0) # Do not edit this port
