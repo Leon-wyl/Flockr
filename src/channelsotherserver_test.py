@@ -154,8 +154,8 @@ def test_standup_start(url):
     info1 = requests.post(f"{url}/auth/register", json={'email': 'leonwu@gmail.com', 'password': 'ihfeh3hgi00d', 'name_first': 'Yilang', 'name_last': 'W'})
     info1 = info1.json()
     requests.post(f"{url}/channels/create", json={'token': info1['token'], 'name': 'first', 'is_public': True})
-    time = datetime.now() + timedelta(seconds=6)
     resp = requests.post(f"{url}/standup/start", json={'token': info1['token'], 'channel_id': 0, 'length': 6})
+    time = datetime.now() + timedelta(seconds=6)
     resp = resp.json()
     assert resp == {
         'time_finish': round(time.replace(tzinfo=timezone.utc).timestamp(), 0),
@@ -166,8 +166,8 @@ def test_standup_active(url):
     info1 = requests.post(f"{url}/auth/register", json={'email': 'leonwu@gmail.com', 'password': 'ihfeh3hgi00d', 'name_first': 'Yilang', 'name_last': 'W'})
     info1 = info1.json()
     requests.post(f"{url}/channels/create", json={'token': info1['token'], 'name': 'first', 'is_public': True})
-    time = datetime.now() + timedelta(seconds=10)
     requests.post(f"{url}/standup/start", json={'token': info1['token'], 'channel_id': 0, 'length': 10})
+    time = datetime.now() + timedelta(seconds=10)
     resp = requests.get(f"{url}/standup/active", params={'token': info1['token'], 'channel_id': 0})
     resp = resp.json()
     assert resp == {

@@ -179,8 +179,8 @@ def test_standup_active():
     clear()
     info2 = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
     channels_create(info2['token'], 'first', True)
-    time = datetime.now() + timedelta(seconds=10)
     standup_start(info2['token'], 0, 10)
+    time = datetime.now() + timedelta(seconds=10)
     assert standup_active(info2['token'], 0) == {
         'is_active': True,
         'time_finish': round(time.replace(tzinfo=timezone.utc).timestamp(), 0),
