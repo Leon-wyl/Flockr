@@ -424,7 +424,7 @@ def data_find_message(message_id, channel_id):
             for item in channel['messages']:
                 if item['message_id'] == message_id:
                     return item
-                    
+
 def data_message_unreacted(message_id, channel_id, react_id, u_id):
     user_count = 0
     message_info = data_find_message(message_id, channel_id)
@@ -434,17 +434,17 @@ def data_message_unreacted(message_id, channel_id, react_id, u_id):
         for reacts in message_info['reacts']:
             if reacts['react_id'] == react_id:
                 for users in reacts['u_ids']:
-                    if users == u_id:                
+                    if users == u_id:
                         reacts['u_ids'].remove(u_id)
         for reacts in message_info['reacts']:
             if reacts['react_id'] == react_id:
                 for users in reacts['u_ids']:
                     user_count += 1
-                        
-                    
+
+
     if user_count == 0:
         message_info['reacts'] = []
-        
+
 def data_react_modify(before_list, u_id):
     for message in before_list:
         for react in message['reacts']:
@@ -453,4 +453,4 @@ def data_react_modify(before_list, u_id):
             else:
                 react['is_this_user_reacted'] = False
     return before_list
-          
+

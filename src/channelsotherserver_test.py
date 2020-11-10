@@ -190,7 +190,7 @@ def test_standup_send(url):
     resp = requests.get(f"{url}/channel/messages", params={'token': info1['token'], 'channel_id': 0, 'start': 0})
     resp = resp.json()
     assert resp == {
-        'message_list':
+        'messages':
         [
             {
                 'message_id': 0,

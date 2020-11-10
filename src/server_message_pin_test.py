@@ -143,7 +143,7 @@ def test_message_pin_valid0(url):
     }
     r = requests.get(f"{url}/channel/messages", params=user0_get_message_input)
     user0_get_message_output = r.json()
-    assert user0_get_message_output['message_list'][0]['is_pinned'] == True
+    assert user0_get_message_output['messages'][0]['is_pinned'] == True
 
 
 def test_message_pin_valid1(url):
@@ -251,7 +251,7 @@ def test_message_pin_valid1(url):
     }
     r = requests.get(f"{url}/channel/messages", params=user0_get_message_input)
     user0_get_message_output = r.json()
-    assert user0_get_message_output['message_list'][0]['is_pinned'] == True
+    assert user0_get_message_output['messages'][0]['is_pinned'] == True
 
 def test_message_pin_valid2(url):
     '''Owner of the flockr pin the message sent by a the owner of the channel'''
@@ -358,7 +358,7 @@ def test_message_pin_valid2(url):
     }
     r = requests.get(f"{url}/channel/messages", params=user0_get_message_input)
     user0_get_message_output = r.json()
-    assert user0_get_message_output['message_list'][1]['is_pinned'] == True
+    assert user0_get_message_output['messages'][1]['is_pinned'] == True
 
 def test_message_pin_valid3(url):
     '''Owner of the flockr pin the message sent by a the owner of the channel'''
@@ -465,7 +465,7 @@ def test_message_pin_valid3(url):
     }
     r = requests.get(f"{url}/channel/messages", params=user0_get_message_input)
     user0_get_message_output = r.json()
-    assert user0_get_message_output['message_list'][1]['is_pinned'] == True
+    assert user0_get_message_output['messages'][1]['is_pinned'] == True
 
 def test_message_pin_invalid0(url):
     '''message_id is not a valid message'''
@@ -975,10 +975,10 @@ def test_message_unpin_valid0(url):
     }
     r = requests.get(f"{url}/channel/messages", params=user0_get_message_input)
     user0_get_message_output = r.json()
-    assert user0_get_message_output['message_list'][0]['is_pinned'] == False
+    assert user0_get_message_output['messages'][0]['is_pinned'] == False
 
 def test_message_unpin_valid1(url):
-    '''Owner of the flocker pins a message sent by a member then the 
+    '''Owner of the flocker pins a message sent by a member then the
     message is uppined by the owner of the channel'''
     clear()
 
@@ -1090,7 +1090,7 @@ def test_message_unpin_valid1(url):
     }
     r = requests.get(f"{url}/channel/messages", params=user0_get_message_input)
     user0_get_message_output = r.json()
-    assert user0_get_message_output['message_list'][0]['is_pinned'] == False
+    assert user0_get_message_output['messages'][0]['is_pinned'] == False
 
 def test_message_unpin_invalid0(url):
     '''message_id is not a valid message'''
@@ -1301,7 +1301,7 @@ def test_message_unpin_invalid1(url):
         'message_id': user2_message_output['message_id'],
     }
     r = requests.post(f"{url}/message/unpin", json=user1_unpin_input)
-    
+
     # User 0 unpin again
     user0_unpin_input = {
         'token': user0_data_output['token'],

@@ -34,29 +34,29 @@ def test_message_react_valid():
     message_react(user1_info['token'], message0_info['message_id'], 1)
     # User 0 get all channel messages
     all_message_info = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
-    assert all_message_info['message_list'][0]['reacts'] == [{
-        'is_this_user_reacted': False, 
-        'react_id': 1, 
+    assert all_message_info['messages'][0]['reacts'] == [{
+        'is_this_user_reacted': False,
+        'react_id': 1,
         'u_ids': [1]
     }  ]
     # User 0 reacts the message sent by user 2
     message_react(user0_info['token'], message0_info['message_id'], 1)
-    
+
     # User 0 get all channel messages
     all_message_info1 = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
-    assert all_message_info1['message_list'][0]['reacts'] == [{
-        'is_this_user_reacted': True, 
-        'react_id': 1, 
+    assert all_message_info1['messages'][0]['reacts'] == [{
+        'is_this_user_reacted': True,
+        'react_id': 1,
         'u_ids': [1, 0]
     }  ]
     # User 2 get all channel messages
     all_message_info2 = channel_messages(user2_info['token'], channel1_info['channel_id'], 0)
-    assert all_message_info2['message_list'][0]['reacts'] == [{
-        'is_this_user_reacted': False, 
-        'react_id': 1, 
+    assert all_message_info2['messages'][0]['reacts'] == [{
+        'is_this_user_reacted': False,
+        'react_id': 1,
         'u_ids': [1, 0]
     }  ]
-   
+
 def test_message_react_invalid_message_id():
     '''Test if function raises an input error when an invalid message_id is given'''
     clear()
@@ -142,18 +142,18 @@ def test_message_unreact_valid():
     message_react(user2_info['token'], message0_info['message_id'], 1)
     # User 0 get all channel messages
     all_message_info0 = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
-    assert all_message_info0['message_list'][0]['reacts'] == [{
-        'is_this_user_reacted': True, 
-        'react_id': 1, 
+    assert all_message_info0['messages'][0]['reacts'] == [{
+        'is_this_user_reacted': True,
+        'react_id': 1,
         'u_ids': [1, 0, 2]
     }  ]
     # User 0 unreact the message sent by user 2
     message_unreact(user0_info['token'], message0_info['message_id'], 1)
     # User 0 get all channel messages
     all_message_info1 = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
-    assert all_message_info1['message_list'][0]['reacts'] == [{
-        'is_this_user_reacted': False, 
-        'react_id': 1, 
+    assert all_message_info1['messages'][0]['reacts'] == [{
+        'is_this_user_reacted': False,
+        'react_id': 1,
         'u_ids': [1, 2]
     }  ]
     # User 1 unreact the message sent by user 2
@@ -162,7 +162,7 @@ def test_message_unreact_valid():
     message_unreact(user2_info['token'], message0_info['message_id'], 1)
     # User 1 get all channel messages
     all_message_info2 = channel_messages(user1_info['token'], channel1_info['channel_id'], 0)
-    assert all_message_info2['message_list'][0]['reacts'] == []
+    assert all_message_info2['messages'][0]['reacts'] == []
 
 def test_message_unreact_invalid_message_id():
     '''Test if function raises an input error when an invalid message_id is given'''
@@ -198,7 +198,7 @@ def test_message_unreact_invalid_react_id():
     with pytest.raises(InputError):
         assert message_unreact(user1_info['token'], message0_info['message_id'], 2)
 
-def test_message_unreact_no_active_react():  
+def test_message_unreact_no_active_react():
     '''Test if function raises an input error when the message is not reacted'''
     clear()
     # Register user 0
@@ -213,10 +213,10 @@ def test_message_unreact_no_active_react():
     message0_info = message_send(user0_info['token'], channel0_info['channel_id'], "Hello")
     # Message not reacted yet
     with pytest.raises(InputError):
-        assert message_unreact(user1_info['token'], message0_info['message_id'] , 1) 
+        assert message_unreact(user1_info['token'], message0_info['message_id'] , 1)
     # User 1 reacts to the message
     message_react(user1_info['token'], message0_info['message_id'] , 1)
     message_unreact(user1_info['token'], message0_info['message_id'] , 1)
     # Message already unreacted by user 1
     with pytest.raises(InputError):
-        assert message_unreact(user1_info['token'], message0_info['message_id'] , 1)      
+        assert message_unreact(user1_info['token'], message0_info['message_id'] , 1)

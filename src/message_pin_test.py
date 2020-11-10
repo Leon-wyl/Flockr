@@ -34,7 +34,7 @@ def test_message_pin_valid0():
     message_pin(user1_info['token'], message0_info['message_id'])
     # User 0 get all channel messages
     all_message_info = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
-    assert all_message_info['message_list'][0]['is_pinned'] == True
+    assert all_message_info['messages'][0]['is_pinned'] == True
 
 def test_message_pin_valid1():
     '''Owner of the flockr joins the channel and pin a message sent by a member'''
@@ -62,7 +62,7 @@ def test_message_pin_valid1():
     message_pin(user0_info['token'], message0_info['message_id'])
     # User 0 get all channel messages
     all_message_info = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
-    assert all_message_info['message_list'][0]['is_pinned'] == True
+    assert all_message_info['messages'][0]['is_pinned'] == True
 
 def test_message_pin_valid2():
     '''Owner of the channel pin the message sent by the owner of the channel'''
@@ -92,7 +92,7 @@ def test_message_pin_valid2():
     message_pin(user0_info['token'], message1_info['message_id'])
     # User 0 get all channel messages
     all_message_info = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
-    assert all_message_info['message_list'][1]['is_pinned'] == True
+    assert all_message_info['messages'][1]['is_pinned'] == True
 
 def test_message_pin_valid3():
     '''Owner of the channel pin the message sent by the owner of the channel'''
@@ -122,7 +122,7 @@ def test_message_pin_valid3():
     message_pin(user1_info['token'], message1_info['message_id'])
     # User 0 get all channel messages
     all_message_info = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
-    assert all_message_info['message_list'][1]['is_pinned'] == True
+    assert all_message_info['messages'][1]['is_pinned'] == True
 
 def test_message_pin_invalid0():
     '''message_id is not a valid message'''
@@ -265,10 +265,10 @@ def test_message_unpin_valid0():
     message_unpin(user0_info['token'], message0_info['message_id'])
     # User 0 get all channel messages
     all_message_info = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
-    assert all_message_info['message_list'][0]['is_pinned'] == False
+    assert all_message_info['messages'][0]['is_pinned'] == False
 
 def test_message_unpin_valid1():
-    '''Owner of the flockr joins the channel and pin a message sent by a member then the 
+    '''Owner of the flockr joins the channel and pin a message sent by a member then the
     message is uppined by the owner of the channel'''
     clear()
 
@@ -296,7 +296,7 @@ def test_message_unpin_valid1():
     message_unpin(user1_info['token'], message0_info['message_id'])
     # User 0 get all channel messages
     all_message_info = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
-    assert all_message_info['message_list'][0]['is_pinned'] == False
+    assert all_message_info['messages'][0]['is_pinned'] == False
 
 def test_message_unpin_invalid0():
     '''message_id is not a valid message'''

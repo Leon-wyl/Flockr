@@ -36,8 +36,8 @@ def test_integration(url):
     requests.delete(f"{url}/clear")
     # Normal register
     dataIn1 = {
-        'email': "leonwu@gmail.com", 
-        'password': "ihfeh3hgi00d", 
+        'email': "leonwu@gmail.com",
+        'password': "ihfeh3hgi00d",
         'name_first': "Yilang",
         'name_last': "W",
     }
@@ -95,7 +95,7 @@ def test_integration(url):
     # Invite new member to channel
     requests.post(f"{url}/channel/invite", \
         json={'token': return_data['token'], 'channel_id': 0, 'u_id': 1})
-    
+
     # Returns a list of all users and their associated details
     resp = requests.get(f"{url}/users/all", params={'token': info['token']})
     resp = resp.json()
@@ -114,17 +114,17 @@ def test_integration(url):
             'name_last': "Dunstone",
             'handle_str': 'eviedunstone',
          }
-        
+
     ]}
     # Permission change
     requests.post(f"{url}/admin/userpermission/change", \
         json={'token': return_data['token'], 'u_id': 1, 'permission_id': 1})
-    
+
     # User profile
     resp = requests.get(f"{url}/user/profile", \
         params={'token': return_data['token'], 'u_id': 1})
     resp = resp.json()
-    assert resp == {'user': 
+    assert resp == {'user':
         {
             'u_id': 1,
             'email': "eviedunstone@gmail.com",
@@ -179,7 +179,7 @@ def test_integration(url):
             'message': "areyouok",
             'time_created': 0,
         }
-         
+
     ]}
 
     # Channel message
@@ -187,7 +187,7 @@ def test_integration(url):
         params={'token': return_data['token'], 'channel_id': 0, 'start': 0})
     resp = resp.json()
     assert resp == {
-        'message_list': 
+        'messages':
             [{
             'message_id': 0,
             'u_id': 0,
@@ -219,5 +219,5 @@ def test_integration(url):
                 'name_last': 'W',
             }
         ]
-    }  
-   
+    }
+

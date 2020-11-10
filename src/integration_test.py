@@ -25,7 +25,7 @@ def test_integration():
     # Invalid information has been summitted
     with pytest.raises(InputError):
         auth_register("andrew.hotmail.com", "Andrrrreeeeesfd", "Andrew", "Taylor")
-    
+
     # User 0 create a channel
     info4 = channels_create(info1['token'], "The first channel", True)
     assert (info4['channel_id'] == 0)
@@ -48,7 +48,7 @@ def test_integration():
 
     # Show channel details of channel 0
     info5 = channel_details(info2['token'], info4['channel_id'])
-    assert (info5['name'] == data['channels'][0]['name'] and info5['owner_members'] == 
+    assert (info5['name'] == data['channels'][0]['name'] and info5['owner_members'] ==
     [
         {
             'u_id': 0,
@@ -95,7 +95,7 @@ def test_integration():
                 'name_first': 'Zixiang',
                 'name_last': 'Lin',
                 'handle_str': 'lizixiang'
-            }, 
+            },
             {
                 'u_id': 1,
                 'email': 'moniquejohnson@outlook.com',
@@ -126,7 +126,7 @@ def test_integration():
     # User 0 obtain the messages the channel 0
     assert channel_messages(info1['token'], info4['channel_id'], 0) == \
     {
-        'message_list': 
+        'messages':
         [
             {
                 'message_id': 0,
@@ -152,7 +152,7 @@ def test_integration():
     # User 0 search message that includes "Monique"
     assert search(info1['token'], "Monique") == \
     {
-        'messages': 
+        'messages':
         [
             {
                 'message_id': 1,
@@ -172,7 +172,7 @@ def test_integration():
     # User 0 obtain the message in the channel 0 again
     assert channel_messages(info1['token'], info4['channel_id'], 0) == \
     {
-        'message_list':
+        'messages':
         [
             {
                 'message_id': 0,
@@ -191,7 +191,7 @@ def test_integration():
     # User 1 view the channel informations
     assert channels_list(info2['token']) == \
     {
-        'channels': 
+        'channels':
         [
             {
                 'channel_id': 0,
@@ -201,7 +201,7 @@ def test_integration():
     }
 
     # User 1 create an new private channel
-    info6 = channels_create(info2['token'], "The private Channel", False) 
+    info6 = channels_create(info2['token'], "The private Channel", False)
     assert info6 == \
     {
         'channel_id': 1
@@ -238,5 +238,5 @@ def test_integration():
     info4 = auth_login("ilovemaths@icloud.com", "Ihateenglish")
     assert info4['u_id'] == 2 and info4['token'] == token_generate(info4['u_id'])
 
-            
-    
+
+
