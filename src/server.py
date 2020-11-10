@@ -7,7 +7,7 @@ from auth import auth_login, auth_logout, auth_register
 from channels import channels_list, channels_listall, channels_create
 from channel import channel_invite, channel_details, channel_messages, channel_leave, \
     channel_join, channel_addowner, channel_removeowner
-from message import message_send, message_remove, message_edit, message_pin, message_unpin
+from message import message_send, message_remove, message_edit, message_pin, message_unpin, message_react, message_unreact
 from user import user_profile, user_profile_setname, user_profile_setemail, user_profile_sethandle
 from other import clear, users_all, admin_userpermission_change, search, standup_active, standup_send, standup_start
 
@@ -163,6 +163,16 @@ def server_pin():
 def server_unpin():
     data = request.get_json()
     return dumps(message_unpin(data['token'], int(data['message_id'])))
+
+@APP.route('/message/react', methods=['POST'])
+def server_react():
+    data = request.get_json()
+    return dumps(message_react(data['token'], int(data['message_id']), int(data['react_id'])))
+
+@APP.route('/message/unreact', methods=['POST'])
+def server_unreact():
+    data = request.get_json()
+    return dumps(message_unreact(data['token'], int(data['message_id']), int(data['react_id'])))
 
 @APP.route('/standup/start', methods=['POST'])
 def server_start_standup():
