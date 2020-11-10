@@ -2,7 +2,6 @@ from error import AccessError, InputError
 from datetime import datetime, timezone, timedelta
 from time import sleep
 import _thread
-import threading
 
 '''The database for the user and channel data'''
 data = {
@@ -247,7 +246,6 @@ def data_users_list():
         new_user['name_first'] = user['name_first']
         new_user['name_last'] = user['name_last']
         new_user['handle_str'] = user['handle']
-        #new_user['profile_img_url'] = user['profile_img_url']
         user_list.append(new_user)
     return user_list
 
@@ -282,8 +280,6 @@ def data_search_message(query_str, u_id):
                         new_message['u_id'] = message['u_id']
                         new_message['message'] = message['message']
                         new_message['time_created'] = message['time_created']
-                        #new_message['reacts'] = message['reacts']
-                        #new_message['is_pinned'] = message['is_pinned']
                         message_list.append(new_message)
                 break
     return message_list
@@ -296,6 +292,7 @@ def data_message_send(channel_id, u_id, message):
                 'u_id': u_id,
                 'message': message,
                 'time_created': 0,
+                'reacts': [],
                 'is_pinned': False,
             }
             channel['messages'].append(newmessage)
@@ -386,13 +383,6 @@ def data_message_pinned(message_id, channel_id):
         message_info['is_pinned'] = True
         return False
 
-def data_find_message(message_id, channel_id):
-    for channel in data['channels']:
-        if channel['channel_id'] == channel_id:
-            for item in channel['messages']:
-                if item['message_id'] == message_id:
-                    return item
-
 def data_message_unpinned(message_id, channel_id):
     message_info = data_find_message(message_id, channel_id)
     if message_info['message_id'] == message_id:
@@ -400,3 +390,67 @@ def data_message_unpinned(message_id, channel_id):
             return True
         message_info['is_pinned'] = False
         return False
+
+
+def data_message_reacted(message_id, channel_id, react_id, u_id):
+    user_present = False
+    message_info = data_find_message(message_id, channel_id)
+    if message_info['message_id'] == message_id:
+        for reacts in message_info['reacts']:
+            if reacts['react_id'] == react_id:
+                for users in reacts['u_ids']:
+                    if users == u_id:
+                        return True
+                    user_present = True
+        if user_present == True:
+            for reacts in message_info['reacts']:
+                if reacts['react_id'] == react_id:
+                    user_old_list = reacts['u_ids']
+                    user_old_list.append(u_id)
+        else:
+            user_old_list = []
+            user_old_list.append(u_id)
+            new_react = {
+                'react_id' : react_id,
+                'u_ids' : user_old_list,
+                'is_this_user_reacted': False,
+            }
+            message_info['reacts'].append(new_react)
+
+
+def data_find_message(message_id, channel_id):
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            for item in channel['messages']:
+                if item['message_id'] == message_id:
+                    return item
+                    
+def data_message_unreacted(message_id, channel_id, react_id, u_id):
+    user_count = 0
+    message_info = data_find_message(message_id, channel_id)
+    if message_info['message_id'] == message_id:
+        if message_info['reacts'] == []:
+            return True
+        for reacts in message_info['reacts']:
+            if reacts['react_id'] == react_id:
+                for users in reacts['u_ids']:
+                    if users == u_id:                
+                        reacts['u_ids'].remove(u_id)
+        for reacts in message_info['reacts']:
+            if reacts['react_id'] == react_id:
+                for users in reacts['u_ids']:
+                    user_count += 1
+                        
+                    
+    if user_count == 0:
+        message_info['reacts'] = []
+        
+def data_react_modify(before_list, u_id):
+    for message in before_list:
+        for react in message['reacts']:
+            if u_id in react['u_ids']:
+                react['is_this_user_reacted'] = True
+            else:
+                react['is_this_user_reacted'] = False
+    return before_list
+          

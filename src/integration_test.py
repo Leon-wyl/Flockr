@@ -133,6 +133,7 @@ def test_integration():
                 'u_id': 0,
                 'message': 'Hello?',
                 'time_created': 0,
+                'reacts': [],
                 'is_pinned': False,
             },
             {
@@ -140,6 +141,7 @@ def test_integration():
                 'u_id': 1,
                 'message': 'My name is Monique',
                 'time_created': 0,
+                'reacts': [],
                 'is_pinned': False,
             }
         ],
@@ -177,6 +179,7 @@ def test_integration():
                 'u_id': 0,
                 'message': 'Sorry',
                 'time_created': 0,
+                'reacts': [],
                 'is_pinned': False,
             }
         ],

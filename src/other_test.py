@@ -222,6 +222,7 @@ def test_standup_send1():
         [
             {
                 'message_id': 0,
+                'reacts': [],
                 'is_pinned': False,
                 'u_id': 0,
                 'message': 'MJohnson: hello\nMJohnson: asd\nMJohnson: dfg\nMJohnson: abc\n',
@@ -248,6 +249,7 @@ def test_standup_send2():
         [
             {
                 'message_id': 0,
+                'reacts': [],
                 'is_pinned': False,
                 'u_id': 0,
                 'message': 'MJohnson: hello\nMJohnson: asd\nMJohnson: dfg\nMJohnson: abc\n',

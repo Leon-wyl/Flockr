@@ -45,3 +45,21 @@ def prior_check_pin_unpin(token, message_id):
     if not is_owner_exist(u_id, channel_id):
         check_global_owner(u_id)
     return channel_id
+    
+def message_react(token, message_id, react_id):
+    channel_id = prior_check_react_unreact(token, message_id, react_id)
+    u_id = auth_u_id_from_token(token)
+    check_message_reacted(message_id, channel_id, react_id, u_id)
+
+def message_unreact(token, message_id, react_id):
+    channel_id = prior_check_react_unreact(token, message_id, react_id)
+    u_id = auth_u_id_from_token(token)
+    check_message_unreacted(message_id, channel_id, react_id, u_id)
+    
+def prior_check_react_unreact(token, message_id, react_id):
+    check_valid_token(token)
+    u_id = auth_u_id_from_token(token)
+    channel_id = data_get_channel_id(message_id)
+    check_authorised_member_channel(channel_id, u_id)
+    check_valid_react_id(react_id)
+    return channel_id
