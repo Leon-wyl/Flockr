@@ -218,7 +218,7 @@ def test_standup_send1():
     standup_send(info2['token'], 0, 'abc')
     sleep(6)
     assert channel_messages(info2['token'], 0, 0) == {
-        'message_list':
+        'messages':
         [
             {
                 'message_id': 0,
@@ -245,7 +245,7 @@ def test_standup_send2():
     standup_send(info2['token'], 0, 'abc')
     sleep(6)
     assert channel_messages(info2['token'], 0, 0) == {
-        'message_list':
+        'messages':
         [
             {
                 'message_id': 0,

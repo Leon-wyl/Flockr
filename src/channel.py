@@ -34,9 +34,9 @@ def channel_messages(token, channel_id, start):
     end = data_channel_messages_end(start, channel_id)
     before_list = data_channel_messages(channel_id, start, end)
     message_list = data_react_modify(before_list, u_id)
-    
+
     return {
-        'message_list': message_list, 
+        'messages': message_list,
         'start': start,
         'end': end,
     }
