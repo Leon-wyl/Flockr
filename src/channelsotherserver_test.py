@@ -195,6 +195,7 @@ def test_standup_send(url):
             {
                 'message_id': 0,
                 'is_pinned': False,
+                'reacts': [],
                 'u_id': 0,
                 'message': 'YilangW: hello\nYilangW: asd\nYilangW: dfg\nYilangW: abc\n',
                 'time_created': 0,

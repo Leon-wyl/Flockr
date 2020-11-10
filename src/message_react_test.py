@@ -148,10 +148,10 @@ def test_message_unreact_valid():
         'u_ids': [1, 0, 2]
     }  ]
     # User 0 unreact the message sent by user 2
-    message_unreact(user2_info['token'], message0_info['message_id'], 1)
+    message_unreact(user0_info['token'], message0_info['message_id'], 1)
     # User 0 get all channel messages
     all_message_info1 = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
-    assert all_message_info2['message_list'][0]['reacts'] == [{
+    assert all_message_info1['message_list'][0]['reacts'] == [{
         'is_this_user_reacted': False, 
         'react_id': 1, 
         'u_ids': [1, 2]

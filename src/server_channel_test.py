@@ -296,6 +296,7 @@ def test_server_channel_messages(url):
                 'u_id': 0,
                 'message': 'Hello',
                 'time_created': 0,
+                'reacts': [],
                 'is_pinned': False
             },
             {
@@ -303,6 +304,7 @@ def test_server_channel_messages(url):
                 'u_id': 1,
                 'message': 'Hey there first',
                 'time_created': 0,
+                'reacts': [],
                 'is_pinned': False
             }
         ],

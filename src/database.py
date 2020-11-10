@@ -476,7 +476,7 @@ def data_react_modify(before_list, u_id):
     for message in before_list:
         for react in message['reacts']:
             if u_id in react['u_ids']:
-                    react['is_this_user_reacted'] = True
+                react['is_this_user_reacted'] = True
             else:
                 react['is_this_user_reacted'] = False
     return before_list
