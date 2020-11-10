@@ -155,7 +155,7 @@ def test_standup_start(url):
     info1 = info1.json()
     requests.post(f"{url}/channels/create", json={'token': info1['token'], 'name': 'first', 'is_public': True})
     resp = requests.post(f"{url}/standup/start", json={'token': info1['token'], 'channel_id': 0, 'length': 6})
-    time = datetime.now() + timedelta(seconds=6, hours=-11)
+    time = datetime.utcnow() + timedelta(seconds=6)
     resp = resp.json()
     assert resp == {
         'time_finish': round(time.replace(tzinfo=timezone.utc).timestamp(), 0),
@@ -167,7 +167,7 @@ def test_standup_active(url):
     info1 = info1.json()
     requests.post(f"{url}/channels/create", json={'token': info1['token'], 'name': 'first', 'is_public': True})
     requests.post(f"{url}/standup/start", json={'token': info1['token'], 'channel_id': 0, 'length': 10})
-    time = datetime.now() + timedelta(seconds=10, hours=-11)
+    time = datetime.utcnow() + timedelta(seconds=10)
     resp = requests.get(f"{url}/standup/active", params={'token': info1['token'], 'channel_id': 0})
     resp = resp.json()
     assert resp == {
