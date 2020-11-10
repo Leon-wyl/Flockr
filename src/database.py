@@ -337,7 +337,7 @@ def data_standup_start(u_id, channel_id, length):
     for channel in data['channels']:
         if channel_id == channel['channel_id']:
             channel['is_active'] = True
-            time = (datetime.now() + timedelta(seconds=length)).replace(tzinfo=timezone.utc).timestamp()
+            time = (datetime.now() + timedelta(seconds=length, hours=-11)).replace(tzinfo=timezone.utc).timestamp()
             channel['time_finish'] = time = round(time, 0)
             try:
                 _thread.start_new_thread(sleep_when_standup, (length, channel, u_id))
