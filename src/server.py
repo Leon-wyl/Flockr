@@ -8,7 +8,7 @@ from channels import channels_list, channels_listall, channels_create
 from channel import channel_invite, channel_details, channel_messages, channel_leave, \
     channel_join, channel_addowner, channel_removeowner
 from message import message_send, message_remove, message_edit
-from user import user_profile, user_profile_setname, user_profile_setemail, user_profile_sethandle
+from user import user_profile, user_profile_setname, user_profile_setemail, user_profile_sethandle, user_profile_uploadphoto
 from other import clear, users_all, admin_userpermission_change, search
 
 def defaultHandler(err):
@@ -120,7 +120,9 @@ def server_edit():
 
 @APP.route('/user/profile', methods=['GET'])
 def server_profile():
-    return dumps(user_profile(request.args.get('token'), int(request.args.get('u_id'))))
+    result = user_profile(request.args.get('token'), int(request.args.get('u_id')))
+    result['user']['profile_img_url'] = str(request.base_url) + result['user']['profile_img_url']
+    return dumps(result)
 
 @APP.route('/user/profile/setname', methods=['PUT'])
 def server_profile_setname():
@@ -142,7 +144,7 @@ def server_profile_uploadphoto():
     data = request.get_json()
     return dumps(user_profile_uploadphoto(data['token'], data['img_url'], int(data['x_start']), int(data['y_start']), int(data['x_end']), int(data['y_end'])))
 
-@APP.route('/static/<path:filename>', methods=['GET'])
+@APP.route('/user/profile/static/<path:filename>', methods=['GET'])
 def server_profile_uploadphoto_serve_photo(filename):
     return send_from_directory('/static/', filename)
 

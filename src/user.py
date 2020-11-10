@@ -18,6 +18,7 @@ def user_profile(token, u_id):
             'name_first': user['name_first'],
             'name_last': user['name_last'],
             'handle_str': user['handle'],
+            'profile_img_url': user['profile_img_url']
         }
     }
 
@@ -60,7 +61,8 @@ def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     imageObject = Image.open(f'static/{u_id}.jpg')
     cropped = imageObject.crop((x_start, y_start, x_end, y_end))
     cropped.save(f'static/{u_id}.jpg')
+    user['profile_img_url'] = f'/static/{u_id}.jpg'
     return {
     }
-
+    
     

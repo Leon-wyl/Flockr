@@ -39,7 +39,8 @@ def data_upload(u_id, email, password, name_first, name_last, handle, token):
         'name_last': name_last,
         'handle': handle,
         'token': token,
-        'permission_id': permission_id
+        'permission_id': permission_id,
+        'profile_img_url': '',
     })
 
 def data_login(u_id, token):
