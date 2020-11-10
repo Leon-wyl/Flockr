@@ -88,6 +88,7 @@ def test_channel_messages():
                 'u_id': 0,
                 'message': 'Hello',
                 'time_created': 0,
+                'reacts': [],
                 'is_pinned': False,
             }
         ],

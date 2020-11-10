@@ -41,6 +41,7 @@ def test_message_send():
                 'u_id': 0,
                 'message': 'hello',
                 'time_created': 0,
+                'reacts': [],
                 'is_pinned': False
             }, 
             {
@@ -48,6 +49,7 @@ def test_message_send():
                 'u_id': 0,
                 'message': 'My name',
                 'time_created': 0,
+                'reacts': [],
                 'is_pinned': False
             },
             {
@@ -55,6 +57,7 @@ def test_message_send():
                 'u_id': 0,
                 'message': '1s sam!',
                 'time_created': 0,
+                'reacts': [],
                 'is_pinned': False
             }
         ], 
@@ -145,6 +148,7 @@ def test_message_edit():
                 'u_id': 1,
                 'message': 'changed1st',
                 'time_created': 0,
+                'reacts': [],
                 'is_pinned': False,
             }, 
             {
@@ -152,6 +156,7 @@ def test_message_edit():
                 'u_id': 1,
                 'message': 'changed2nd',
                 'time_created': 0,
+                'reacts': [],
                 'is_pinned': False,
             },
         ],

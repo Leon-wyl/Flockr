@@ -210,3 +210,16 @@ def check_message_pinned(message_id, channel_id):
 def check_message_unpinned(message_id, channel_id):
     if data_message_unpinned(message_id, channel_id) == True:
         raise InputError("Message is not pinned already")
+
+def check_message_reacted(message_id, channel_id, react_id, u_id):
+    if data_message_reacted(message_id, channel_id, react_id, u_id) == True:
+        raise InputError("Message has already been reacted with this react")
+
+def check_message_unreacted(message_id, channel_id, react_id, u_id):
+    if data_message_unreacted(message_id, channel_id, react_id, u_id) == True:
+        raise InputError("Message is not reacted yet")
+
+def check_valid_react_id(react_id):
+    if react_id != 1:
+        raise InputError("React ID is not valid")
+        
