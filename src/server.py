@@ -164,6 +164,16 @@ def server_unpin():
     data = request.get_json()
     return dumps(message_unpin(data['token'], int(data['message_id'])))
 
+@APP.route('/message/react', methods=['POST'])
+def server_react():
+    data = request.get_json()
+    return dumps(message_react(data['token'], int(data['message_id']), int(data['react_id'])))
+
+@APP.route('/message/unreact', methods=['POST'])
+def server_unreact():
+    data = request.get_json()
+    return dumps(message_unreact(data['token'], int(data['message_id']), int(data['react_id'])))
+
 @APP.route('/standup/start', methods=['POST'])
 def server_start_standup():
     data = request.get_json()
