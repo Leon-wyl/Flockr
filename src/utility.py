@@ -1,6 +1,7 @@
 import jwt
 import re
 import hashlib
+import datetime
 from database import *
 from error import InputError
 from error import AccessError
@@ -223,3 +224,10 @@ def check_valid_react_id(react_id):
     if react_id != 1:
         raise InputError("React ID is not valid")
         
+def check_time_diff(time_sent):
+    now = datetime.now() - timedelta(microseconds=datetime.now().microsecond)
+    time_input = datetime.fromtimestamp(time_sent)
+    if now > time_input:
+        raise InputError("Time sent is a time in the past")
+    time_diff = now - time_input
+    return time_diff
