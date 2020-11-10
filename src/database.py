@@ -444,33 +444,6 @@ def data_message_unreacted(message_id, channel_id, react_id, u_id):
                     
     if user_count == 0:
         message_info['reacts'] = []
-    
-
-
-def data_message_reacted(message_id, channel_id, react_id, u_id):
-    user_present = False
-    message_info = data_find_message(message_id, channel_id)
-    if message_info['message_id'] == message_id:
-        for reacts in message_info['reacts']:
-            if reacts['react_id'] == react_id:
-                for users in reacts['u_ids']:
-                    if users == u_id:
-                        return True
-                    user_present = True
-        if user_present == True:
-            for reacts in message_info['reacts']:
-                if reacts['react_id'] == react_id:
-                    user_old_list = reacts['u_ids']
-                    user_old_list.append(u_id)
-        else:
-            user_old_list = []
-            user_old_list.append(u_id)
-            new_react = {
-                'react_id' : react_id,
-                'u_ids' : user_old_list,
-                'is_this_user_reacted': False,
-            }
-            message_info['reacts'].append(new_react)
         
 def data_react_modify(before_list, u_id):
     for message in before_list:
