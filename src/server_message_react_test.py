@@ -94,7 +94,7 @@ def test_server_message_react(url):
     }
     r = requests.post(f"{url}/message/react", json=dataIn20)
     return_data20 = r.json()
-    assert return_data5['code'] == 400
+    assert return_data20['code'] == 400
 
     # The second user tries to react to the message
     # created by the first user, which is invalid
@@ -197,7 +197,7 @@ def test_server_message_unreact(url):
     }
     r = requests.post(f"{url}/message/unreact", json=dataIn20)
     return_data20 = r.json()
-    assert return_data5['code'] == 400
+    assert return_data20['code'] == 400
 
     # The second user tries to unreact to the message
     # created by the first user, which is invalid
