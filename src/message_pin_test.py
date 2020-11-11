@@ -4,7 +4,7 @@ from channel import channel_join, channel_messages
 from message import message_send, message_pin, message_unpin, message_sendlater
 from other import clear
 from error import InputError, AccessError
-import threading
+import time
 import pytest
 import datetime
 
@@ -448,6 +448,7 @@ def test_message_sendlater_valid0():
     message_info = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
     assert message_info['messages'][1]['message'] == "Hi"
 
+
 def test_message_sendlater_valid1():
     "User 1 sent a message 1 second later"
     clear()
@@ -475,10 +476,7 @@ def test_message_sendlater_valid1():
     timestamp = int(datetime.datetime.timestamp(one_sec_later))
     message_sendlater(user1_info['token'], channel1_info['channel_id'], "Hi", timestamp)
     # User 0 get the info of messages 1 sec later
-    t = threading.Timer(1, one_sec_later_function(user0_info, channel1_info))
-    t.start()
-
-def one_sec_later_function(user0_info, channel1_info):
+    time.sleep(1)
     message_info = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
     assert message_info['messages'][1]['message'] == "Hi"
 
