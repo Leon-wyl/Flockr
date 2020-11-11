@@ -229,5 +229,5 @@ def check_time_diff(time_sent):
     time_input = datetime.fromtimestamp(time_sent)
     if now > time_input:
         raise InputError("Time sent is a time in the past")
-    time_diff = now - time_input
+    time_diff = time_input - now
     return time_diff

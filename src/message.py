@@ -72,6 +72,6 @@ def message_sendlater(token, channel_id, message, time_sent):
     check_valid_channel(channel_id)
     check_authorised_member_channel(channel_id, u_id)
     check_valid_message_length(message)
-    time_diff = check_time_diff(time_sent)
-    t = threading.Timer(time_diff, data_message_send(channel_id, u_id, message))
-    t.start()
+    time_diff = check_time_diff(time_sent).seconds
+    time.sleep(time_diff)
+    data_message_send(channel_id, u_id, message)
