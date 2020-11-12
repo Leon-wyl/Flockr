@@ -7,9 +7,11 @@ from auth import auth_login, auth_logout, auth_register
 from channels import channels_list, channels_listall, channels_create
 from channel import channel_invite, channel_details, channel_messages, channel_leave, \
     channel_join, channel_addowner, channel_removeowner
-from message import message_send, message_remove, message_edit, message_pin, message_unpin, message_react, message_unreact
+from message import message_send, message_remove, message_edit, message_pin, message_unpin, \
+    message_react, message_unreact, message_sendlater
 from user import user_profile, user_profile_setname, user_profile_setemail, user_profile_sethandle
-from other import clear, users_all, admin_userpermission_change, search, standup_active, standup_send, standup_start
+from other import clear, users_all, admin_userpermission_change, search, standup_active, \
+    standup_send, standup_start
 
 def defaultHandler(err):
     response = err.get_response()
@@ -173,6 +175,12 @@ def server_react():
 def server_unreact():
     data = request.get_json()
     return dumps(message_unreact(data['token'], int(data['message_id']), int(data['react_id'])))
+
+@APP.route('/message/sendlater', methods=['POST'])
+def server_sendlater():
+    data = request.get_json()
+    return dumps(message_sendlater(data['token'], int(data['channel_id']), data['message'], \
+        int(data['time_sent'])))
 
 @APP.route('/standup/start', methods=['POST'])
 def server_start_standup():

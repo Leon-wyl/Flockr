@@ -3,7 +3,9 @@ from error import AccessError
 from database import *
 from utility import *
 from auth import *
-from database import data 
+from database import data
+import threading
+import time
 
 
 def message_send(token, channel_id, message):
@@ -63,3 +65,14 @@ def prior_check_react_unreact(token, message_id, react_id):
     check_authorised_member_channel(channel_id, u_id)
     check_valid_react_id(react_id)
     return channel_id
+
+def message_sendlater(token, channel_id, message, time_sent):
+    print(channel_id)
+    check_valid_token(token)
+    u_id = auth_u_id_from_token(token)
+    check_valid_channel(channel_id)
+    check_authorised_member_channel(channel_id, u_id)
+    check_valid_message_length(message)
+    time_diff = check_time_diff(time_sent).seconds
+    t = threading.Timer(time_diff, data_message_send, args=[channel_id, u_id, message])
+    t.start()
