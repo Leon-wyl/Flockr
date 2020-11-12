@@ -67,6 +67,7 @@ def prior_check_react_unreact(token, message_id, react_id):
     return channel_id
 
 def message_sendlater(token, channel_id, message, time_sent):
+    print(channel_id)
     check_valid_token(token)
     u_id = auth_u_id_from_token(token)
     check_valid_channel(channel_id)
