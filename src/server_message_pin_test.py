@@ -5,6 +5,8 @@ import signal
 from time import sleep
 import requests
 import json
+import datetime
+import time
 from other import clear
 from utility import token_generate
 from error import InputError
@@ -1508,3 +1510,623 @@ def test_message_unpin_invalid3(url):
     r = requests.post(f"{url}/message/unpin", json=user2_unpin_input)
     user2_unpin_output = r.json()
     assert user2_unpin_output['message'] == '<p>You are not owner of flockr</p>'
+
+def test_message_sendlater_valid0(url):
+    "User 1 sent a message 0 second later"
+    clear()
+
+    # Register user 0
+    user0_data_input = {
+        'email': "leonwu@gmail.com",
+        'password': "ihfeh3hgi00d",
+        'name_first': "Yilang",
+        'name_last': "W",
+    }
+    r = requests.post(f"{url}/auth/register", json=user0_data_input)
+    user0_data_output = r.json()
+
+    # Register user 1
+    user1_data_input = {
+        'email': "billgates@outlook.com",
+        'password':  "VukkFs",
+        'name_first': "Bill",
+        'name_last': "Gates"
+    }
+    r = requests.post(f"{url}/auth/register", json=user1_data_input)
+    user1_data_output = r.json()
+
+    # Register user 2
+    user2_data_input = {
+        'email': "johnson@icloud.com",
+        'password': "RFVtgb45678",
+        'name_first': "M",
+        'name_last': "Johnson"
+    }
+    r = requests.post(f"{url}/auth/register", json=user2_data_input)
+    user2_data_output = r.json()
+
+    # User 0 create a channel
+    channel0_data_input = {
+        'token': user0_data_output['token'],
+        'name': "channel0",
+        'is_public': True,
+    }
+    r = requests.post(f"{url}/channels/create", json=channel0_data_input)
+    channel0_data_output = r.json()
+
+    # User 1 join the channel
+    user1_join_data_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel0_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user1_join_data_input)
+
+    # User 1 create another channel
+    channel1_data_input = {
+        'token': user1_data_output['token'],
+        'name': "channel1",
+        'is_public': True,
+    }
+    r = requests.post(f"{url}/channels/create", json=channel1_data_input)
+    channel1_data_output = r.json()
+
+    # user 2 join the channel created by user 1
+    user2_join_data_input = {
+        'token': user2_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user2_join_data_input)
+
+    # User 0 join channel1
+    user0_join_data_input = {
+        'token': user0_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user0_join_data_input)
+
+    # User 2 send a message
+    user2_message_input = {
+        'token': user2_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hello",
+    }
+    r = requests.post(f"{url}/message/send", json=user2_message_input)
+
+    # User 1 send a message
+    user1_message_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hi",
+    }
+    r = requests.post(f"{url}/message/send", json=user1_message_input)
+
+    # USer 1 send a message 0 second later
+    zero_sec_later = datetime.datetime.now()
+    timestamp = int(datetime.datetime.timestamp(zero_sec_later))
+    user1_sendlater_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hi",
+        'time_sent': timestamp,
+    }
+    r = requests.post(f"{url}/message/sendlater", json=user1_sendlater_input)
+    # User 0 get the info of messages
+    user0_get_message_input = {
+        'token': user0_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'start': 0,
+    }
+    r = requests.get(f"{url}/channel/messages", params=user0_get_message_input)    
+    message_info = r.json()
+    assert message_info['messages'][1]['message'] == "Hi"
+
+def test_message_sendlater_valid1(url):
+    "User 1 sent a message 1 second later"
+    clear()
+
+    # Register user 0
+    user0_data_input = {
+        'email': "leonwu@gmail.com",
+        'password': "ihfeh3hgi00d",
+        'name_first': "Yilang",
+        'name_last': "W",
+    }
+    r = requests.post(f"{url}/auth/register", json=user0_data_input)
+    user0_data_output = r.json()
+
+    # Register user 1
+    user1_data_input = {
+        'email': "billgates@outlook.com",
+        'password':  "VukkFs",
+        'name_first': "Bill",
+        'name_last': "Gates"
+    }
+    r = requests.post(f"{url}/auth/register", json=user1_data_input)
+    user1_data_output = r.json()
+
+    # Register user 2
+    user2_data_input = {
+        'email': "johnson@icloud.com",
+        'password': "RFVtgb45678",
+        'name_first': "M",
+        'name_last': "Johnson"
+    }
+    r = requests.post(f"{url}/auth/register", json=user2_data_input)
+    user2_data_output = r.json()
+
+    # User 0 create a channel
+    channel0_data_input = {
+        'token': user0_data_output['token'],
+        'name': "channel0",
+        'is_public': True,
+    }
+    r = requests.post(f"{url}/channels/create", json=channel0_data_input)
+    channel0_data_output = r.json()
+
+    # User 1 join the channel
+    user1_join_data_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel0_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user1_join_data_input)
+
+    # User 1 create another channel
+    channel1_data_input = {
+        'token': user1_data_output['token'],
+        'name': "channel1",
+        'is_public': True,
+    }
+    r = requests.post(f"{url}/channels/create", json=channel1_data_input)
+    channel1_data_output = r.json()
+
+    # user 2 join the channel created by user 1
+    user2_join_data_input = {
+        'token': user2_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user2_join_data_input)
+
+    # User 0 join channel1
+    user0_join_data_input = {
+        'token': user0_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user0_join_data_input)
+
+    # User 2 send a message
+    user2_message_input = {
+        'token': user2_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hello",
+    }
+    r = requests.post(f"{url}/message/send", json=user2_message_input)
+
+    # User 1 send a message
+    user1_message_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hi",
+    }
+    r = requests.post(f"{url}/message/send", json=user1_message_input)
+
+    # USer 1 send a message 0 second later
+    one_sec_later = datetime.datetime.now() + datetime.timedelta(seconds=1)
+    timestamp = int(datetime.datetime.timestamp(one_sec_later))
+    user1_sendlater_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hi",
+        'time_sent': timestamp,
+    }
+    r = requests.post(f"{url}/message/sendlater", json=user1_sendlater_input)
+    # User 0 get the info of messages 2 seconds later
+    time.sleep(2)
+    user0_get_message_input = {
+        'token': user0_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'start': 0,
+    }
+    r = requests.get(f"{url}/channel/messages", params=user0_get_message_input)    
+    message_info = r.json()
+    assert message_info['messages'][1]['message'] == "Hi"
+
+def test_message_sendlater_invalid0(url):
+    '''User 1 sent a message 0 second later in a invalid channel'''
+    clear()
+
+    # Register user 0
+    user0_data_input = {
+        'email': "leonwu@gmail.com",
+        'password': "ihfeh3hgi00d",
+        'name_first': "Yilang",
+        'name_last': "W",
+    }
+    r = requests.post(f"{url}/auth/register", json=user0_data_input)
+    user0_data_output = r.json()
+
+    # Register user 1
+    user1_data_input = {
+        'email': "billgates@outlook.com",
+        'password':  "VukkFs",
+        'name_first': "Bill",
+        'name_last': "Gates"
+    }
+    r = requests.post(f"{url}/auth/register", json=user1_data_input)
+    user1_data_output = r.json()
+
+    # Register user 2
+    user2_data_input = {
+        'email': "johnson@icloud.com",
+        'password': "RFVtgb45678",
+        'name_first': "M",
+        'name_last': "Johnson"
+    }
+    r = requests.post(f"{url}/auth/register", json=user2_data_input)
+    user2_data_output = r.json()
+
+    # User 0 create a channel
+    channel0_data_input = {
+        'token': user0_data_output['token'],
+        'name': "channel0",
+        'is_public': True,
+    }
+    r = requests.post(f"{url}/channels/create", json=channel0_data_input)
+    channel0_data_output = r.json()
+
+    # User 1 join the channel
+    user1_join_data_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel0_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user1_join_data_input)
+
+    # User 1 create another channel
+    channel1_data_input = {
+        'token': user1_data_output['token'],
+        'name': "channel1",
+        'is_public': True,
+    }
+    r = requests.post(f"{url}/channels/create", json=channel1_data_input)
+    channel1_data_output = r.json()
+
+    # user 2 join the channel created by user 1
+    user2_join_data_input = {
+        'token': user2_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user2_join_data_input)
+
+    # User 0 join channel1
+    user0_join_data_input = {
+        'token': user0_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user0_join_data_input)
+
+    # User 2 send a message
+    user2_message_input = {
+        'token': user2_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hello",
+    }
+    r = requests.post(f"{url}/message/send", json=user2_message_input)
+
+    # User 1 send a message
+    user1_message_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hi",
+    }
+    r = requests.post(f"{url}/message/send", json=user1_message_input)
+
+    # USer 1 send a message 0 second later
+    zero_sec_later = datetime.datetime.now()
+    timestamp = int(datetime.datetime.timestamp(zero_sec_later))
+    user1_sendlater_input = {
+        'token': user1_data_output['token'],
+        'channel_id': 2,
+        'message': "Hi",
+        'time_sent': timestamp,
+    }
+    r = requests.post(f"{url}/message/sendlater", json=user1_sendlater_input)
+    message_info = r.json()
+    assert message_info['message'] == '<p>Channel is invalid</p>'
+
+def test_message_sendlater_invalid1(url):
+    '''User 1 sent a message that is over 1000 letters 0 second later in a channel'''
+    clear()
+
+    # Register user 0
+    user0_data_input = {
+        'email': "leonwu@gmail.com",
+        'password': "ihfeh3hgi00d",
+        'name_first': "Yilang",
+        'name_last': "W",
+    }
+    r = requests.post(f"{url}/auth/register", json=user0_data_input)
+    user0_data_output = r.json()
+
+    # Register user 1
+    user1_data_input = {
+        'email': "billgates@outlook.com",
+        'password':  "VukkFs",
+        'name_first': "Bill",
+        'name_last': "Gates"
+    }
+    r = requests.post(f"{url}/auth/register", json=user1_data_input)
+    user1_data_output = r.json()
+
+    # Register user 2
+    user2_data_input = {
+        'email': "johnson@icloud.com",
+        'password': "RFVtgb45678",
+        'name_first': "M",
+        'name_last': "Johnson"
+    }
+    r = requests.post(f"{url}/auth/register", json=user2_data_input)
+    user2_data_output = r.json()
+
+    # User 0 create a channel
+    channel0_data_input = {
+        'token': user0_data_output['token'],
+        'name': "channel0",
+        'is_public': True,
+    }
+    r = requests.post(f"{url}/channels/create", json=channel0_data_input)
+    channel0_data_output = r.json()
+
+    # User 1 join the channel
+    user1_join_data_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel0_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user1_join_data_input)
+
+    # User 1 create another channel
+    channel1_data_input = {
+        'token': user1_data_output['token'],
+        'name': "channel1",
+        'is_public': True,
+    }
+    r = requests.post(f"{url}/channels/create", json=channel1_data_input)
+    channel1_data_output = r.json()
+
+    # user 2 join the channel created by user 1
+    user2_join_data_input = {
+        'token': user2_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user2_join_data_input)
+
+    # User 0 join channel1
+    user0_join_data_input = {
+        'token': user0_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user0_join_data_input)
+
+    # User 2 send a message
+    user2_message_input = {
+        'token': user2_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hello",
+    }
+    r = requests.post(f"{url}/message/send", json=user2_message_input)
+
+    # User 1 send a message
+    user1_message_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hi",
+    }
+    r = requests.post(f"{url}/message/send", json=user1_message_input)
+
+    # USer 1 send a message that is over 1000 letters 0 second later
+    zero_sec_later = datetime.datetime.now()
+    timestamp = int(datetime.datetime.timestamp(zero_sec_later))
+    user1_sendlater_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "H" * 1001,
+        'time_sent': timestamp,
+    }
+    r = requests.post(f"{url}/message/sendlater", json=user1_sendlater_input)
+    message_info = r.json()
+    assert message_info['message'] == '<p>Message is more than 1000 characters</p>'
+
+def test_message_sendlater_invalid2(url):
+    '''User 1 sent a message 1 second before'''
+    clear()
+
+    # Register user 0
+    user0_data_input = {
+        'email': "leonwu@gmail.com",
+        'password': "ihfeh3hgi00d",
+        'name_first': "Yilang",
+        'name_last': "W",
+    }
+    r = requests.post(f"{url}/auth/register", json=user0_data_input)
+    user0_data_output = r.json()
+
+    # Register user 1
+    user1_data_input = {
+        'email': "billgates@outlook.com",
+        'password':  "VukkFs",
+        'name_first': "Bill",
+        'name_last': "Gates"
+    }
+    r = requests.post(f"{url}/auth/register", json=user1_data_input)
+    user1_data_output = r.json()
+
+    # Register user 2
+    user2_data_input = {
+        'email': "johnson@icloud.com",
+        'password': "RFVtgb45678",
+        'name_first': "M",
+        'name_last': "Johnson"
+    }
+    r = requests.post(f"{url}/auth/register", json=user2_data_input)
+    user2_data_output = r.json()
+
+    # User 0 create a channel
+    channel0_data_input = {
+        'token': user0_data_output['token'],
+        'name': "channel0",
+        'is_public': True,
+    }
+    r = requests.post(f"{url}/channels/create", json=channel0_data_input)
+    channel0_data_output = r.json()
+
+    # User 1 join the channel
+    user1_join_data_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel0_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user1_join_data_input)
+
+    # User 1 create another channel
+    channel1_data_input = {
+        'token': user1_data_output['token'],
+        'name': "channel1",
+        'is_public': True,
+    }
+    r = requests.post(f"{url}/channels/create", json=channel1_data_input)
+    channel1_data_output = r.json()
+
+    # user 2 join the channel created by user 1
+    user2_join_data_input = {
+        'token': user2_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user2_join_data_input)
+
+    # User 0 join channel1
+    user0_join_data_input = {
+        'token': user0_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user0_join_data_input)
+
+    # User 2 send a message
+    user2_message_input = {
+        'token': user2_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hello",
+    }
+    r = requests.post(f"{url}/message/send", json=user2_message_input)
+
+    # User 1 send a message
+    user1_message_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hi",
+    }
+    r = requests.post(f"{url}/message/send", json=user1_message_input)
+
+    # USer 1 send a message that is over 1000 letters 0 second later
+    one_sec_before = datetime.datetime.now() - datetime.timedelta(seconds=1)
+    timestamp = int(datetime.datetime.timestamp(one_sec_before))
+    user1_sendlater_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hi",
+        'time_sent': timestamp,
+    }
+    r = requests.post(f"{url}/message/sendlater", json=user1_sendlater_input)
+    message_info = r.json()
+    assert message_info['message'] == '<p>Time sent is a time in the past</p>'
+
+def test_message_sendlater_invalid3(url):
+    '''the authorised user has not joined the channel they are trying to post to'''
+    clear()
+
+    # Register user 0
+    user0_data_input = {
+        'email': "leonwu@gmail.com",
+        'password': "ihfeh3hgi00d",
+        'name_first': "Yilang",
+        'name_last': "W",
+    }
+    r = requests.post(f"{url}/auth/register", json=user0_data_input)
+    user0_data_output = r.json()
+
+    # Register user 1
+    user1_data_input = {
+        'email': "billgates@outlook.com",
+        'password':  "VukkFs",
+        'name_first': "Bill",
+        'name_last': "Gates"
+    }
+    r = requests.post(f"{url}/auth/register", json=user1_data_input)
+    user1_data_output = r.json()
+
+    # Register user 2
+    user2_data_input = {
+        'email': "johnson@icloud.com",
+        'password': "RFVtgb45678",
+        'name_first': "M",
+        'name_last': "Johnson"
+    }
+    r = requests.post(f"{url}/auth/register", json=user2_data_input)
+    user2_data_output = r.json()
+
+    # User 0 create a channel
+    channel0_data_input = {
+        'token': user0_data_output['token'],
+        'name': "channel0",
+        'is_public': True,
+    }
+    r = requests.post(f"{url}/channels/create", json=channel0_data_input)
+    channel0_data_output = r.json()
+
+    # User 1 join the channel
+    user1_join_data_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel0_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user1_join_data_input)
+
+    # User 1 create another channel
+    channel1_data_input = {
+        'token': user1_data_output['token'],
+        'name': "channel1",
+        'is_public': True,
+    }
+    r = requests.post(f"{url}/channels/create", json=channel1_data_input)
+    channel1_data_output = r.json()
+
+    # user 2 join the channel created by user 1
+    user2_join_data_input = {
+        'token': user2_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+    }
+    r = requests.post(f"{url}/channel/join", json=user2_join_data_input)
+
+    # User 2 send a message
+    user2_message_input = {
+        'token': user2_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hello",
+    }
+    r = requests.post(f"{url}/message/send", json=user2_message_input)
+
+    # User 1 send a message
+    user1_message_input = {
+        'token': user1_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hi",
+    }
+    r = requests.post(f"{url}/message/send", json=user1_message_input)
+
+    # USer 0 send a message letters 0 second later in channel1 which hasn't join
+    one_sec_before = datetime.datetime.now() - datetime.timedelta(seconds=1)
+    timestamp = int(datetime.datetime.timestamp(one_sec_before))
+    user0_sendlater_input = {
+        'token': user0_data_output['token'],
+        'channel_id': channel1_data_output['channel_id'],
+        'message': "Hi",
+        'time_sent': timestamp,
+    }
+    r = requests.post(f"{url}/message/sendlater", json=user0_sendlater_input)
+    message_info = r.json()
+    assert message_info['message'] == '<p>User is not in channel</p>'
