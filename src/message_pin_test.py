@@ -511,7 +511,7 @@ def test_message_sendlater_valid2():
     assert message_info['messages'][1]['message'] == "H" * 1000
 
 def test_message_sendlater_invalid0():
-    "User 1 sent a message 0 second later in a invalid channel"
+    """User 1 sent a message 0 second later in a invalid channel"""
     clear()
 
     # Register user 0
@@ -539,7 +539,7 @@ def test_message_sendlater_invalid0():
         message_sendlater(user1_info['token'], 2, "Hi", timestamp)
 
 def test_message_sendlater_invalid1():
-    "User 1 sent a message that is over 1000 letters 0 second later in a invalid channel"
+    "User 1 sent a message that is over 1000 letters 0 second later in a channel"
     clear()
 
     # Register user 0
@@ -567,7 +567,7 @@ def test_message_sendlater_invalid1():
         message_sendlater(user1_info['token'], channel1_info, "H" * 1001, timestamp)
 
 def test_message_sendlater_invalid2():
-    "User 1 sent a message 0 second later"
+    '''User 1 sent a message 1 second before'''
     clear()
 
     # Register user 0
