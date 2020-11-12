@@ -476,7 +476,7 @@ def test_message_sendlater_valid1():
     timestamp = int(datetime.datetime.timestamp(one_sec_later))
     message_sendlater(user1_info['token'], channel1_info['channel_id'], "Hi", timestamp)
     # User 0 get the info of messages 1 sec later
-    time.sleep(1)
+    time.sleep(2)
     message_info = channel_messages(user0_info['token'], channel1_info['channel_id'], 0)
     assert message_info['messages'][1]['message'] == "Hi"
 
@@ -539,7 +539,7 @@ def test_message_sendlater_invalid0():
         message_sendlater(user1_info['token'], 2, "Hi", timestamp)
 
 def test_message_sendlater_invalid1():
-    "User 1 sent a message 0 second later in a invalid channel"
+    "User 1 sent a message that is over 1000 letters 0 second later in a invalid channel"
     clear()
 
     # Register user 0
@@ -594,7 +594,7 @@ def test_message_sendlater_invalid2():
     with pytest.raises(InputError):
         message_sendlater(user1_info['token'], channel1_info['channel_id'], "Hi", timestamp)
 
-def test_message_pin_invalid3():
+def test_message_sendlater_invalid3():
     '''the authorised user has not joined the channel they are trying to post to'''
     clear()
     user0_info = auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
