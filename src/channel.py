@@ -28,17 +28,17 @@ def channel_details(token, channel_id):
 
 def channel_messages(token, channel_id, start):
     check_valid_token(token)
-    check_valid_channel(channel_id)
+    check_valid_message_start(start, channel_id)
     u_id = auth_u_id_from_token(token)
     check_authorised_member_channel(channel_id, u_id)
-    check_valid_message_start(start, channel_id)
     end = data_channel_messages_end(start, channel_id)
-    message_list = data_channel_messages(channel_id, start, end)
-    
+    before_list = data_channel_messages(channel_id, start, end)
+    message_list = data_react_modify(before_list, u_id)
+
     return {
-        'message_list': message_list, 
-        'start': start, 
-        'end': end
+        'messages': message_list,
+        'start': start,
+        'end': end,
     }
 
 def channel_leave(token, channel_id):
@@ -49,11 +49,10 @@ def channel_leave(token, channel_id):
 
 def channel_join(token, channel_id):
     check_valid_token(token)
-    check_valid_channel(channel_id)
+    check_public_channel(channel_id)
     u_id = auth_u_id_from_token(token)
     # make sure member doesn't exist before joining
     check_member_not_exist(u_id, channel_id)
-    check_public_channel(channel_id)
     data_add_member(u_id, channel_id)
     return {}
 
@@ -68,8 +67,6 @@ def channel_addowner(token, channel_id, u_id):
     token_id = auth_u_id_from_token(token)
     check_owner_exist(token_id, channel_id)
     data_add_owner(u_id, channel_id)
-    if not is_member_exist(u_id, channel_id):
-        data_add_member(u_id, channel_id)
     return {}
 
 # Remove user with user id u_id an owner of this channel

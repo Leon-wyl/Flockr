@@ -7,9 +7,11 @@ from auth import auth_login, auth_logout, auth_register
 from channels import channels_list, channels_listall, channels_create
 from channel import channel_invite, channel_details, channel_messages, channel_leave, \
     channel_join, channel_addowner, channel_removeowner
-from message import message_send, message_remove, message_edit
+from message import message_send, message_remove, message_edit, message_pin, message_unpin, \
+    message_react, message_unreact, message_sendlater
 from user import user_profile, user_profile_setname, user_profile_setemail, user_profile_sethandle
-from other import clear, users_all, admin_userpermission_change, search
+from other import clear, users_all, admin_userpermission_change, search, standup_active, \
+    standup_send, standup_start
 
 def defaultHandler(err):
     response = err.get_response()
@@ -153,6 +155,46 @@ def server_search():
 @APP.route('/clear', methods=['DELETE'])
 def server_clear():
     return dumps(clear())
+
+@APP.route('/message/pin', methods=['POST'])
+def server_pin():
+    data = request.get_json()
+    return dumps(message_pin(data['token'], int(data['message_id'])))
+
+@APP.route('/message/unpin', methods=['POST'])
+def server_unpin():
+    data = request.get_json()
+    return dumps(message_unpin(data['token'], int(data['message_id'])))
+
+@APP.route('/message/react', methods=['POST'])
+def server_react():
+    data = request.get_json()
+    return dumps(message_react(data['token'], int(data['message_id']), int(data['react_id'])))
+
+@APP.route('/message/unreact', methods=['POST'])
+def server_unreact():
+    data = request.get_json()
+    return dumps(message_unreact(data['token'], int(data['message_id']), int(data['react_id'])))
+
+@APP.route('/message/sendlater', methods=['POST'])
+def server_sendlater():
+    data = request.get_json()
+    return dumps(message_sendlater(data['token'], int(data['channel_id']), data['message'], \
+        int(data['time_sent'])))
+
+@APP.route('/standup/start', methods=['POST'])
+def server_start_standup():
+    data = request.get_json()
+    return dumps(standup_start(data['token'], int(data['channel_id']), data['length']))
+
+@APP.route('/standup/active', methods=['GET'])
+def server_active_standup():
+    return dumps(standup_active(request.args.get('token'), int(request.args.get('channel_id'))))
+
+@APP.route('/standup/send', methods=['POST'])
+def server_send_standup():
+    data = request.get_json()
+    return dumps(standup_send(data['token'], int(data['channel_id']), data['message']))
 
 if __name__ == "__main__":
     APP.run(port=0) # Do not edit this port

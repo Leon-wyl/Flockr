@@ -6,7 +6,6 @@ from time import sleep
 import requests
 import json
 from other import clear
-from utility import token_generate
 from error import InputError
 
 # Use this fixture to get the URL of the server. It starts the server for you,
@@ -40,74 +39,72 @@ def test_echo(url):
 
 def test_server_auth_register(url):
     # Normal register
-    dataIn1 = {
+    user0_data_input = {
         'email': "leonwu@gmail.com", 
         'password': "ihfeh3hgi00d", 
         'name_first': "Yilang",
         'name_last': "Wu",
     }
-    r = requests.post(f"{url}/auth/register", json=dataIn1)
-    return_data = r.json()
-    assert return_data['u_id'] == 0
-    assert return_data['token'] == token_generate(return_data['u_id'])
+    r = requests.post(f"{url}/auth/register", json=user0_data_input)
+    user0_data_output = r.json()
+    assert user0_data_output['u_id'] == 0
 
     # Invalid email
-    dataIn2 = {
+    invalid_data_input1 = {
         'email': "ufhsdfkshfdhfsfhiw",
         'password': "uf89rgu",
         'name_first': "Andrew",
         'name_last': "Williams",
     }
-    r = requests.post(f"{url}/auth/register", json=dataIn2)
-    return_data = r.json()
-    assert return_data['message'] == "<p>Email entered is not a valid email</p>"
+    r = requests.post(f"{url}/auth/register", json=invalid_data_input1)
+    invalid_data_output1 = r.json()
+    assert invalid_data_output1['message'] == "<p>Email entered is not a valid email</p>"
 
     # Registered email register again
-    dataIn3 = {
+    invalid_data_input2 = {
         'email': "leonwu@gmail.com", 
         'password': "dfsdfskdfj", 
         'name_first': "haha",
         'name_last': "hehe",
     }
-    r = requests.post(f"{url}/auth/register", json=dataIn3)
-    return_data = r.json()
-    assert return_data['message'] == '<p>Email address leonwu@gmail.com is already being used' \
+    r = requests.post(f"{url}/auth/register", json=invalid_data_input2)
+    invalid_data_output2 = r.json()
+    assert invalid_data_output2['message'] == '<p>Email address leonwu@gmail.com is already being used' \
         ' by another user</p>'
 
     # Password too short
-    dataIn4 = {
+    invalid_data_input3 = {
         'email': "hahaha@hehe.com", 
         'password': "dfsdf", 
         'name_first': "haha",
         'name_last': "hehe",
     }
-    r = requests.post(f"{url}/auth/register", json=dataIn4)
-    return_data = r.json()
-    assert return_data['message'] == '<p>Password entered is less than 6 characters long</p>'
+    r = requests.post(f"{url}/auth/register", json=invalid_data_input3)
+    invalid_data_output3 = r.json()
+    assert invalid_data_output3['message'] == '<p>Password entered is less than 6 characters long</p>'
 
     # First Name too long
-    dataIn5 = {
+    invalid_data_input4 = {
         'email': "hahaha@hehe.com", 
         'password': "dfsddfdff", 
         'name_first': "h" * 51,
         'name_last': "hehe",
     }
-    r = requests.post(f"{url}/auth/register", json=dataIn5)
-    return_data = r.json()
-    assert return_data['message'] == '<p>name_first is not between 1 and 50 characters inclusively' \
+    r = requests.post(f"{url}/auth/register", json=invalid_data_input4)
+    invalid_data_output4 = r.json()
+    assert invalid_data_output4['message'] == '<p>name_first is not between 1 and 50 characters inclusively' \
         ' in length</p>'
 
     # Last name too long
-    dataIn6 = {
+    invalid_data_input5 = {
         'email': "hahaha@hehe.com", 
         'password': "dfssdfdfdf", 
         'name_first': "haha",
         'name_last': "h" * 51,
     }
-    r = requests.post(f"{url}/auth/register", json=dataIn6)
-    return_data = r.json()
-    print(return_data)
-    assert return_data['message'] == '<p>name_last is not between 1 and 50 characters inclusively' \
+    r = requests.post(f"{url}/auth/register", json=invalid_data_input5)
+    invalid_data_output5 = r.json()
+    assert invalid_data_output5['message'] == '<p>name_last is not between 1 and 50 characters inclusively' \
         ' in length</p>'
 
 def test_server_auth_logout(url):
@@ -133,7 +130,7 @@ def test_server_auth_logout(url):
 
     # Logout an invalid u_id
     dataIn3 = {
-        'token': token_generate(5)
+        'token': "fdfjskdfjwekjf"
     }
     r = requests.post(f"{url}/auth/logout", json=dataIn3)
     return_data3 = r.json()
@@ -145,7 +142,6 @@ def test_server_auth_logout(url):
     }
     r = requests.post(f"{url}/auth/logout", json=dataIn4)
     return_data4 = r.json()
-    print(return_data4)
     assert return_data4['is_success'] == False
 
 def test_server_auth_login(url):
@@ -183,7 +179,6 @@ def test_server_auth_login(url):
     }
     r = requests.post(f"{url}/auth/login", json=dataIn4)
     return_data2 = r.json()
-    print(return_data2)
     assert return_data2['message'] == "<p>Email entered is not a valid email</p>"
 
     # Login this user again
@@ -194,7 +189,6 @@ def test_server_auth_login(url):
     r = requests.post(f"{url}/auth/login", json=dataIn5)
     return_data3 = r.json()
     assert return_data3['u_id'] == 0
-    assert return_data3['token'] == token_generate(return_data3['u_id'])
 
     dataIn6 = {
         'email': "dfdskfj@fdf.com",
@@ -205,7 +199,7 @@ def test_server_auth_login(url):
     assert return_data4['message'] == '<p>Error, email address dfdskfj@fdf.com has not been registered' \
         ' yet</p>'
 
-'''def test_server_addowner(url):
+def test_server_addowner(url):
     requests.delete(f"{url}/clear")
     # Register a user
     dataIn1 = {
@@ -234,7 +228,6 @@ def test_server_auth_login(url):
         'is_public': True,
     }
     r = requests.post(f"{url}/channels/create", json=dataIn3)
-    return_data3 = r.json()
 
     # The second user join the channel
     dataIn4 = {
@@ -286,7 +279,7 @@ def test_server_auth_login(url):
         'channel_id': 0,
         'u_id': return_data6['u_id'],
     }
-    r = requests.post(f"{url}/channel/addowner", json=dataIn6)
+    r = requests.post(f"{url}/channel/addowner", json=dataIn9)
     return_data7 = r.json()
     assert return_data7['code'] == 400
     
@@ -306,7 +299,7 @@ def test_server_auth_login(url):
     r = requests.get(f"{url}/channel/details", params=dataIn11)
     return_data8 = r.json()
     is_owner = False
-    for owner in return_data8['owners']:
+    for owner in return_data8['owner_members']:
         if return_data2['u_id'] == owner['u_id']:
             is_owner = True
     assert is_owner == True
@@ -357,15 +350,15 @@ def test_server_removeowner(url):
         'token': return_data2['token'],
         'channel_id': 0,
     }
-    r = requests.post(f"{url}/channel/join", json=dataIn4)
+    r = requests.post(f"{url}/channel/join", json=dataIn5)
 
     # The first user add the second user as owner
     dataIn6 = {
         'token': return_data1['token'],
-        'channel_id': return_data3['channel_id'],
+        'channel_id': return_data4['channel_id'],
         'u_id': return_data2['u_id'],
     }
-    r = requests.post(f"{url}/channel/addowner", json=dataIn5)
+    r = requests.post(f"{url}/channel/addowner", json=dataIn6)
 
     # The first user remove the owner identity of the second user but input an invalid channel
     dataIn7 = {
@@ -373,7 +366,7 @@ def test_server_removeowner(url):
         'channel_id': 5,
         'u_id': return_data2['u_id'],
     }
-    r = requests.post(f"{url}/channel/removeowner", json=dataIn6)
+    r = requests.post(f"{url}/channel/removeowner", json=dataIn7)
     return_data5 = r.json()
     assert return_data5['code'] == 400
 
@@ -383,37 +376,37 @@ def test_server_removeowner(url):
         'channel_id': return_data4['channel_id'],
         'u_id': return_data3['u_id'],
     }
-    r = requests.post(f"{url}/channel/removeowner", json=dataIn7)
+    r = requests.post(f"{url}/channel/removeowner", json=dataIn8)
     return_data6 = r.json()
     assert return_data6['code'] == 400
 
-    # The third user wants to remove the second user but user 3 is not an owner
+    # The third user wants to remove the second user but the third is not an owner
     dataIn9 = {
         'token': return_data3['token'],
         'channel_id': return_data4['channel_id'],
         'u_id': return_data2['u_id'],
     }
-    r = requests.post(f"{url}/channel/removeowner", json=dataIn8)
+    r = requests.post(f"{url}/channel/removeowner", json=dataIn9)
     return_data7 = r.json()
     assert return_data7['code'] == 400
 
     # The first user remove the second user from owner
     dataIn10 = {
-        'token': return_data3['token'],
+        'token': return_data1['token'],
         'channel_id': return_data4['channel_id'],
         'u_id': return_data2['u_id'],
-    }    
-    r = requests.post(f"{url}/channel/removeowner", json=dataIn9)
+    }
+    r = requests.post(f"{url}/channel/removeowner", json=dataIn10)
 
     # The first user obtain the channel details
     dataIn11 = {
         'token': return_data1['token'],
-        'channel_id': dataIn4['channel_id'],
+        'channel_id': return_data4['channel_id'],
     }
     r = requests.get(f"{url}/channel/details", params=dataIn11)
     return_data8 = r.json()
     is_owner = False
-    for owner in return_data8['owners']:
+    for owner in return_data8['owner_members']:
         if return_data2['u_id'] == owner['u_id']:
             is_owner = True
-    assert is_owner == False'''
+    assert is_owner == False

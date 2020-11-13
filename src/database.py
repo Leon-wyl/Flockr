@@ -1,7 +1,7 @@
 from error import AccessError, InputError
 from datetime import datetime, timezone, timedelta
 from time import sleep
-import _thread
+import threading
 
 '''The database for the user and channel data'''
 data = {
@@ -341,7 +341,8 @@ def data_standup_start(u_id, channel_id, length):
             time = (datetime.utcnow() + timedelta(seconds=length)).replace(tzinfo=timezone.utc).timestamp()
             channel['time_finish'] = time = round(time, 0)
             try:
-                _thread.start_new_thread(sleep_when_standup, (length, channel, u_id))
+               new_thread = threading.Thread(target=sleep_when_standup, args=(length, channel, u_id))
+               new_thread.start()
             except:
                 raise Exception('Cannot start thread MUDAMUDAMUDA!')
             return time

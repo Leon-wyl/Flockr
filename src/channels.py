@@ -3,7 +3,7 @@ from utility import check_valid_token, check_valid_channel_name
 from auth import auth_u_id_from_token
 from error import InputError, AccessError
 
-# Provide a list of all channels (and their associated details) 
+# Provide a list of all channels (and their associated details)
 # that the authorised user is part of
 def channels_list(token):
     # if token is invalid raise an Exception
@@ -13,8 +13,6 @@ def channels_list(token):
         'channels': data_user_channels(u_id),
     }
 
-
-
 # Provide a list of all channels (and their associated details)
 def channels_listall(token):
     # if token is invalid raise an Exception
@@ -23,7 +21,7 @@ def channels_listall(token):
         'channels': data_channels_list(),
     }
 
-# Creates a new channel with that name that is 
+# Creates a new channel with that name that is
 # either a public or private channel
 def channels_create(token, name, is_public):
     # if the name is more than 20 or token is invalid raise an Exception
@@ -42,6 +40,9 @@ def channels_create(token, name, is_public):
         'members' : [],
         'owners' : [],
         'messages' : [],
+        'is_active': False,
+        'standup_message': '',
+        'time_finish': None,
     }
     # add new_channel to the list
     data_add_channel(new_channel)
@@ -51,5 +52,3 @@ def channels_create(token, name, is_public):
     return {
         'channel_id': channel_id,
     }
-
-
