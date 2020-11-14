@@ -272,7 +272,6 @@ def test_channel_join_flockr_owner_joins_private_channel():
 # InputError: Channel ID is not a valid channel
 def test_channel_join_invalid_channel():
     clear()
-    userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')
     userB = auth.auth_register('validemail2@gmail.com', '123abc!@#', 'Dennis', 'Lin')
     with pytest.raises(InputError):
         channel.channel_join(userB['token'], 0)
