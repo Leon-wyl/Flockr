@@ -42,7 +42,8 @@ def data_upload(u_id, email, password, name_first, name_last, handle, token):
         'name_last': name_last,
         'handle': handle,
         'token': token,
-        'permission_id': permission_id
+        'permission_id': permission_id,
+        'reset_code': "",
     })
 
 def data_login(u_id, token):
@@ -455,3 +456,19 @@ def data_react_modify(before_list, u_id):
                 react['is_this_user_reacted'] = False
     return before_list
 
+def data_reset_code_renew(u_id, reset_code):
+    for user in data['users']:
+        if user['u_id'] == u_id:
+            user['reset_code'] = reset_code
+
+def data_reset_code_check(reset_code):
+    for user in data['users']:
+        if user['reset_code'] == reset_code:
+            return user['u_id']
+    return -1
+
+def data_password_renew(u_id, new_password):
+    for user in data['users']:
+        if user['u_id'] == u_id:
+            user['password'] = new_password
+            break
