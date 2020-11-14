@@ -23,6 +23,7 @@ def user_profile(token, u_id):
 
 
 def user_profile_setname(token, name_first, name_last):
+    check_valid_token(token)
     user = is_token_exist(token)
     check_name_length(name_first, name_last)
     user['name_first'] = name_first
@@ -32,6 +33,7 @@ def user_profile_setname(token, name_first, name_last):
 
 def user_profile_setemail(token, email):
     email_check(email)
+    check_valid_token(token)
     if data_email_search(email) == None:    # if no one has the same email as this one
         user = is_token_exist(token)        # find the user with token
         user['email'] = email
@@ -41,6 +43,7 @@ def user_profile_setemail(token, email):
 
 
 def user_profile_sethandle(token, handle_str):
+    check_valid_token(token)
     user = is_token_exist(token)        # find the user with token
     check_handle_length(handle_str)
     check_handle_exist(handle_str)
@@ -50,6 +53,7 @@ def user_profile_sethandle(token, handle_str):
 
 
 def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
+    check_valid_token(token)
     user = is_token_exist(token)        # find the user with token
     u_id = user['u_id']
     check_img_is_jpg(img_url)
