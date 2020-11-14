@@ -1,4 +1,3 @@
-import urllib.request
 from PIL import Image
 from error import InputError
 from error import AccessError
@@ -53,27 +52,12 @@ def user_profile_sethandle(token, handle_str):
 def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     user = is_token_exist(token)        # find the user with token
     u_id = user['u_id']
-    # create or empty the image file for storing new image
-    #open(f'src/static/{u_id}.jpg', 'w').close() 
-
-    # check if image is a jpg file
-    if img_url[-3:] != 'jpg':
-        raise InputError('Image url is not a jpg!')
-        
+    check_img_is_jpg(img_url)
     # Fetching image via url
-    try:
-        urllib.request.urlretrieve(img_url, f'src/static/{u_id}.jpg')
-        # check if the image url is valid 
-    except:
-        raise InputError('url is invalid')
-
+    fetch_img_check_valid_url(img_url, u_id)
     imageObject = Image.open(f'src/static/{u_id}.jpg')
-    
-    width, height = imageObject.size
-    if x_start < 0 or y_start < 0 or x_end > width or y_end > width:
-        raise InputError('Dimension is out of range!')
-    
-    # Crops the image from img_file.jpg
+    check_img_dimension(imageObject, x_start, y_start, x_end, y_end)
+    # Crops the image and save in local
     cropped = imageObject.crop((x_start, y_start, x_end, y_end))
     cropped.save(f'src/static/{u_id}.jpg')
     user['profile_img_url'] = f'static/{u_id}.jpg'

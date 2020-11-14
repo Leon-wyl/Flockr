@@ -124,8 +124,8 @@ def test_server_channel(url):
     # check member correctness
     r = requests.get(f"{url}/channel/details", params={'token': token1, 'channel_id': 0})
     return_data = r.json()
-    assert return_data['all_members'] == [{'name_first': 'Yilang', 'name_last': 'Wu', 'u_id': 0},
-    {'name_first': 'Guanbin', 'name_last': 'Wen', 'u_id': 2}]
+    assert return_data['all_members'] == [{'name_first': 'Yilang', 'name_last': 'Wu', 'u_id': 0, 'profile_img_url': return_data['all_members'][0]['profile_img_url']},
+    {'name_first': 'Guanbin', 'name_last': 'Wen', 'u_id': 2, 'profile_img_url': return_data['all_members'][1]['profile_img_url']}]
 
     # test_channel_invite_user_already_joined
     r = requests.post(f"{url}/channel/invite", json={'token': token1, 'channel_id': 0, 'u_id': 0})
@@ -194,7 +194,31 @@ def test_server_channel_details(url):
 
     resp = requests.get(f"{url}/channel/details", params=dataIn6)
     resp = resp.json()
-    assert resp == {'all_members': [{'name_first': 'Yilang', 'name_last': 'Wu', 'u_id': 0}, {'name_first': 'Bill', 'name_last': 'Gates', 'u_id': 1}], 'name': 'group1', 'owner_members': [{'name_first': 'Yilang', 'name_last': 'Wu', 'u_id': 0}]}
+    assert resp == {
+        'all_members': [
+            {
+                'name_first': 'Yilang', 
+                'name_last': 'Wu', 
+                'u_id': 0, 
+                'profile_img_url': resp['all_members'][0]['profile_img_url']
+                }, 
+            {
+                'name_first': 'Bill', 
+                'name_last': 'Gates', 
+                'u_id': 1, 
+                'profile_img_url': resp['all_members'][1]['profile_img_url']
+                }
+            ], 
+        'name': 'group1', 
+        'owner_members': [
+            {
+                'name_first': 'Yilang', 
+                'name_last': 'Wu', 
+                'u_id': 0, 
+                'profile_img_url': resp['owner_members'][0]['profile_img_url']
+                }
+                ]
+            }
 
 def test_server_channel_messages(url):
 

@@ -32,12 +32,13 @@ def test_channel_details():
     clear()
     info = auth.auth_register('validemail@gmail.com', '123abc!@#',
     'Hayden', 'Everest')
+    u_id = info['u_id']
     channels.channels_create(info['token'], 'validchannelname', True)
     second_channel_id = channels.channels_create(info['token'], 'secondchannelname', True)
     assert channel.channel_details(info['token'], second_channel_id['channel_id']) == {
         'name':'secondchannelname',
-        'owner_members': [{'name_first': 'Hayden', 'name_last': 'Everest', 'u_id': 0}],
-        'all_members': [{'name_first': 'Hayden', 'name_last': 'Everest', 'u_id': 0}],
+        'owner_members': [{'name_first': 'Hayden', 'name_last': 'Everest', 'u_id': 0, 'profile_img_url': f'static/{u_id}.jpg',}],
+        'all_members': [{'name_first': 'Hayden', 'name_last': 'Everest', 'u_id': 0, 'profile_img_url': f'static/{u_id}.jpg',}],
     }
 
 # Test if the function raises an Input Error if the channel id is invalid.
@@ -68,6 +69,31 @@ def test_unauthorised_channel_messages():
     'Guanbin', 'Wen')
     with pytest.raises(AccessError):
         assert channel.channel_messages(secondinfo['token'], channel_id['channel_id'], 0)
+
+def test_flockr_owner_access_channel_messages():
+    clear()
+    info = auth.auth_register('validemail@gmail.com', '123abc!@#',
+    'Hayden', 'Everest')
+    secondinfo = auth.auth_register('newemail@gmail.com', '234abc!@#',
+    'Guanbin', 'Wen')
+    channel_id = channels.channels_create(secondinfo['token'], 'validchannelname', True)
+    message.message_send(info['token'], channel_id, "Hello")
+    assert channel.channel_messages(info['token'], channel_id, 0) == \
+    {
+        'messages':
+        [
+            {
+                'message_id': 0,
+                'u_id': 0,
+                'message': 'Hello',
+                'time_created': 0,
+                'reacts': [],
+                'is_pinned': False,
+            }
+        ],
+        'start': 0,
+        'end': -1,
+    }
 
 # This is not testable as message.message_send function is not yet implemented, will exclude this test for now and write in assumption
 
@@ -240,7 +266,7 @@ def test_channel_invite_user_already_joined():
 # InputError: channel_id does not refer to a valid channel.
 def test_channel_invite_invalid_channel():
     clear()
-    userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')           # return u_id and token
+    userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')
     userB = auth.auth_register('validemail2@gmail.com', '123abc!@#', 'Guanbin', 'Wen')
     with pytest.raises(InputError):
         channel.channel_invite(userA['token'], 0, userB['u_id'])
@@ -250,29 +276,38 @@ def test_channel_invite_invalid_channel():
 #
 #
 
+
 # join successful
 def test_channel_join_successful():
     clear()
     userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')
     userB = auth.auth_register('validemail2@gmail.com', '123abc!@#', 'Guanbin', 'Wen')
-    newchannel = channels.channels_create(userA['token'], 'validchannelname', True) # return channel_id
+    newchannel = channels.channels_create(userA['token'], 'validchannelname', True) 
     channel.channel_join(userB['token'], newchannel['channel_id'])
     assert len(data['channels'][0]['members']) == 2
 
+def test_channel_join_flockr_owner_joins_private_channel():
+    clear()
+    userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')
+    userB = auth.auth_register('validemail2@gmail.com', '123abc!@#', 'Guanbin', 'Wen')
+    newchannel = channels.channels_create(userB['token'], 'validchannelname', False) 
+    channel.channel_join(userA['token'], newchannel['channel_id'])
+    assert len(data['channels'][0]['members']) == 2
 
 # InputError: Channel ID is not a valid channel
 def test_channel_join_invalid_channel():
     clear()
     userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')
+    userB = auth.auth_register('validemail2@gmail.com', '123abc!@#', 'Dennis', 'Lin')
     with pytest.raises(InputError):
-        channel.channel_join(userA['token'], 0)
+        channel.channel_join(userB['token'], 0)
 
 
 
 def test_channel_join_channel_already_joined():
     clear()
-    userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')           # return u_id and token
-    channels.channels_create(userA['token'], 'validchannelname', True) # return channel_id
+    userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')
+    channels.channels_create(userA['token'], 'validchannelname', True)
     with pytest.raises(InputError):
         channel.channel_join(userA['token'], 0)
 
@@ -295,7 +330,7 @@ def test_channel_join_is_private():
 def test_channel_leave():
     clear()
     userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')
-    channels.channels_create(userA['token'], 'validchannelname', True) # return channel_id
+    channels.channels_create(userA['token'], 'validchannelname', True)
     assert len(data['channels'][0]['members']) == 1
     channel.channel_leave(userA['token'], 0)
     assert len(data['channels'][0]['members']) == 0
@@ -305,7 +340,7 @@ def test_channel_leave_unauthorised():
     clear()
     userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')
     userB = auth.auth_register('validemail2@gmail.com', '123abc!@#', 'Guanbin', 'Wen')
-    newchannel = channels.channels_create(userA['token'], 'validchannelname', True) # return channel_id
+    newchannel = channels.channels_create(userA['token'], 'validchannelname', True)
     with pytest.raises(AccessError):
         channel.channel_leave(userB['token'], newchannel['channel_id'])
 

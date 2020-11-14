@@ -1,6 +1,7 @@
 import jwt
 import re
 import hashlib
+import urllib.request
 from database import *
 from error import InputError
 from error import AccessError
@@ -29,6 +30,11 @@ def check_global_owner(u_id):
     if data_permission(u_id) != 1:
         raise AccessError("You are not owner of flockr")
     return
+
+def check_global_owner_access(u_id):
+    if data_permission(u_id) == 1:
+        return True
+    return False
 
 def check_valid_user(u_id):
     if not is_user_exist(u_id):
@@ -223,3 +229,17 @@ def check_valid_react_id(react_id):
     if react_id != 1:
         raise InputError("React ID is not valid")
         
+def check_img_is_jpg(img_url):
+    if img_url[-3:] != 'jpg':
+        raise InputError('Image url is not a jpg!')
+
+def fetch_img_check_valid_url(img_url, u_id):
+    try:
+        urllib.request.urlretrieve(img_url, f'src/static/{u_id}.jpg')
+    except:
+        raise InputError('url is invalid')
+
+def check_img_dimension(imageObject, x_start, y_start, x_end, y_end):
+    width, height = imageObject.size
+    if x_start < 0 or y_start < 0 or x_start > width or y_start > height or x_end < 0 or y_end < 0 or x_end > width or y_end > height:
+        raise InputError('Dimension is out of range!')

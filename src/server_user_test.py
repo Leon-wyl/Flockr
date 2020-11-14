@@ -253,7 +253,7 @@ def test_user_profile_uploadphoto(url):
         'x_start': 0, 
         'y_start': 0, 
         'x_end': 600, 
-        'y_end': 600,
+        'y_end': 300,
     }
     r = requests.post(f"{url}/user/profile/uploadphoto", json=correct_input)
     return_data = r.json()

@@ -109,6 +109,7 @@ def test_users_all(url):
             'name_first': "Yilang",
             'name_last': "W",
             'handle_str': 'yilangw',
+            'profile_img_url': resp['users'][0]['profile_img_url']
          },
          {
             'u_id': 1,
@@ -116,6 +117,7 @@ def test_users_all(url):
             'name_first': "M",
             'name_last': "Johnson",
             'handle_str': 'mjohnson',
+            'profile_img_url': resp['users'][1]['profile_img_url']
          }
 
     ]}
