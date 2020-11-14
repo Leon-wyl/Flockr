@@ -100,11 +100,9 @@ def test_search():
     message_send(info2['token'], 0, "he is ok haha")
     time2 = round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0)
     message_send(info2['token'], 0, "Old man and sea")
-    time3 = round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0)
     message_send(info2['token'], 1, "bangindgdliok")
     time4 = round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0)
     message_send(info2['token'], 1, "Fast and furious")
-    time5 = round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0)
     message_send(info2['token'], 1, "ok in abcdefg")
     time6 = round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0)
     assert search(info2['token'], 'ok') == {'messages': [
