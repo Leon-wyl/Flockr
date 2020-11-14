@@ -1,8 +1,9 @@
 import pytest
-from auth import auth_register, auth_login, auth_logout
+from auth import auth_register, auth_login, auth_logout, auth_passwordreset_request, \
+    auth_passwordreset_reset
 from other import clear
 from database import data
-from utility import token_generate
+from utility import token_generate, password_encode
 from error import InputError, AccessError
 
 def test_register():
@@ -112,3 +113,87 @@ def test_logout():
     # An invalid token given to logout, which should be fail
     with pytest.raises(AccessError):
         assert auth_logout(token_generate(5))
+
+def test_password_reset_valid0():
+    '''Valid password reset by the owner of flockr'''
+    clear()
+
+    # Valid information has been summitted to register from the first user
+    auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
+    # Vadid information has been summitted to register from the second user
+    auth_register("billgates@outlook.com", "VukkFs", "Bill", "Gates")
+    # Vadid information has been summitted to register from the third user
+    auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
+    # User 0 send a password reset request
+    auth_passwordreset_request("leonwu@gmail.com")
+    # User 0 change the password
+    reset_code = data['users'][0]['reset_code']
+    auth_passwordreset_reset(reset_code, "1q2w3e")
+    assert data['users'][0]['password'] == password_encode("1q2w3e")
+
+def test_password_reset_valid1():
+    '''Valid password reset by a member of flockr'''
+    clear()
+
+    # Valid information has been summitted to register from the first user
+    auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
+    # Vadid information has been summitted to register from the second user
+    auth_register("billgates@outlook.com", "VukkFs", "Bill", "Gates")
+    # Vadid information has been summitted to register from the third user
+    auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
+    # User 2 send a password reset request
+    auth_passwordreset_request("johnson@icloud.com")
+    # User 2 change the password
+    reset_code = data['users'][2]['reset_code']
+    auth_passwordreset_reset(reset_code, "Qwerty567")
+    assert data['users'][2]['password'] == password_encode("Qwerty567")
+
+def test_password_reset_invalid_reset_code():
+    '''reset_code is not a valid reset code'''
+    clear()
+
+    # Valid information has been summitted to register from the first user
+    auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
+    # Vadid information has been summitted to register from the second user
+    auth_register("billgates@outlook.com", "VukkFs", "Bill", "Gates")
+    # Vadid information has been summitted to register from the third user
+    auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
+    # User 2 send a password reset request
+    auth_passwordreset_request("johnson@icloud.com")
+    # User 2 change the password with reset_code that has only 4 digits
+    with pytest.raises(InputError):
+        auth_passwordreset_reset(str(1234), "Qwerty567")
+
+def test_password_reset_wrong_reset_code0():
+    '''reset_code is not a valid reset code'''
+    clear()
+
+    # Valid information has been summitted to register from the first user
+    auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
+    # Vadid information has been summitted to register from the second user
+    auth_register("billgates@outlook.com", "VukkFs", "Bill", "Gates")
+    # Vadid information has been summitted to register from the third user
+    auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
+    # User 2 send a password reset request
+    auth_passwordreset_request("johnson@icloud.com")
+    # User 2 change the password with wrong reset_code
+    reset_code = data['users'][2]['reset_code']
+    with pytest.raises(InputError):
+        auth_passwordreset_reset(str(int(reset_code) + 1), "Qwerty567")
+
+def test_password_reset_wrong_reset_code1():
+    '''reset_code is not a valid reset code'''
+    clear()
+
+    # Valid information has been summitted to register from the first user
+    auth_register("leonwu@gmail.com", "ihfeh3hgi00d", "Yilang", "W")
+    # Vadid information has been summitted to register from the second user
+    auth_register("billgates@outlook.com", "VukkFs", "Bill", "Gates")
+    # Vadid information has been summitted to register from the third user
+    auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
+    # User 2 send a password reset request
+    auth_passwordreset_request("johnson@icloud.com")
+    # User 2 change the password with wrong reset_code
+    reset_code = data['users'][2]['reset_code']
+    with pytest.raises(InputError):
+        auth_passwordreset_reset(reset_code, "Qwer7")
