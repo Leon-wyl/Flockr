@@ -107,6 +107,7 @@ def test_integration(url):
             'name_first': "Yilang",
             'name_last': "W",
             'handle_str': 'yilangw',
+            'profile_img_url': resp['users'][0]['profile_img_url']
          },
          {
             'u_id': 1,
@@ -114,6 +115,7 @@ def test_integration(url):
             'name_first': "Evie",
             'name_last': "Dunstone",
             'handle_str': 'eviedunstone',
+            'profile_img_url': resp['users'][1]['profile_img_url']
          }
 
     ]}
@@ -132,6 +134,7 @@ def test_integration(url):
             'name_first': "Evie",
             'name_last': "Dunstone",
             'handle_str': 'eviedunstone',
+            'profile_img_url': resp['user']['profile_img_url']
          }
     }
     # Set name to user_profile
@@ -211,6 +214,7 @@ def test_integration(url):
                 'u_id': 0,
                 'name_first': 'Yilang',
                 'name_last': 'W',
+                'profile_img_url': resp['owner_members'][0]['profile_img_url']
             }
         ],
         'all_members': [
@@ -218,6 +222,7 @@ def test_integration(url):
                 'u_id': 0,
                 'name_first': 'Yilang',
                 'name_last': 'W',
+                'profile_img_url': resp['all_members'][0]['profile_img_url']
             }
         ]
     }

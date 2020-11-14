@@ -49,10 +49,14 @@ def channel_leave(token, channel_id):
 
 def channel_join(token, channel_id):
     check_valid_token(token)
-    check_public_channel(channel_id)
+    check_valid_channel(channel_id)
     u_id = auth_u_id_from_token(token)
     # make sure member doesn't exist before joining
     check_member_not_exist(u_id, channel_id)
+    if check_global_owner_access(u_id) == True:
+        data_add_member(u_id, channel_id)
+        return {}
+    check_public_channel(channel_id)
     data_add_member(u_id, channel_id)
     return {}
 

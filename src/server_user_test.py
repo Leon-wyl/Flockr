@@ -35,7 +35,8 @@ def test_echo(url):
     resp = requests.get(url + 'echo', params={'data': 'hey'})
     assert json.loads(resp.text) == {'data': 'hey'}
 
-def test_server_user(url):
+# test user_profile, user_setname, user_setemail, user_sethandle
+def test_server_user_set(url):
     requests.delete(f"{url}/clear")
     # test server user profile success
     FirstUser1 = {
@@ -48,7 +49,6 @@ def test_server_user(url):
     return_data = r.json()
     assert return_data['u_id'] == 0
     token1 = return_data['token']
-    assert return_data['token'] == token1
 
     FirstUser = {
         'token': return_data['token'],
@@ -63,6 +63,7 @@ def test_server_user(url):
             'name_first': "Yilang",
             'name_last': "Wu",
             'handle_str': "yilangwu",
+            'profile_img_url': return_data['user']['profile_img_url'],
         }
     }
 
@@ -95,6 +96,7 @@ def test_server_user(url):
             'name_first': "Dennis",
             'name_last': "Lin",
             'handle_str': "yilangwu",
+            'profile_img_url': return_data['user']['profile_img_url'],
         }
     }
 
@@ -140,6 +142,7 @@ def test_server_user(url):
             'name_first': "Dennis",
             'name_last': "Lin",
             'handle_str': "yilangwu",
+            'profile_img_url': return_data['user']['profile_img_url'],
         }
     }
 
@@ -183,6 +186,7 @@ def test_server_user(url):
             'name_first': "Dennis",
             'name_last': "Lin",
             'handle_str': "dennislin",
+            'profile_img_url': return_data['user']['profile_img_url'],
         }
     }
 
@@ -227,3 +231,133 @@ def test_server_user(url):
     r = requests.put(f"{url}/user/profile/sethandle", json=ChangedHandle)
     return_data = r.json()
     assert return_data['message'] == '<p>Handle is already used by another user</p>'
+
+
+def test_user_profile_uploadphoto(url):
+    requests.delete(f"{url}/clear")
+    # register a user
+    FirstUser = {
+        'email': "leonwu@gmail.com", 
+        'password': "ihfeh3hgi00d", 
+        'name_first': "Yilang",
+        'name_last': "Wu",
+    }
+    r = requests.post(f"{url}/auth/register", json=FirstUser)
+    return_data = r.json()
+    assert return_data['u_id'] == 0     # check if user has been created
+    token1 = return_data['token']
+
+    correct_input = {
+        'token': token1, 
+        'img_url': 'https://img1.looper.com/img/gallery/things-only-adults-notice-in-shrek/intro-1573597941.jpg', 
+        'x_start': 0, 
+        'y_start': 0, 
+        'x_end': 600, 
+        'y_end': 300,
+    }
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=correct_input)
+    return_data = r.json()
+    assert return_data == {}
+
+    # Wrong HTTP status
+    wrong_url = {
+        'token': token1, 
+        'img_url': 'http://images.abcde.jpg', 
+        'x_start': 0, 
+        'y_start': 0, 
+        'x_end': 0, 
+        'y_end': 0,
+    }
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=wrong_url)
+    return_data = r.json()
+    assert return_data['message'] == '<p>url is invalid</p>'
+
+
+    # wrong dimension
+    x_end_exceed = {
+        'token': token1, 
+        'img_url': 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.jpg', 
+        'x_start': 0, 
+        'y_start': 0, 
+        'x_end': 500000, 
+        'y_end': 1000,
+    }
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=x_end_exceed)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Dimension is out of range!</p>'
+    
+    y_end_exceed = {
+        'token': token1, 
+        'img_url': 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.jpg', 
+        'x_start': 0, 
+        'y_start': 0, 
+        'x_end': 500, 
+        'y_end': 500000,
+    }
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=y_end_exceed)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Dimension is out of range!</p>'
+
+    x_start_exceed = {
+        'token': token1, 
+        'img_url': 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.jpg', 
+        'x_start': 100000, 
+        'y_start': 0, 
+        'x_end': 500, 
+        'y_end': 500,
+    }
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=x_start_exceed)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Dimension is out of range!</p>'
+
+    y_start_exceed = {
+        'token': token1, 
+        'img_url': 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.jpg', 
+        'x_start': 0, 
+        'y_start': 100000, 
+        'x_end': 500, 
+        'y_end': 500,
+    }
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=y_start_exceed)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Dimension is out of range!</p>'
+    
+
+    negative_x_start = {
+        'token': token1, 
+        'img_url': 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.jpg', 
+        'x_start': -1, 
+        'y_start': 0, 
+        'x_end': 500, 
+        'y_end': 500,
+    }
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=negative_x_start)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Dimension is out of range!</p>'
+
+    negative_y_start = {
+        'token': token1, 
+        'img_url': 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.jpg', 
+        'x_start': 0, 
+        'y_start': -1, 
+        'x_end': 500, 
+        'y_end': 500,
+    }
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=negative_y_start)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Dimension is out of range!</p>'
+
+
+    # Image url is not a jpg
+    not_jpg = {
+        'token': token1, 
+        'img_url': 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.img', 
+        'x_start': 0, 
+        'y_start': 0, 
+        'x_end': 0, 
+        'y_end': 0,
+    }
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=not_jpg)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Image url is not a jpg!</p>'
+    

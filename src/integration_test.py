@@ -54,12 +54,14 @@ def test_integration():
         {
             'u_id': 0,
             'name_first': 'Yilang',
-            'name_last': 'Wu'
+            'name_last': 'Wu',
+            'profile_img_url': data['users'][0]['profile_img_url'],
         },
         {
             'u_id': 1,
             'name_first': 'Monique',
-            'name_last': 'Jonhson'
+            'name_last': 'Jonhson',
+            'profile_img_url': data['users'][1]['profile_img_url'],
         }
     ])
 
@@ -82,7 +84,8 @@ def test_integration():
             'email': 'zilxianglin@google.com',
             'name_first': 'Zixiang',
             'name_last': 'Lin',
-            'handle_str': 'lizixiang'
+            'handle_str': 'lizixiang',
+            'profile_img_url': data['users'][0]['profile_img_url'],
         }
     }
 
@@ -95,21 +98,24 @@ def test_integration():
                 'email': 'zilxianglin@google.com',
                 'name_first': 'Zixiang',
                 'name_last': 'Lin',
-                'handle_str': 'lizixiang'
+                'handle_str': 'lizixiang',
+                'profile_img_url': data['users'][0]['profile_img_url'],
             },
             {
                 'u_id': 1,
                 'email': 'moniquejohnson@outlook.com',
                 'name_first': 'Monique',
                 'name_last': 'Jonhson',
-                'handle_str': 'moniquejonhson'
+                'handle_str': 'moniquejonhson',
+                'profile_img_url': data['users'][1]['profile_img_url'],
             },
             {
                 'u_id': 2,
                 'email': 'ilovemaths@icloud.com',
                 'name_first': 'Maths',
                 'name_last': 'English',
-                'handle_str': 'mathsenglish'
+                'handle_str': 'mathsenglish',
+                'profile_img_url': data['users'][2]['profile_img_url'],
             }
         ]
     }

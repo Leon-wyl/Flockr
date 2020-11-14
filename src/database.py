@@ -43,6 +43,7 @@ def data_upload(u_id, email, password, name_first, name_last, handle, token):
         'handle': handle,
         'token': token,
         'permission_id': permission_id,
+        'profile_img_url': f'static/{u_id}.jpg',
         'reset_code': "",
     })
 
@@ -141,6 +142,7 @@ def data_channel_owners(channel_id):
                 new_owner['u_id'] = owner['u_id']
                 new_owner['name_first'] = owner['name_first']
                 new_owner['name_last'] = owner['name_last']
+                new_owner['profile_img_url'] = owner['profile_img_url']
                 owners.append(new_owner)
             return owners
 
@@ -153,6 +155,7 @@ def data_channel_members(channel_id):
                 new_member['u_id'] = member['u_id']
                 new_member['name_first'] = member['name_first']
                 new_member['name_last'] = member['name_last']
+                new_member['profile_img_url'] = member['profile_img_url']
                 members.append(new_member)
             return members
 
@@ -247,6 +250,7 @@ def data_users_list():
         new_user['name_first'] = user['name_first']
         new_user['name_last'] = user['name_last']
         new_user['handle_str'] = user['handle']
+        new_user['profile_img_url'] = user['profile_img_url']
         user_list.append(new_user)
     return user_list
 
