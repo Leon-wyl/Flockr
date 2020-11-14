@@ -6,6 +6,7 @@ from user import *
 from other import *
 from database import data
 import pytest
+from datetime import datetime, timezone
 
 def test_integration():
     clear()
@@ -132,7 +133,7 @@ def test_integration():
                 'message_id': 0,
                 'u_id': 0,
                 'message': 'Hello?',
-                'time_created': 0,
+                'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
                 'reacts': [],
                 'is_pinned': False,
             },
@@ -140,7 +141,7 @@ def test_integration():
                 'message_id': 1,
                 'u_id': 1,
                 'message': 'My name is Monique',
-                'time_created': 0,
+                'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
                 'reacts': [],
                 'is_pinned': False,
             }
@@ -158,7 +159,7 @@ def test_integration():
                 'message_id': 1,
                 'u_id': 1,
                 'message': 'My name is Monique',
-                'time_created': 0,
+                'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
             }
         ]
     }
@@ -178,7 +179,7 @@ def test_integration():
                 'message_id': 0,
                 'u_id': 0,
                 'message': 'Sorry',
-                'time_created': 0,
+                'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
                 'reacts': [],
                 'is_pinned': False,
             }
