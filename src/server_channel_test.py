@@ -6,6 +6,7 @@ from time import sleep
 import requests
 import json
 from error import InputError
+from datetime import datetime, timezone
 
 # Use this fixture to get the URL of the server.
 @pytest.fixture
@@ -295,7 +296,7 @@ def test_server_channel_messages(url):
                 'message_id': 0,
                 'u_id': 0,
                 'message': 'Hello',
-                'time_created': 0,
+                'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
                 'reacts': [],
                 'is_pinned': False
             },
@@ -303,7 +304,7 @@ def test_server_channel_messages(url):
                 'message_id': 1,
                 'u_id': 1,
                 'message': 'Hey there first',
-                'time_created': 0,
+                'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
                 'reacts': [],
                 'is_pinned': False
             }

@@ -10,6 +10,7 @@ from time import sleep, time
 from message import message_send
 import pytest
 import threading
+from datetime import datetime, timezone, timedelta
 
 # Test users_all function
 def test_users_all():
@@ -95,35 +96,41 @@ def test_search():
     channels_create(info1['token'], 'third', True)
     channels_create(info1['token'], 'fourth', True)
     message_send(info2['token'], 0, "I am ok haha")
+    time1 = round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0)
     message_send(info2['token'], 0, "he is ok haha")
+    time2 = round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0)
     message_send(info2['token'], 0, "Old man and sea")
+    time3 = round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0)
     message_send(info2['token'], 1, "bangindgdliok")
+    time4 = round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0)
     message_send(info2['token'], 1, "Fast and furious")
+    time5 = round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0)
     message_send(info2['token'], 1, "ok in abcdefg")
+    time6 = round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0)
     assert search(info2['token'], 'ok') == {'messages': [
         {
             'message_id': 0,
             'u_id': 1,
             'message': "I am ok haha",
-            'time_created': 0,
+            'time_created': time1
         },
         {
             'message_id': 1,
             'u_id': 1,
             'message': "he is ok haha",
-            'time_created': 0,
+            'time_created': time2
         },
         {
             'message_id': 3,
             'u_id': 1,
             'message': "bangindgdliok",
-            'time_created': 0,
+            'time_created': time4
         },
         {
             'message_id': 5,
             'u_id': 1,
             'message': "ok in abcdefg",
-            'time_created': 0,
+            'time_created': time6
         },
     ]}
 
@@ -212,6 +219,7 @@ def test_standup_send1():
     info2 = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
     channels_create(info2['token'], 'first', True)
     standup_start(info2['token'], 0, 5)
+    time = round((datetime.utcnow() + timedelta(seconds=5)).replace(tzinfo=timezone.utc).timestamp(), 0)
     standup_send(info2['token'], 0, 'hello')
     standup_send(info2['token'], 0, 'asd')
     standup_send(info2['token'], 0, 'dfg')
@@ -226,7 +234,7 @@ def test_standup_send1():
                 'is_pinned': False,
                 'u_id': 0,
                 'message': 'MJohnson: hello\nMJohnson: asd\nMJohnson: dfg\nMJohnson: abc\n',
-                'time_created': 0,
+                'time_created': time
             }
         ],
         'start': 0,
@@ -239,6 +247,7 @@ def test_standup_send2():
     info2 = auth_register("johnson@icloud.com", "RFVtgb45678", "M", "Johnson")
     channels_create(info2['token'], 'first', True)
     standup_start(info2['token'], 0, 5)
+    time = round((datetime.utcnow() + timedelta(seconds=5)).replace(tzinfo=timezone.utc).timestamp(), 0)
     standup_send(info2['token'], 0, 'hello')
     standup_send(info2['token'], 0, 'asd')
     standup_send(info2['token'], 0, 'dfg')
@@ -253,7 +262,7 @@ def test_standup_send2():
                 'is_pinned': False,
                 'u_id': 0,
                 'message': 'MJohnson: hello\nMJohnson: asd\nMJohnson: dfg\nMJohnson: abc\n',
-                'time_created': 0,
+                'time_created': time
             }
         ],
         'start': 0,

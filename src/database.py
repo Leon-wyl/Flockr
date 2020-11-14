@@ -176,9 +176,9 @@ def data_channel_messages(channel_id, start, end):
 	                    message_list.append(message)
                     i += 1
             else:
-	            for message in channel['messages']:
-	                if message['message_id'] >= start:
-	                    if message['message_id'] < end:
+	            for i, message in enumerate(channel['messages']):
+	                if i >= start:
+	                    if i < end:
 	                        message_list.append(message)
     return message_list
 
@@ -288,11 +288,12 @@ def data_search_message(query_str, u_id):
 def data_message_send(channel_id, u_id, message):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
+            time = round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0)
             newmessage = {
                 'message_id': data['num_message'],
                 'u_id': u_id,
                 'message': message,
-                'time_created': 0,
+                'time_created': time,
                 'reacts': [],
                 'is_pinned': False,
             }
