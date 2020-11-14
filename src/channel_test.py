@@ -7,6 +7,7 @@ import channels
 from database import data
 from other import clear
 import message
+from datetime import datetime, timezone
 
 def test_channel_details_invalid_channel_id():
     clear()
@@ -78,6 +79,7 @@ def test_channel_messages():
     'Hayden', 'Everest')
     channel0 = channels.channels_create(user0['token'], 'validchannelname', True)
     message.message_send(user0['token'], channel0['channel_id'], "Hello")
+
     print(channel.channel_messages(user0['token'], channel0['channel_id'], 0))
     assert channel.channel_messages(user0['token'], channel0['channel_id'], 0) == \
     {
@@ -87,7 +89,7 @@ def test_channel_messages():
                 'message_id': 0,
                 'u_id': 0,
                 'message': 'Hello',
-                'time_created': 0,
+                'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
                 'reacts': [],
                 'is_pinned': False,
             }

@@ -147,7 +147,7 @@ def test_search(url):
             'message_id': 0,
             'u_id': 0,
             'message': "I am ok haha",
-            'time_created': 0,
+            'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
         }
     ]}
 
@@ -200,7 +200,7 @@ def test_standup_send(url):
                 'reacts': [],
                 'u_id': 0,
                 'message': 'YilangW: hello\nYilangW: asd\nYilangW: dfg\nYilangW: abc\n',
-                'time_created': 0,
+                'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
             }
         ],
         'start': 0,

@@ -8,6 +8,7 @@ import json
 from database import *
 from utility import token_generate
 from error import InputError
+from datetime import datetime, timezone
 
 # Use this fixture to get the URL of the server. It starts the server for you,
 # so you don't need to.
@@ -180,7 +181,7 @@ def test_integration(url):
             'message_id': 0,
             'u_id': 0,
             'message': "areyouok",
-            'time_created': 0,
+            'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
         }
 
     ]}
@@ -195,7 +196,7 @@ def test_integration(url):
             'message_id': 0,
             'u_id': 0,
             'message': "areyouok",
-            'time_created': 0,
+            'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
             'reacts': [],
             'is_pinned': False,
         }],

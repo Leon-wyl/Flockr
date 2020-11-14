@@ -5,6 +5,7 @@ import signal
 from time import sleep
 import requests
 import json
+from database import data
 from other import clear
 from error import InputError
 
@@ -410,3 +411,46 @@ def test_server_removeowner(url):
         if return_data2['u_id'] == owner['u_id']:
             is_owner = True
     assert is_owner == False
+
+def test_server_password_reset_invalid0(url):
+    '''invalid reset code provided by the owner of flockr'''
+    clear()
+
+    # Valid information has been summitted to register from the first user
+    user0_data_input = {
+        'email': "leonwu@gmail.com",
+        'password': "ihfeh3hgi00d",
+        'name_first': "Yilang",
+        'name_last': "W"
+    }
+    r = requests.post(f"{url}/auth/register", json=user0_data_input)
+    # Vadid information has been summitted to register from the second user
+    user1_data_input = {
+        'email': "billgates@outlook.com",
+        'password': "VukkFs",
+        'name_first': "Bill",
+        'name_last': "Gates"
+    }
+    r = requests.post(f"{url}/auth/register", json=user1_data_input)
+    # Vadid information has been summitted to register from the third user
+    user2_data_input = {
+        'email': "johnson@icloud.com",
+        'password': "RFVtgb45678",
+        'name_first': "M",
+        'name_last': "Johnson"
+    }
+    r = requests.post(f"{url}/auth/register", json=user2_data_input)
+    # User 0 send a password reset request
+    user0_password_reset_request_input = {
+        'email': "leonwu@gmail.com"
+    }
+    requests.post(f"{url}/auth/passwordreset/request", json=user0_password_reset_request_input)
+    # User 0 change the password with invalid password
+    user0_password_reset_input = {
+        'reset_code': 1234,
+        'new_password': "1q2w3w",
+    }
+    r = requests.post(f"{url}/auth/passwordreset/reset", \
+        json=user0_password_reset_input)
+    user0_reset_output = r.json()
+    assert user0_reset_output['message'] == '<p>reset_code is not a valid reset code</p>'

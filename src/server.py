@@ -3,7 +3,8 @@ from json import dumps
 from flask import Flask, request, send_from_directory
 from flask_cors import CORS
 from error import InputError
-from auth import auth_login, auth_logout, auth_register
+from auth import auth_login, auth_logout, auth_register, auth_passwordreset_request, \
+    auth_passwordreset_reset
 from channels import channels_list, channels_listall, channels_create
 from channel import channel_invite, channel_details, channel_messages, channel_leave, \
     channel_join, channel_addowner, channel_removeowner
@@ -57,6 +58,16 @@ def server_register():
     data = request.get_json()
     return dumps(auth_register(data['email'], data['password'], data['name_first'], \
         data['name_last']))
+
+@APP.route('/auth/passwordreset/request', methods=['POST'])
+def server_passwordreset_request():
+    data = request.get_json()
+    return dumps(auth_passwordreset_request(data['email']))
+
+@APP.route('/auth/passwordreset/reset', methods=['POST'])
+def server_passwordreset_reset():
+    data = request.get_json()
+    return dumps(auth_passwordreset_reset(data['reset_code'], data['new_password']))
 
 @APP.route('/channels/list', methods=['GET'])
 def server_list():

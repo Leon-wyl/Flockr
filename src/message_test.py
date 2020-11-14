@@ -6,6 +6,7 @@ import message
 from error import InputError
 from error import AccessError
 from database import data
+from datetime import datetime, timezone
 from other import clear
 
 # Test if message_send function raises an InputError when the message is more than 1000 characters.
@@ -40,7 +41,7 @@ def test_message_send():
                 'message_id': 0,
                 'u_id': 0,
                 'message': 'hello',
-                'time_created': 0,
+                'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
                 'reacts': [],
                 'is_pinned': False
             },
@@ -48,7 +49,7 @@ def test_message_send():
                 'message_id': 1,
                 'u_id': 0,
                 'message': 'My name',
-                'time_created': 0,
+                'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
                 'reacts': [],
                 'is_pinned': False
             },
@@ -56,7 +57,7 @@ def test_message_send():
                 'message_id': 2,
                 'u_id': 0,
                 'message': '1s sam!',
-                'time_created': 0,
+                'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
                 'reacts': [],
                 'is_pinned': False
             }
@@ -147,7 +148,7 @@ def test_message_edit():
                 'message_id': 0,
                 'u_id': 1,
                 'message': 'changed1st',
-                'time_created': 0,
+                'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
                 'reacts': [],
                 'is_pinned': False,
             },
@@ -155,7 +156,7 @@ def test_message_edit():
                 'message_id': 1,
                 'u_id': 1,
                 'message': 'changed2nd',
-                'time_created': 0,
+                'time_created': round(datetime.utcnow().replace(tzinfo=timezone.utc).timestamp(), 0),
                 'reacts': [],
                 'is_pinned': False,
             },
