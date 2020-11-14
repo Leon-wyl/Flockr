@@ -203,7 +203,7 @@ def test_user_profile_uploadphoto_x_start_negative():
         user_profile_uploadphoto(user['token'], 'https://img1.looper.com/img/gallery/things-only-adults-notice-in-shrek/intro-1573597941.jpg', -1, 0, 500, 500)
 
 
-def test_user_profile_uploadphoto_x_start_negative():
+def test_user_profile_uploadphoto_y_start_negative():
     clear()
     user = auth_register('validemail@gmail.com', '123abc!@#', 
     'Hayden', 'Everest')

@@ -298,7 +298,7 @@ def test_user_profile_uploadphoto(url):
     return_data = r.json()
     assert return_data['message'] == '<p>Dimension is out of range!</p>'
 
-    '''x_start_exceed = {
+    x_start_exceed = {
         'token': token1, 
         'img_url': 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.jpg', 
         'x_start': 100000, 
@@ -321,7 +321,7 @@ def test_user_profile_uploadphoto(url):
     r = requests.post(f"{url}/user/profile/uploadphoto", json=y_start_exceed)
     return_data = r.json()
     assert return_data['message'] == '<p>Dimension is out of range!</p>'
-    '''
+    
 
     negative_x_start = {
         'token': token1, 
