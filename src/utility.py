@@ -8,12 +8,23 @@ from error import AccessError
 SECRET = "fri09mango01"
 REGEX = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
+def check_standup_active(channel_id):
+    if not is_standup_active(channel_id):
+        raise InputError('An active standup is not currently running in this channel')
+    return
+
+
+def check_standup_not_active(channel_id):
+    if is_standup_active(channel_id):
+        raise InputError('There is already an active standup')
+    return
+
 def check_valid_permission_id(permission_id):
     if permission_id != 1 and permission_id != 2:
         raise InputError("Invalid permission_id")
     return
-    
-    
+
+
 def check_global_owner(u_id):
     if data_permission(u_id) != 1:
         raise AccessError("You are not owner of flockr")
@@ -23,8 +34,8 @@ def check_valid_user(u_id):
     if not is_user_exist(u_id):
         raise InputError('User is invalid')
     return
-    
-def check_valid_token(token): 
+
+def check_valid_token(token):
     if not is_token_exist(token) or token == None:
         raise AccessError('Token is invalid')
     return
@@ -33,8 +44,8 @@ def check_valid_channel(channel_id):
     if not is_channel_exist(channel_id):
         raise InputError("Channel is invalid")
     return
-    
-    
+
+
 def check_valid_channel_name(name):
     if len(name) > 20:
         raise InputError(f"This name is too long!")
@@ -44,8 +55,8 @@ def check_owner_exist(u_id, channel_id):
     if not is_owner_exist(u_id, channel_id):
         raise AccessError('Owner does not exist')
     return
-    
-    
+
+
 def check_owner_not_exist(u_id, channel_id):
     if is_owner_exist(u_id, channel_id):
         raise InputError('User is already an owner of the channel')
@@ -55,7 +66,7 @@ def check_owner_not_exist(u_id, channel_id):
 def check_authorised_member(u_id, channel_id):
     if not is_member_exist(u_id, channel_id):
         raise AccessError('Member does not exist')
-    return 
+    return
 
 def check_member_not_exist(u_id, channel_id):
     if is_member_exist(u_id, channel_id):
@@ -80,11 +91,11 @@ def check_valid_message_start(start, channel_id):
                 raise InputError("Start is greater than the total number of messages in the channel")
             return
     raise InputError("Channel is invalid")
-               
+
 def token_generate(u_id):
     '''Return the generated token'''
     return jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256').decode('utf-8')
-    
+
 def check_name_length(name_first, name_last):
     if len(name_first) > 0 and len(name_first) <= 50:
         if len(name_last) >0 and len(name_last) <= 50:
@@ -110,12 +121,12 @@ def valid_member(channel, token):
         if token == member['token']:
             return member
     raise AccessError('Invalid token')
-    
+
 def check_valid_message_length(message):
     if len(message) > 1000:
         raise InputError('Message is more than 1000 characters')
     return
-    
+
 ''' def check_message_exist(message_id):
     for channel in data['channels']:
         for message in channel['messages']:
@@ -123,17 +134,17 @@ def check_valid_message_length(message):
                 return
     raise InputError('Message does not exist')
     '''
-    
+
 def check_authorised_member_message(u_id, channel_id, message_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
             for owner in channel['owners']:
                 if u_id == owner['u_id']:
-                    return 
+                    return
             for message in channel['messages']:
                 if u_id == message['u_id'] and message_id == message['message_id']:
                     return
-    raise AccessError('User is not the authorised user making this request nor an owner of this channel or the flockr') 
+    raise AccessError('User is not the authorised user making this request nor an owner of this channel or the flockr')
 
 def email_check(email):
     '''Test whether the email input is valid. If not, raise exception'''
@@ -178,9 +189,6 @@ def login_check(email, password):
         # If the password is not correct
         raise InputError("Password is not correct")
 
-    if correct_user['token'] is not None:
-        raise AccessError("User has already logged in")
-
     return correct_user['u_id']
 
 def password_encode(password):
@@ -197,4 +205,21 @@ def check_authorised_member_channel(channel_id, u_id):
 
 def check_message_pinned(message_id, channel_id):
     if data_message_pinned(message_id, channel_id) == True:
-        raise InputError("message has already been")
+        raise InputError("Message has already been pinned")
+
+def check_message_unpinned(message_id, channel_id):
+    if data_message_unpinned(message_id, channel_id) == True:
+        raise InputError("Message is not pinned already")
+
+def check_message_reacted(message_id, channel_id, react_id, u_id):
+    if data_message_reacted(message_id, channel_id, react_id, u_id) == True:
+        raise InputError("Message has already been reacted with this react")
+
+def check_message_unreacted(message_id, channel_id, react_id, u_id):
+    if data_message_unreacted(message_id, channel_id, react_id, u_id) == True:
+        raise InputError("Message is not reacted yet")
+
+def check_valid_react_id(react_id):
+    if react_id != 1:
+        raise InputError("React ID is not valid")
+        

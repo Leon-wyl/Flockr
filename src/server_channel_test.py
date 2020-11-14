@@ -7,7 +7,7 @@ import requests
 import json
 from error import InputError
 
-# Use this fixture to get the URL of the server. 
+# Use this fixture to get the URL of the server.
 @pytest.fixture
 def url():
     url_re = re.compile(r' \* Running on ([^ ]*)')
@@ -39,8 +39,8 @@ def test_server_channel(url):
     requests.delete(f"{url}/clear")
     # test_channel_invite_success
     FirstUser = {
-        'email': "leonwu@gmail.com", 
-        'password': "ihfeh3hgi00d", 
+        'email': "leonwu@gmail.com",
+        'password': "ihfeh3hgi00d",
         'name_first': "Yilang",
         'name_last': "Wu",
     }
@@ -49,10 +49,10 @@ def test_server_channel(url):
     token1 = return_data['token']
 
     requests.post(f"{url}/channels/create", json={'token': token1, 'name': 'first', 'is_public': True})
-    
+
     SecondUser = {
-        'email': "dennislin@gmail.com", 
-        'password': "ihfeh3hgi00d", 
+        'email': "dennislin@gmail.com",
+        'password': "ihfeh3hgi00d",
         'name_first': "Dennis",
         'name_last': "Lin",
     }
@@ -96,8 +96,8 @@ def test_server_channel(url):
     # test_channel_invite_success
 
     ThirdUser = {
-        'email': "guanbin@gmail.com", 
-        'password': "ihfeh3hgi00d", 
+        'email': "guanbin@gmail.com",
+        'password': "ihfeh3hgi00d",
         'name_first': "Guanbin",
         'name_last': "Wen",
     }
@@ -124,7 +124,7 @@ def test_server_channel(url):
     # check member correctness
     r = requests.get(f"{url}/channel/details", params={'token': token1, 'channel_id': 0})
     return_data = r.json()
-    assert return_data['all_members'] == [{'name_first': 'Yilang', 'name_last': 'Wu', 'u_id': 0}, 
+    assert return_data['all_members'] == [{'name_first': 'Yilang', 'name_last': 'Wu', 'u_id': 0},
     {'name_first': 'Guanbin', 'name_last': 'Wen', 'u_id': 2}]
 
     # test_channel_invite_user_already_joined
@@ -141,8 +141,8 @@ def test_server_channel_details(url):
 
     # Register a user
     dataIn1 = {
-        'email': "leonwu@gmail.com", 
-        'password': "ihfeh3hgi00d", 
+        'email': "leonwu@gmail.com",
+        'password': "ihfeh3hgi00d",
         'name_first': "Yilang",
         'name_last': "Wu",
     }
@@ -166,7 +166,7 @@ def test_server_channel_details(url):
         'is_public': True,
     }
     r = requests.post(f"{url}/channels/create", json=dataIn3)
-    
+
     # The first user tries to get the channel details from an invalid channel
     dataIn4 = {
         'token': return_data1['token'],
@@ -176,7 +176,7 @@ def test_server_channel_details(url):
     return_data4 = r.json()
     assert return_data4['code'] == 400
 
-    # The second user tries to get the channel details of the channel created by the first user, which is unauthorised    
+    # The second user tries to get the channel details of the channel created by the first user, which is unauthorised
     dataIn5 = {
         'token': return_data2['token'],
         'channel_id': 0,
@@ -184,15 +184,15 @@ def test_server_channel_details(url):
     r = requests.get(f"{url}/channel/details", params=dataIn5)
     return_data5 = r.json()
     assert return_data5['code'] == 400
-    
+
     # The second user join the channel
     dataIn6 = {
         'token': return_data2['token'],
         'channel_id': 0,
     }
     r = requests.post(f"{url}/channel/join", json=dataIn6)
-    
-    resp = requests.get(f"{url}/channel/details", params=dataIn6) 
+
+    resp = requests.get(f"{url}/channel/details", params=dataIn6)
     resp = resp.json()
     assert resp == {'all_members': [{'name_first': 'Yilang', 'name_last': 'Wu', 'u_id': 0}, {'name_first': 'Bill', 'name_last': 'Gates', 'u_id': 1}], 'name': 'group1', 'owner_members': [{'name_first': 'Yilang', 'name_last': 'Wu', 'u_id': 0}]}
 
@@ -200,8 +200,8 @@ def test_server_channel_messages(url):
 
     # Register a user
     dataIn1 = {
-        'email': "leonwu@gmail.com", 
-        'password': "ihfeh3hgi00d", 
+        'email': "leonwu@gmail.com",
+        'password': "ihfeh3hgi00d",
         'name_first': "Yilang",
         'name_last': "Wu",
     }
@@ -225,7 +225,7 @@ def test_server_channel_messages(url):
         'is_public': True,
     }
     r = requests.post(f"{url}/channels/create", json=dataIn3)
-    
+
     # Message sent by the first user
     dataIn4 = {
         'token': return_data1['token'],
@@ -243,7 +243,7 @@ def test_server_channel_messages(url):
     r = requests.get(f"{url}/channel/messages", params=dataIn5)
     return_data5 = r.json()
     assert return_data5['code'] == 400
-    
+
     # The first user tries to get the channel messages from channel with an invalid start
     dataIn6 = {
         'token': return_data1['token'],
@@ -254,22 +254,22 @@ def test_server_channel_messages(url):
     return_data6 = r.json()
     assert return_data6['code'] == 400
 
-    # The second user tries to get the channel messages of the channel created by the first user, which is unauthorised    
+    # The second user tries to get the channel messages of the channel created by the first user, which is unauthorised
     dataIn7 = {
         'token': return_data2['token'],
         'channel_id': 0,
     }
     r = requests.get(f"{url}/channel/details", params=dataIn7)
     return_data7 = r.json()
-    assert return_data7['code'] == 400   
-    
+    assert return_data7['code'] == 400
+
     # The second user join the channel
     dataIn8 = {
         'token': return_data2['token'],
         'channel_id': 0,
     }
     r = requests.post(f"{url}/channel/join", json=dataIn8)
-    
+
     # Message sent by the second user
     dataIn9 = {
         'token': return_data2['token'],
@@ -277,25 +277,26 @@ def test_server_channel_messages(url):
         'message': "Hey there first",
     }
     r = requests.post(f"{url}/message/send", json=dataIn9)
-    
+
     dataIn10 = {
         'token': return_data1['token'],
         'channel_id': 0,
         'start': 0
     }
-    
-    resp = requests.get(f"{url}/channel/messages", params=dataIn10) 
+
+    resp = requests.get(f"{url}/channel/messages", params=dataIn10)
     resp = resp.json()
     print(resp)
     assert resp == \
     {
-        'message_list': 
+        'messages':
         [
             {
                 'message_id': 0,
                 'u_id': 0,
                 'message': 'Hello',
                 'time_created': 0,
+                'reacts': [],
                 'is_pinned': False
             },
             {
@@ -303,11 +304,12 @@ def test_server_channel_messages(url):
                 'u_id': 1,
                 'message': 'Hey there first',
                 'time_created': 0,
+                'reacts': [],
                 'is_pinned': False
             }
         ],
         'start': 0,
         'end': -1,
     }
-    
-    
+
+

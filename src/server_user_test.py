@@ -63,6 +63,7 @@ def test_server_user_set(url):
             'name_first': "Yilang",
             'name_last': "Wu",
             'handle_str': "yilangwu",
+            'profile_img_url': return_data['user']['profile_img_url'],
         }
     }
 
@@ -95,6 +96,7 @@ def test_server_user_set(url):
             'name_first': "Dennis",
             'name_last': "Lin",
             'handle_str': "yilangwu",
+            'profile_img_url': return_data['user']['profile_img_url'],
         }
     }
 
@@ -140,6 +142,7 @@ def test_server_user_set(url):
             'name_first': "Dennis",
             'name_last': "Lin",
             'handle_str': "yilangwu",
+            'profile_img_url': return_data['user']['profile_img_url'],
         }
     }
 
@@ -183,6 +186,7 @@ def test_server_user_set(url):
             'name_first': "Dennis",
             'name_last': "Lin",
             'handle_str': "dennislin",
+            'profile_img_url': return_data['user']['profile_img_url'],
         }
     }
 
@@ -254,7 +258,7 @@ def test_user_profile_uploadphoto(url):
     r = requests.post(f"{url}/user/profile/uploadphoto", json=correct_input)
     return_data = r.json()
     assert return_data == {}
-'''
+
     # Wrong HTTP status
     wrong_url = {
         'token': token1, 
@@ -266,35 +270,60 @@ def test_user_profile_uploadphoto(url):
     }
     r = requests.post(f"{url}/user/profile/uploadphoto", json=wrong_url)
     return_data = r.json()
-    assert return_data['message'] == '<p>Wrong HTTP status!</p>'
+    assert return_data['message'] == '<p>url is invalid</p>'
 
 
     # wrong dimension
-    wrong_x_end = {
+    x_end_exceed = {
         'token': token1, 
         'img_url': 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.jpg', 
         'x_start': 0, 
         'y_start': 0, 
-        'x_end': 50000, 
+        'x_end': 500000, 
         'y_end': 1000,
     }
-    r = requests.post(f"{url}/user/profile/uploadphoto", json=wrong_x_end)
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=x_end_exceed)
     return_data = r.json()
     assert return_data['message'] == '<p>Dimension is out of range!</p>'
     
-    wrong_y_end = {
+    y_end_exceed = {
         'token': token1, 
         'img_url': 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.jpg', 
         'x_start': 0, 
         'y_start': 0, 
         'x_end': 500, 
-        'y_end': 50000,
+        'y_end': 500000,
     }
-    r = requests.post(f"{url}/user/profile/uploadphoto", json=wrong_y_end)
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=y_end_exceed)
     return_data = r.json()
     assert return_data['message'] == '<p>Dimension is out of range!</p>'
 
-    wrong_x_start = {
+    '''x_start_exceed = {
+        'token': token1, 
+        'img_url': 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.jpg', 
+        'x_start': 100000, 
+        'y_start': 0, 
+        'x_end': 500, 
+        'y_end': 500,
+    }
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=x_start_exceed)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Dimension is out of range!</p>'
+
+    y_start_exceed = {
+        'token': token1, 
+        'img_url': 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.jpg', 
+        'x_start': 0, 
+        'y_start': 100000, 
+        'x_end': 500, 
+        'y_end': 500,
+    }
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=y_start_exceed)
+    return_data = r.json()
+    assert return_data['message'] == '<p>Dimension is out of range!</p>'
+    '''
+
+    negative_x_start = {
         'token': token1, 
         'img_url': 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.jpg', 
         'x_start': -1, 
@@ -302,11 +331,11 @@ def test_user_profile_uploadphoto(url):
         'x_end': 500, 
         'y_end': 500,
     }
-    r = requests.post(f"{url}/user/profile/uploadphoto", json=wrong_x_start)
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=negative_x_start)
     return_data = r.json()
     assert return_data['message'] == '<p>Dimension is out of range!</p>'
 
-    wrong_y_start = {
+    negative_y_start = {
         'token': token1, 
         'img_url': 'http://images.tritondigitalcms.com/6616/sites/356/2017/07/28103713/Rick-Astley.jpg', 
         'x_start': 0, 
@@ -314,7 +343,7 @@ def test_user_profile_uploadphoto(url):
         'x_end': 500, 
         'y_end': 500,
     }
-    r = requests.post(f"{url}/user/profile/uploadphoto", json=wrong_y_start)
+    r = requests.post(f"{url}/user/profile/uploadphoto", json=negative_y_start)
     return_data = r.json()
     assert return_data['message'] == '<p>Dimension is out of range!</p>'
 
@@ -331,4 +360,4 @@ def test_user_profile_uploadphoto(url):
     r = requests.post(f"{url}/user/profile/uploadphoto", json=not_jpg)
     return_data = r.json()
     assert return_data['message'] == '<p>Image url is not a jpg!</p>'
-    '''
+    

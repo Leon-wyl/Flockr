@@ -32,11 +32,12 @@ def channel_messages(token, channel_id, start):
     u_id = auth_u_id_from_token(token)
     check_authorised_member_channel(channel_id, u_id)
     end = data_channel_messages_end(start, channel_id)
-    message_list = data_channel_messages(channel_id, start, end)
-    
+    before_list = data_channel_messages(channel_id, start, end)
+    message_list = data_react_modify(before_list, u_id)
+
     return {
-        'message_list': message_list, 
-        'start': start, 
+        'messages': message_list,
+        'start': start,
         'end': end,
     }
 

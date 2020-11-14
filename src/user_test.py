@@ -127,4 +127,4 @@ def test_user_profile_uploadphoto_success():
     'Hayden', 'Everest')
     assert user_profile_uploadphoto(user['token'], 'https://img1.looper.com/img/gallery/things-only-adults-notice-in-shrek/intro-1573597941.jpg', 0, 0, 500, 500) == {}
 
-        
+    
