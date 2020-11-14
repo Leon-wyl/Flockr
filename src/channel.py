@@ -30,8 +30,7 @@ def channel_messages(token, channel_id, start):
     check_valid_token(token)
     check_valid_message_start(start, channel_id)
     u_id = auth_u_id_from_token(token)
-    if not check_global_owner_access(u_id):
-        check_authorised_member_channel(channel_id, u_id)
+    check_authorised_member_channel(channel_id, u_id)
     end = data_channel_messages_end(start, channel_id)
     before_list = data_channel_messages(channel_id, start, end)
     message_list = data_react_modify(before_list, u_id)

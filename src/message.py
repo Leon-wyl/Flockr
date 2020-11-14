@@ -9,8 +9,7 @@ from database import data
 def message_send(token, channel_id, message):
     check_valid_token(token)
     u_id = auth_u_id_from_token(token)
-    if not check_global_owner_access(u_id):
-        check_authorised_member_channel(channel_id, u_id)
+    check_authorised_member_channel(channel_id, u_id)
     check_valid_message_length(message)
     return {
         'message_id': data_message_send(channel_id, u_id, message),

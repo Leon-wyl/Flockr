@@ -70,31 +70,6 @@ def test_unauthorised_channel_messages():
     with pytest.raises(AccessError):
         assert channel.channel_messages(secondinfo['token'], channel_id['channel_id'], 0)
 
-def test_flockr_owner_access_channel_messages():
-    clear()
-    info = auth.auth_register('validemail@gmail.com', '123abc!@#',
-    'Hayden', 'Everest')
-    secondinfo = auth.auth_register('newemail@gmail.com', '234abc!@#',
-    'Guanbin', 'Wen')
-    channel_id = channels.channels_create(secondinfo['token'], 'validchannelname', True)
-    message.message_send(info['token'], channel_id, "Hello")
-    assert channel.channel_messages(info['token'], channel_id, 0) == \
-    {
-        'messages':
-        [
-            {
-                'message_id': 0,
-                'u_id': 0,
-                'message': 'Hello',
-                'time_created': 0,
-                'reacts': [],
-                'is_pinned': False,
-            }
-        ],
-        'start': 0,
-        'end': -1,
-    }
-
 # This is not testable as message.message_send function is not yet implemented, will exclude this test for now and write in assumption
 
 def test_channel_messages():
