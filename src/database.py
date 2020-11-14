@@ -342,6 +342,7 @@ def data_standup_start(u_id, channel_id, length):
             channel['time_finish'] = time = round(time, 0)
             try:
                new_thread = threading.Thread(target=sleep_when_standup, args=(length, channel, u_id))
+               new_thread.setDaemon(True)
                new_thread.start()
             except:
                 raise Exception('Cannot start thread MUDAMUDAMUDA!')
