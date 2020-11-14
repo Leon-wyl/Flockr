@@ -49,6 +49,7 @@ def channel_leave(token, channel_id):
 
 def channel_join(token, channel_id):
     check_valid_token(token)
+    check_valid_channel(channel_id)
     u_id = auth_u_id_from_token(token)
     # make sure member doesn't exist before joining
     check_member_not_exist(u_id, channel_id)

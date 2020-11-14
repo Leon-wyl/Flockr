@@ -257,7 +257,7 @@ def test_channel_join_successful():
     clear()
     userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')
     userB = auth.auth_register('validemail2@gmail.com', '123abc!@#', 'Guanbin', 'Wen')
-    newchannel = channels.channels_create(userA['token'], 'validchannelname', True) 
+    newchannel = channels.channels_create(userA['token'], 'validchannelname', True)
     channel.channel_join(userB['token'], newchannel['channel_id'])
     assert len(data['channels'][0]['members']) == 2
 
@@ -265,7 +265,7 @@ def test_channel_join_flockr_owner_joins_private_channel():
     clear()
     userA = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Dennis', 'Lin')
     userB = auth.auth_register('validemail2@gmail.com', '123abc!@#', 'Guanbin', 'Wen')
-    newchannel = channels.channels_create(userB['token'], 'validchannelname', False) 
+    newchannel = channels.channels_create(userB['token'], 'validchannelname', False)
     channel.channel_join(userA['token'], newchannel['channel_id'])
     assert len(data['channels'][0]['members']) == 2
 
